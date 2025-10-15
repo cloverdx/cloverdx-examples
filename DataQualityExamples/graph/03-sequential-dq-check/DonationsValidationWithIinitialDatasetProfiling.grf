@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.1.2.4" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="DQExample1" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="Donations" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Year" name="Year" type="string"/>
+<Field label="Electoral Event" name="Electoral_Event" type="string"/>
+<Field label="Source" name="Source" type="string"/>
+<Field label="Contributor Type" name="Contributor_Type" type="string"/>
+<Field label="Contributor" name="Contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="Contributor_City_Province_Postal" type="string"/>
+<Field label="Recipient" name="Recipient" type="string"/>
+<Field label="Political Party" name="Political_Party" type="string"/>
+<Field label="Political Entity" name="Political_Entity" type="string"/>
+<Field label="Total Amount" name="Total_Amount" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="DonationsTyped" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Year" name="Year" type="integer"/>
+<Field label="Electoral Event" name="Electoral_Event" type="string"/>
+<Field label="Source" name="Source" type="string"/>
+<Field label="Contributor Type" name="Contributor_Type" type="string"/>
+<Field label="Contributor" name="Contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="Contributor_City_Province_Postal" type="string"/>
+<Field label="Recipient" name="Recipient" type="string"/>
+<Field label="Political Party" name="Political_Party" type="string"/>
+<Field label="Political Entity" name="Political_Entity" type="string"/>
+<Field label="Total Amount" name="Total_Amount" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="|" name="ProfilingResults" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="inputRecordCount" trim="true" type="decimal"/>
+<Field name="nullTotalAmountCount" trim="true" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field label="Year" name="Year" type="string"/>
+<Field label="Electoral Event" name="Electoral_Event" type="string"/>
+<Field label="Source" name="Source" type="string"/>
+<Field label="Contributor Type" name="Contributor_Type" type="string"/>
+<Field label="Contributor" name="Contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="Contributor_City_Province_Postal" type="string"/>
+<Field label="Recipient" name="Recipient" type="string"/>
+<Field label="Political Party" name="Political_Party" type="string"/>
+<Field label="Political Entity" name="Political_Entity" type="string"/>
+<Field label="Total Amount" name="Total_Amount" type="string"/>
+<Field name="recordNo" trim="true" type="long"/>
+<Field name="validationMessage" type="string"/>
+<Field name="ruleStatusCode" trim="true" type="integer"/>
+<Field name="ruleName" type="string"/>
+<Field name="ruleType" type="string"/>
+<Field containerType="list" name="rulePath" type="string"/>
+<Field containerType="list" name="validatedFieldNames" type="string"/>
+<Field containerType="map" name="validatedValues" type="string"/>
+<Field containerType="map" name="ruleParameters" type="string"/>
+<Field name="validationDate" trim="true" type="date"/>
+<Field name="componentID" type="string"/>
+<Field name="componentName" type="string"/>
+<Field name="graphURL" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="444444" folded="false" fontSize="medium" height="125" id="Note0" textColor="FFFFFF" width="1450" x="75" y="25">
+<attr name="text"><![CDATA[h3. Sequential data quality check
+- entire data set can be profiled at first - typical approach in real-world use cases
+- you can start validating the data only after you ensure the entire data set profiling results are acceptable (e.g. does not contain too many records with null values etc.)
+- profiling and validation section is typically more complex and involves use of generic subgraphs]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="500" id="Note1" textColor="444444" width="976" x="75" y="150">
+<attr name="text"><![CDATA[h3. Profiling data at first
+- notice the numbrs in the left top corner of the components, these are so called *phases;* in CloverDX they tell the engine in which order the components are supposed to be executed (components with the same phase number run in parallel and phases are processed sequentially starting with 0)
+- using phases concept, we can profile the data before we do any further processing (of course data profiling could be processed in another job as well, but that would require the data set to be read twice)]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="500" id="Note2" textColor="444444" width="475" x="1050" y="150">
+<attr name="text"><![CDATA[h3. Validation and data processing in the next phase
+- since the components are in the phase 1, they will not process any records until all components in phase 0 are finished
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/DonationsAbbr1993to2003.xlsx" guiName="Donations" guiX="120" guiY="325" id="DONATIONS" type="SPREADSHEET_READER">
+<attr name="guiDescription"><![CDATA[Read from the first sheet in the XLSX using implicit mapping (columns are sequentially mapped onto the data record fields)]]></attr>
+</Node>
+<Node errorMessage="Too many null values in the data set!" guiName="Fail" guiX="870" guiY="500" id="FAIL" type="FAIL">
+<attr name="guiDescription"><![CDATA[Too many nulls!]]></attr>
+</Node>
+<Node guiName="Filter" guiX="670" guiY="500" id="FILTER" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.nullTotalAmountCount / $in.0.inputRecordCount > 0.2]]></attr>
+<attr name="guiDescription"><![CDATA[too many nulls?]]></attr>
+</Node>
+<Node guiName="Profile dataset" guiX="445" guiY="325" id="PROFILE_DATASET" type="PROFILER_PROBE">
+<attr name="metrics"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<listOfFunctions>
+    <metadataField name="Year" type="string"/>
+    <metadataField name="Electoral_Event" type="string"/>
+    <metadataField name="Source" type="string"/>
+    <metadataField name="Contributor_Type" type="string"/>
+    <metadataField name="Contributor" type="string"/>
+    <metadataField name="Contributor_City_Province_Postal" type="string"/>
+    <metadataField name="Recipient" type="string"/>
+    <metadataField name="Political_Party" type="string"/>
+    <metadataField name="Political_Entity" type="string"/>
+    <metadataField name="Total_Amount" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+</listOfFunctions>
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.1.nullTotalAmountCount = $in.1.Total_Amount__null_cnt;
+	$out.1.inputRecordCount = $in.0.inputRecordCount;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge fromNode="DONATIONS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="PROFILE_DATASET:0"/>
+<Edge fromNode="FILTER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="FAIL:0"/>
+<Edge fromNode="PROFILE_DATASET:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (copy of input)" toNode="VALIDATE_DONATIONS:0"/>
+<Edge fromNode="PROFILE_DATASET:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 1 (results)" toNode="FILTER:0"/>
+</Phase>
+<Phase number="1">
+<Node excludeFields="rulePath;validatedFieldNames;validatedValues;ruleParameters" fileURL="${DATAOUT_DIR}/InvalidData.data" guiName="Invalid Data" guiX="1345" guiY="500" id="INVALID_DATA" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Validate donations" guiX="1095" guiY="325" id="VALIDATE_DONATIONS" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
+        <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Total_Amount" name="Is Total_Amount number?" numberType="INTEGER" outputField="Total_Amount" trimInput="false">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </isNumber>
+        <interval acceptEmpty="false" boundaries="CLOSED_CLOSED" customRejectMessage="Year value not in the required range!" description="" enabled="true" from="1990" inputField="Year" name="Is Year value in range between 1990 and 2030?" outputField="" to="2030" useType="DEFAULT">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </interval>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <imports/>
+</group>
+]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.1.* = $in.1.*;
+	$out.1.Year = $in.0.Year;
+	$out.1.Electoral_Event = $in.0.Electoral_Event;
+	$out.1.Source = $in.0.Source;
+	$out.1.Contributor_Type = $in.0.Contributor_Type;
+	$out.1.Contributor = $in.0.Contributor;
+	$out.1.Contributor_City_Province_Postal = $in.0.Contributor_City_Province_Postal;
+	$out.1.Recipient = $in.0.Recipient;
+	$out.1.Political_Party = $in.0.Political_Party;
+	$out.1.Political_Entity = $in.0.Political_Entity;
+	$out.1.Total_Amount = $in.0.Total_Amount;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/ValidData.data" guiName="Valid data" guiX="1345" guiY="325" id="VALID_DATA" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="VALIDATE_DONATIONS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (valid)" toNode="VALID_DATA:0"/>
+<Edge fromNode="VALIDATE_DONATIONS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (invalid)" toNode="INVALID_DATA:0"/>
+</Phase>
+</Graph>
