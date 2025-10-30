@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.1.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" name="DateTime" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field format="yyyy-MM-dd" name="date" type="date"/>
+<Field format="HH:mm:ss.SSS" name="time" type="date"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="timestampNTZ" type="date"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS X" name="timestampTZ" type="date"/>
+<Field eofAsDelimiter="true" format="yyyy-MM-dd HH:mm:ss.SSS" name="timestampLTZ" type="date"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter=";" name="DateTime_strings" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="date" type="string"/>
+<Field name="time" type="string"/>
+<Field name="timestampNTZ" type="string"/>
+<Field name="timestampTZ" type="string"/>
+<Field eofAsDelimiter="true" name="timestampLTZ" type="string"/>
+</Record>
+</Metadata>
+<Connection dbConfig="${CONN_DIR}/snowflake.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameter name="TABLE_NAME" value="cloverdx_example_datetime"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="DAD8C9" folded="false" fontSize="large" height="288" id="Note2" textColor="444444" width="943" x="46" y="-211">
+<attr name="text"><![CDATA[h3. Reading and Writing Dates in Snowflake
+
+This example demonstrates writing date-time values into Snowflake and reading them back. If you don't have a working Snowflake [connection|element://JDBC0], please start with [Snowflake.grf|open://BasicExamples/graph/Snowflake.grf].
+
+All Snowflake date-time types map to just one data type in CloverDX: _date_.
+An important property of the _date_ data type is its *Format*. It controls how the values are interpreted when reading and writing them and also affects time zone handling.
+
+You can set the *session time zone* by adding a {{TIMEZONE}} property on the _Advanced_ tab of the [connection|element://JDBC0].
+
+See also [Date/Time Data Types in Snowflake|help://com.cloveretl.gui.docs/docs/snowflake-connection.html#snowflake-date-time] in the documentation.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="141" id="Note3" textColor="444444" width="378" x="591" y="232">
+<attr name="text"><![CDATA[Check the *Format* property (it is located in the *Advanced* category) of individual fields in [DateTime|element://Metadata0] metadata.
+
+The Format is used for parsing dates from CSV files,
+but it is also controls how [DatabaseWriter|element://WRITE_DATES_TO_SNOWFLAKE] and [DatabaseReader|element://READ_DATES_FROM_SNOWFLAKE] interpret the data. It affects time zone selection.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="141" id="Note1" textColor="444444" width="378" x="591" y="395">
+<attr name="text"><![CDATA["timestampNTZ" is parsed from the CSV using the local time zone, but it is written to Snowflake as the wallclock date-time in the session time zone.
+
+You can avoid time zone shifting by writing the values as strings, as shown below.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="179" id="Note4" textColor="444444" width="378" x="591" y="692">
+<attr name="text"><![CDATA[Compare the first two records written as dates with the other two records written as strings:
+
+
+* timestampNTZ is written exactly as in the CSV file
+* timestampTZ is written with the offset from the CSV file instead of the session time zone, but the values are equivalent
+* timestampLTZ is interpreted in the session time zone instead of the local time zone]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" guiName="Create table" guiX="95" guiY="100" id="CREATE_TABLE1" type="DB_EXECUTE">
+<attr name="sqlQuery"><![CDATA[create or replace transient table ${TABLE_NAME} (
+	"cDate" DATE,
+	"cTime" TIME,
+	"cTimestampNTZ" TIMESTAMP_NTZ,
+	"cTimestampTZ" TIMESTAMP_TZ,
+	"cTimestampLTZ" TIMESTAMP_LTZ
+)
+]]></attr>
+</Node>
+</Phase>
+<Phase number="1">
+<Node fileURL="${DATAIN_DIR}/snowflake/datetime.csv" guiName="Read dates from CSV" guiX="94" guiY="244" id="READ_DATES_FROM_CSV" type="FLAT_FILE_READER"/>
+<Node batchMode="true" dbConnection="JDBC0" dbTable="${TABLE_NAME}" guiName="Write dates to Snowflake" guiX="380" guiY="244" id="WRITE_DATES_TO_SNOWFLAKE" type="DB_OUTPUT_TABLE"/>
+<Edge fromNode="READ_DATES_FROM_CSV:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="WRITE_DATES_TO_SNOWFLAKE:0"/>
+</Phase>
+<Phase number="2">
+<Node dbConnection="JDBC0" guiName="Read dates from Snowflake" guiX="94" guiY="407" id="READ_DATES_FROM_SNOWFLAKE" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[select * from ${TABLE_NAME}]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/snowflake/datetime-out-1.csv" guiName="Write CSV" guiX="380" guiY="407" id="WRITE_CSV" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="READ_DATES_FROM_SNOWFLAKE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="WRITE_CSV:0"/>
+</Phase>
+<Phase number="3">
+<Node fileURL="${DATAIN_DIR}/snowflake/datetime.csv" guiName="Read CSV as strings" guiX="94" guiY="558" id="READ_CSV_AS_STRINGS" type="FLAT_FILE_READER"/>
+<Node batchMode="true" dbConnection="JDBC0" dbTable="${TABLE_NAME}" guiName="Write strings to Snowflake" guiX="380" guiY="558" id="WRITE_STRINGS_TO_SNOWFLAKE" type="DB_OUTPUT_TABLE"/>
+<Edge fromNode="READ_CSV_AS_STRINGS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (output)" toNode="WRITE_STRINGS_TO_SNOWFLAKE:0"/>
+</Phase>
+<Phase number="4">
+<Node fileURL="${DATAOUT_DIR}/snowflake/datetime-out-2.csv" guiName="FlatFileWriter" guiX="380" guiY="710" id="FLAT_FILE_WRITER" type="FLAT_FILE_WRITER"/>
+<Node dbConnection="JDBC0" guiName="SELECT to_char(*)" guiX="94" guiY="710" id="SELECT_TO_CHAR" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[select
+	to_char("cDate"),
+	to_char("cTime", 'HH24:MI:SS.FF3'),
+	to_char("cTimestampNTZ"),
+	to_char("cTimestampTZ"),
+	to_char("cTimestampLTZ")
+ from
+	${TABLE_NAME}]]></attr>
+</Node>
+<Edge fromNode="SELECT_TO_CHAR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="FLAT_FILE_WRITER:0"/>
+</Phase>
+</Graph>

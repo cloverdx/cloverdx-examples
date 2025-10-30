@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="dpavlis" category="readers" created="Wed Jul 09 15:34:33 CEST 2014" guiVersion="7.1.0.8" id="1404915642404" largeIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_48.png" licenseCode="Commercial Devel" licenseType="Commercial" mediumIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_32.png" modified="Wed Feb 24 10:04:23 CET 2016" modifiedBy="jansedlacek" name="TwitterReader" nature="subgraph" revision="1.40" showComponentDetails="true" smallIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_16.png">
+<Global>
+<inputPorts>
+<singlePort connected="false" name="0"/>
+</inputPorts>
+<outputPorts>
+<singlePort connected="false" name="0"/>
+<singlePort connected="false" name="1"/>
+</outputPorts>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="Trends" recordDelimiter="\n" type="delimited">
+<Field name="name" type="string"/>
+<Field name="query" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="|" name="TweetMinID" recordDelimiter="\n" type="delimited">
+<Field name="minID" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="Tweets" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="tweet_text" type="string"/>
+<Field name="created" type="string"/>
+<Field name="author" type="string"/>
+<Field name="id" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="TwitterResponse" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="content" type="string"/>
+<Field name="query" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="TWITTER_QUERY" name="_TWITTER__QUERY1" public="true" required="false" value="Data Integration"/>
+<GraphParameter category="basic" label="NUM_TWEETS" name="_NUM__TWEETS" public="true" required="false" value="100"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="F9EB81" enabled="true" folded="false" fontSize="medium" height="100" id="Note0" textColor="000000" width="613" x="350" y="100">
+<attr name="text"><![CDATA[Reading Tweets/Searching based on provided search string. As X returns max 100 tweets per request, this subgraph allows for cascading of the requests in order to return older (timewise) tweets for the same search string - that's why the second output port.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" guiName="Aggregate" guiX="895" guiY="250" id="AGGREGATE" mapping="$minID:=min($id);" sorted="false" type="AGGREGATE"/>
+<Node debugInput="true" enabled="disabled" guiName="DebugInput" guiX="-5" guiY="125" id="DEBUG_INPUT" recordsNumber="0" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+// Generates output record.
+function integer generate() {
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the generate. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if generate() throws an exception.
+// function integer generateOnError(string errorMessage, string stackTrace) {
+// }
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1170" guiY="200" id="DEBUG_OUTPUT" type="TRASH"/>
+<Node enabled="trash" guiName="JSONExtract" guiX="495" guiY="200" id="JSONEXTRACT" sourceUri="port:$0.content:source" type="JSON_EXTRACT"/>
+<Node NUM_TWEETS="${_NUM__TWEETS}" TWITTER_QUERY="${_TWITTER__QUERY1}" enabled="enabled" guiName="Search for tweets" guiX="295" guiY="200" id="SEARCH_FOR_TWEETS" type="HTTP_CONNECTOR">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+
+	$out.0.URL = "https://api.x.com/2/tweets/search/recent"
++ "?query=" + escapeUrlFragment(getComponentProperty("TWITTER_QUERY"))
++ "&max_results=" + getComponentProperty("NUM_TWEETS")
++ "&tweet.fields=created_at,author_id,text";
+	//$out.0.consumerKey = "";
+	//$out.0.consumerSecret = "";
+	//$out.0.oAuthAccessToken = "";
+	//$out.0.oAuthAccessTokenSecret = "";
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.content = $in.1.content;
+	$out.0.query = $in.2.URL;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+<attr name="headerProperties"><![CDATA[Accept=application/json
+Authorization=Bearer AAAAAAAAAAAAAAAAAAAAAOly4wEAAAAAWy%2FrfUBw8IZ27Qm4zZXm%2F8bY63A%3DpSuHDO8KxoNezXKIaxe8kbu1Nr4Ko80aGrIVxcNQY7ati1I7Vg
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="SimpleCopy" guiX="695" guiY="200" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node enabled="enabled" guiName="SubgraphInput" guiX="220" guiY="25" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="142" name="0"/>
+<Port guiY="222" name="1"/>
+</Node>
+<Node enabled="enabled" guiName="SubgraphOutput" guiX="1070" guiY="25" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="217" name="0"/>
+<Port guiY="267" name="1"/>
+<Port guiY="317" name="2"/>
+</Node>
+<Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 1 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:1"/>
+<Edge fromNode="DEBUG_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SUBGRAPH_INPUT:0"/>
+<Edge debugMode="false" fromNode="JSONEXTRACT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+<Edge debugMode="false" fromNode="SEARCH_FOR_TWEETS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (input)" metadata="Metadata0" outPort="Port 0 (out)" toNode="JSONEXTRACT:0"/>
+<Edge debugMode="false" fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="AGGREGATE:0"/>
+<Edge fromNode="SUBGRAPH_OUTPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="DEBUG_OUTPUT:0"/>
+</Phase>
+</Graph>

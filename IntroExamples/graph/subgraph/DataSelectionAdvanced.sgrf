@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="CalvinCortez" created="Wed Oct 01 09:30:25 EDT 2025" guiVersion="7.1.0.8" id="1760017182602" licenseCode="CLCDSCLOVE85208925SP" name="DataSelectionAdvanced" nature="subgraph" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata4" previewAttachment="${DATAIN_DIR}/Orders_Argentina.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="orders_country" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" skipSourceRows="0" type="delimited">
+<Field name="OrderID" type="string"/>
+<Field name="CustomerID" type="string"/>
+<Field name="EmployeeID" type="string"/>
+<Field name="OrderDate" type="string"/>
+<Field name="RequiredDate" type="string"/>
+<Field name="ShippedDate" type="string"/>
+<Field name="ShipVia" type="string"/>
+<Field name="Freight" type="string"/>
+<Field name="ShipName" type="string"/>
+<Field name="ShipAddress" type="string"/>
+<Field name="ShipCity" type="string"/>
+<Field name="ShipRegion" type="string"/>
+<Field name="ShipPostalCode" type="string"/>
+<Field name="ShipCountry" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="OrdersCount" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Field auto_filling="sheet_name" name="From" type="string"/>
+<Field name="Count" type="integer"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="476" id="Note0" textColor="444444" width="275" x="625" y="300">
+<attr name="text"><![CDATA[This subgraph reads from 3 different archive files using UniversalDataReader components. It's reading 3 sheets from a .zip file, 2 sheet from a .tgz file, and a .tar file. These 3 data streams are concatenated together using a concatinate component. Then the records are sorted using an ExtSort component by OrderID(Ascending) and ShipCountry(Ascending). They are then de-duplicated using a deduplicate component. Non-duplicate records are aggregated using an Aggregate component that uses ShipCountry as the aggregation key. The result is then sent to a trash component as stdout.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="tar:(gzip:(${DATAIN_DIR}/delimited/Orders.TGZ))#Orders_Spain.csv" guiName="1 sheet from .TGZ" guiX="214" guiY="175" id="DATA_READER3" skipLeadingBlanks="false" skipRows="1" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[One file]]></attr>
+</Node>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="tar:(${DATAIN_DIR}/delimited/Orders.tar)#Orders_Br*.csv" guiName="selects from .tar" guiX="214" guiY="300" id="DATA_READER4" skipRows="1" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[Wildcard usage]]></attr>
+</Node>
+<Node guiName="SubgraphInput" guiX="50" guiY="22" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="130" name="0"/>
+</Node>
+<Edge fromNode="DATA_READER3:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge8" inPort="Port 1 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="CONCATENATE0:1"/>
+<Edge fromNode="DATA_READER4:0" guiBendpoints="268:601|268:521" guiLocks="400|null|null" guiRouter="Manual" id="Edge9" inPort="Port 2 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="CONCATENATE0:2"/>
+</Phase>
+<Phase number="1">
+<Node aggregateKey="ShipCountry" enabled="enabled" guiName="how many from?" guiX="989" guiY="150" id="AGGREGATE1" mapping="$From:=$ShipCountry;$Count:=count();" sorted="false" type="AGGREGATE"/>
+<Node enabled="enabled" guiName="concatenates" guiX="464" guiY="150" id="CONCATENATE0" type="CONCATENATE"/>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(./data-in/delimited/Orders.zip)#Orders_Argentina.csv;zip:(./data-in/delimited/Orders.zip)#Orders_Brazil.csv;zip:(./data-in/delimited/Orders.zip)#Orders_Venezuela.csv;" guiName="3 sheets from .zip" guiX="214" guiY="50" id="DATA_READER0" skipSourceRows="1" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[List of files]]></attr>
+</Node>
+<Node append="false" enabled="enabled" fileURL="${DATATMP_DIR}/had_duplicate_records.txt" guiName="has duplicate" guiX="989" guiY="275" id="DATA_WRITER0" outputFieldNames="true" type="DATA_WRITER">
+<attr name="guiDescription"><![CDATA[Writes duplicates to tmp file]]></attr>
+</Node>
+<Node dedupKey="OrderID(a);ShipCountry(a)" enabled="enabled" guiName="removes duplicates" guiX="814" guiY="150" id="DEDUP0" type="DEDUP"/>
+<Node guiName="ExtSort" guiX="639" guiY="150" id="EXT_SORT0" sortKey="OrderID(a);ShipCountry(a)" type="EXT_SORT"/>
+<Node guiName="SubgraphOutput" guiX="1399" guiY="22" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="130" name="0"/>
+</Node>
+<Node debugPrint="true" enabled="enabled" guiName="prints to stdout" guiX="1164" guiY="150" id="TRASH1" type="TRASH"/>
+<Edge fromNode="AGGREGATE1:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (out)" toNode="TRASH1:0"/>
+<Edge fromNode="CONCATENATE0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="EXT_SORT0:0"/>
+<Edge fromNode="DATA_READER0:0" guiBendpoints="266:391|266:489" guiLocks="398|null|null" guiRouter="Manual" id="Edge7" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="CONCATENATE0:0"/>
+<Edge fromNode="DEDUP0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" outPort="Port 0 (unique)" toNode="AGGREGATE1:0"/>
+<Edge fromNode="DEDUP0:1" guiBendpoints="820:624|820:724|815:564|815:616" guiLocks="964|904|42" guiRouter="Manual" id="Edge11" inPort="Port 0 (in)" outPort="Port 1 (duplicate)" toNode="DATA_WRITER0:0"/>
+<Edge fromNode="EXT_SORT0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="DEDUP0:0"/>
+</Phase>
+</Graph>
