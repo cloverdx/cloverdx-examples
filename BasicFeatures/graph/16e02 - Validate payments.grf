@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="droben" created="Fri Jan 31 10:28:19 GMT 2020" guiVersion="7.2.0.8" id="1580477938641" licenseCode="CLP1DCLOVE64060597BY" name="16e01 - Validate customers" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" label="Payments" name="Payments" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="paymentId" type="integer"/>
+<Field name="orderId" type="string"/>
+<Field name="customerId" type="string"/>
+<Field name="paymentType" type="string"/>
+<Field name="paidAmount" scale="2" type="decimal"/>
+<Field eofAsDelimiter="true" name="paymentDate" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note0" textColor="444444" width="926" x="125" y="25">
+<attr name="text"><![CDATA[h3. Validate payments
+
+The example demonstrates use of the Validator component to assess quality of incoming data.
+
+A [Validator|element://VALIDATOR] component uses a custom rule to validate payment data. The custom rule (CashTransactionLimit) is written in CTL and can be viewed in the source tab of the graph. Valid records are emitted on port 0.  Invalid record information is emitted on port 1 and passed to a Fail component which will cause the graph to finish in an error state.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/Payments-2021-0?.csv" guiName="read payments" guiX="120" guiY="250" id="READ_PAYMENTS" type="FLAT_FILE_READER"/>
+<Node guiName="Success" guiX="520" guiY="250" id="SUCCESS" type="SUCCESS"/>
+<Node guiName="Validator" guiX="320" guiY="250" id="VALIDATOR" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
+        <custom customRejectMessage="" description="" enabled="true" inputField="" name="CashTransactionLimit" outputField="" ref="CashTransactionLimit">
+            <mapping>transactionType:=paymentType;paidAmount:=paidAmount</mapping>
+        </custom>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <customRules>
+        <customRule name="myCustomValidationRuleName"><![CDATA[//#CTL2
+
+// Custom validation rule myCustomValidationRuleName
+// Do not rename this function
+function boolean myCustomValidationRuleName(string inputParameter, string secondInputparameter, integer thirdInputParzameter) {
+
+	// Customize the code to your needs
+
+	$out.0.validationMessage = "Reason why the record is invalid";
+	return false; // return true for valid records
+}
+
+
+
+]]]]><![CDATA[></customRule>
+        <customRule name="CashTransactionLimit"><![CDATA[//#CTL2
+
+integer CASH_TRANSACTION_LIMIT = 1000;
+
+// Custom validation rule CashTransactionLimit
+// Do not rename this function
+function boolean CashTransactionLimit(string transactionType, decimal paidAmount) {
+	if (upperCase(transactionType) == "CASH" and paidAmount > CASH_TRANSACTION_LIMIT){
+		$out.0.validationMessage = concat(num2str(paidAmount), " is over the limit ", num2str(CASH_TRANSACTION_LIMIT), " for cash transactions!!!");
+		return false;
+	}
+	
+	return true; 
+}
+
+
+]]]]><![CDATA[></customRule>
+    </customRules>
+    <imports/>
+</group>
+]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.1.recordNo = $in.1.recordNo;
+	$out.1.validationMessage = $in.1.validationMessage;
+	$out.1.ruleStatusCode = $in.1.ruleStatusCode;
+	$out.1.ruleName = $in.1.ruleName;
+	$out.1.ruleType = $in.1.ruleType;
+	$out.1.rulePath = $in.1.rulePath;
+	$out.1.validatedFieldNames = $in.1.validatedFieldNames;
+	$out.1.validatedValues = $in.1.validatedValues;
+	$out.1.ruleParameters = $in.1.ruleParameters;
+	$out.1.validationDate = $in.1.validationDate;
+	$out.1.componentID = $in.1.componentID;
+	$out.1.componentName = $in.1.componentName;
+	$out.1.graphURL = $in.1.graphURL;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge fromNode="READ_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="VALIDATOR:0"/>
+<Edge fromNode="VALIDATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (valid)" toNode="SUCCESS:0"/>
+<Edge fromNode="VALIDATOR:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 1 (invalid)" toNode="FAIL:0"/>
+</Phase>
+<Phase number="5">
+<Node guiName="Fail" guiX="520" guiY="400" id="FAIL" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.errorMessage = $in.0.validationMessage;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+</Phase>
+</Graph>

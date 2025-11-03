@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Jun 20 10:55:50 CEST 2017" guiVersion="7.0.0.15" id="1497949972442" licenseCode="CLP1DJAVLI10291612BY" name="08e01 - Database connections" showComponentDetails="true">
+<Global>
+<Connection dbConfig="${CONN_DIR}/TrainingDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="database.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="3465A4" folded="false" fontSize="medium" height="165" id="Note0" textColor="FFFFFF" width="647" x="25" y="25">
+<attr name="text"><![CDATA[h3. Database connections
+
+Configure *Connection* to your database. Test the connection directly from the Connection wizard.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+</Graph>

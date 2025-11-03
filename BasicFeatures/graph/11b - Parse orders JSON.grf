@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Fri Sep 22 11:03:05 CEST 2017" guiVersion="7.2.0.8" id="1506092545117" licenseCode="CLP1DJAVLI50596644BY" name="11e03 - Parse orders JSON" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Address.fmt" id="Metadata1"/>
+<Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata0"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="751" x="175" y="25">
+<attr name="text"><![CDATA[h3. Parse orders JSON
+
+Ths graph demonstrated the use of the [JSON Extract |element://ORDERS_JSON] component. The component reads a zip file containing a set of JSON  documents that describe purchases. The JSON documents have nested elements. JSON Extract uses a SAX parser and can process very large files while consuming minimal memory. The parser emits  top level order information on Port 0, Line Item information on Port 1 and Address information on Port 2. The parerent Order ID is included on each port to simplify subsequent re-association of data.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Addresses" guiX="545" guiY="500" id="ADDRESSES" type="TRASH"/>
+<Node guiName="Line items" guiX="545" guiY="350" id="LINE_ITEMS" type="TRASH"/>
+<Node guiName="Orders" guiX="545" guiY="200" id="ORDERS" type="TRASH"/>
+<Node guiName="Orders.json" guiX="220" guiY="325" id="ORDERS_JSON" schema="${META_DIR}/online-store/OrdersJSON.xsd" sourceUri="zip:(${DATAIN_DIR}/OrdersJSON.zip)#Orders.json" type="JSON_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="json_object">
+		<Mapping element="orders" outPort="0">
+			<Mapping element="items" outPort="1"
+					xmlFields="../{}id"
+					cloverFields="orderId">
+			</Mapping>
+			<Mapping element="addresses" outPort="2"
+					xmlFields="../{}id"
+					cloverFields="orderId">
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Edge fromNode="ORDERS_JSON:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ORDERS:0"/>
+<Edge fromNode="ORDERS_JSON:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="LINE_ITEMS:0"/>
+<Edge fromNode="ORDERS_JSON:2" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 2 (out)" toNode="ADDRESSES:0"/>
+</Phase>
+</Graph>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://cloveretl.com/server/data" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="execution" type="data:executionType" xmlns:data="http://cloveretl.com/server/data"/>
+  <xs:complexType name="parameterType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="name" use="optional"/>
+        <xs:attribute type="xs:string" name="publicParam" use="optional"/>
+        <xs:attribute type="xs:string" name="required" use="optional"/>
+        <xs:attribute type="xs:string" name="secure" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="jobParametersType">
+    <xs:sequence>
+      <xs:element type="data:parameterType" name="parameter" maxOccurs="unbounded" minOccurs="0" xmlns:data="http://cloveretl.com/server/data"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="nodeType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="nodeId"/>
+      <xs:element type="xs:string" name="nodeName"/>
+      <xs:element type="xs:string" name="nodeType"/>
+      <xs:element type="xs:float" name="peakCpuUsage"/>
+      <xs:element type="xs:float" name="peakUserUsage"/>
+      <xs:element type="xs:string" name="result"/>
+      <xs:element type="xs:byte" name="totalCpuTime"/>
+      <xs:element type="xs:byte" name="totalUserTime"/>
+      <xs:element type="xs:float" name="cpuUsage"/>
+      <xs:element type="xs:float" name="userUsage"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="phaseType">
+    <xs:sequence>
+      <xs:element type="xs:dateTime" name="endTime"/>
+      <xs:element type="xs:short" name="execTime"/>
+      <xs:element type="xs:int" name="memoryUtilization"/>
+      <xs:element type="xs:int" name="phaseNumber"/>
+      <xs:element type="xs:dateTime" name="startTime"/>
+      <xs:element type="data:nodeType" name="node" xmlns:data="http://cloveretl.com/server/data"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="trackingType">
+    <xs:sequence>
+      <xs:element type="data:phaseType" name="phase" xmlns:data="http://cloveretl.com/server/data"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="executionType">
+    <xs:sequence>
+      <xs:element type="xs:long" name="duration"/>
+      <xs:element type="xs:string" name="durationString"/>
+      <xs:element type="xs:string" name="errException"/>
+      <xs:element type="xs:string" name="errMessage"/>
+      <xs:element type="xs:string" name="errNode"/>
+      <xs:element type="xs:string" name="errNodeType"/>
+      <xs:element type="xs:string" name="executionType"/>
+      <xs:element type="xs:string" name="graphId"/>
+      <xs:element type="xs:long" name="runId"/>
+      <xs:element type="xs:string" name="jobFile"/>
+      <xs:element type="xs:string" name="jobType"/>
+      <xs:element type="xs:string" name="nodeId"/>
+      <xs:element type="data:jobParametersType" name="jobParameters" xmlns:data="http://cloveretl.com/server/data"/>
+      <xs:element type="xs:string" name="runOnWorker"/>
+      <xs:element type="xs:string" name="sandboxCode"/>
+      <xs:element type="xs:dateTime" name="startTime"/>
+      <xs:element type="xs:string" name="status"/>
+      <xs:element type="xs:dateTime" name="stopTime"/>
+      <xs:element type="data:trackingType" name="tracking" xmlns:data="http://cloveretl.com/server/data"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

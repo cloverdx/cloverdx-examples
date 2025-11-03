@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Brano" created="Wed Feb 08 11:35:58 CET 2017" guiVersion="7.2.0.8" id="1486563180290" licenseCode="CLP1DJAVLI56082859BY" name="05e01 - Reformat address" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="\t" name="CustomerAddress" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="id" type="long"/>
+<Field name="name" type="string"/>
+<Field name="addressLine1" type="string"/>
+<Field name="addressLine2" type="string"/>
+<Field name="addressLine3" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note0" textColor="444444" width="1026" x="50" y="25">
+<attr name="text"><![CDATA[h3. Reformat address
+Transforms a set of customer contact information into a format suitable addressing correspondence. It has these four components:
+
+* [Flatfile Reader|element://CUSTOMERS]: reads a csv file containing customer data, parses that data and emits output records containing each field in the file. The metadata describing customer records is stored in a separate file in a separate folder within the project (meta/onlinestore/Customer.fmt).
+* [Filter|element://IS_ACTIVE] : removes records where the enabled field is set to false.
+* [Map|element://FORMAT_ADDRESS] : transforms the data from the Customer format into the CustomerAddress format. The AddressFormat is defined within the graph.
+* [Flatfile Writer|element://ADDRESSES] : writes the newly formated data into a csv file within the project at '/data-out/ActiveCustomersAddresses.csv. This component is configured to also write field headers and to overwrite any content already in the file.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAOUT_DIR}/ActiveCustomersAddresses.csv" guiName="Addresses" guiX="820" guiY="250" id="ADDRESSES" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="70" guiY="250" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node guiName="Format address" guiX="570" guiY="250" id="FORMAT_ADDRESS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.id = $in.0.id;
+	$out.0.name = $in.0.fullName;
+	$out.0.addressLine1 = $in.0.streetAddress;
+	$out.0.addressLine2 = $in.0.city+", "+$in.0.state+" "+$in.0.postalCode;
+	$out.0.addressLine3 = $in.0.country;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Is active?" guiX="320" guiY="250" id="IS_ACTIVE" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.isActive == true]]></attr>
+</Node>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="IS_ACTIVE:0"/>
+<Edge fromNode="FORMAT_ADDRESS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="ADDRESSES:0"/>
+<Edge fromNode="IS_ACTIVE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="FORMAT_ADDRESS:0"/>
+</Phase>
+</Graph>

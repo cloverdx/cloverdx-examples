@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="readers" created="Mon Feb 12 10:44:47 CET 2018" guiVersion="7.2.0.8" id="1518452058987" largeIconPath="${GRAPH_DIR}/subgraph/OrdersReader64.png" licenseCode="CLP1DJAVLI71979440BY" mediumIconPath="${GRAPH_DIR}/subgraph/OrdersReader32.png" name="OrdersReader" nature="subgraph" showComponentDetails="true" smallIconPath="${GRAPH_DIR}/subgraph/OrdersReader16.png">
+<Global>
+<outputPorts>
+<singlePort connected="false" name="0"/>
+<singlePort connected="false" name="1"/>
+<singlePort connected="false" name="2"/>
+</outputPorts>
+<Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata1"/>
+<Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata0"/>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="AddressExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="addressId" type="long"/>
+<Field name="orderId" type="long"/>
+<Field name="type" type="string"/>
+<Field name="name" type="string"/>
+<Field name="street" type="string"/>
+<Field name="city" type="string"/>
+<Field name="zip" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="|" name="AddressOrderId" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="addressId" type="long"/>
+<Field name="orderId" type="long"/>
+<Field name="type" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Input File URL" name="INPUT_FILE_URL" public="true" required="true" value="zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml">
+<ComponentReference referencedComponent="ORDERS_INPUT" referencedProperty="sourceUri"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note0" textColor="444444" width="551" x="125" y="50">
+<attr name="text"><![CDATA[h3. OrdersReader
+
+OrdersReader is a subgraph that uses an XMLExtract component to parse an orders document.
+
+
+* orderIDs are order dates emitted on port 0
+* order product details are emitted on port 1
+* customer addresses are emitted on port 2
+* the top level orderID is included on all ports.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Orders input" guiX="295" guiY="250" id="ORDERS_INPUT" schema="${META_DIR}/online-store/Orders.xsd" sourceUri="${INPUT_FILE_URL}" type="XML_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="orders">
+		<Mapping element="order" outPort="0"
+				xmlFields="{}date"
+				cloverFields="orderDatetime">
+			<Mapping element="item" outPort="1"
+					xmlFields=".;../{}id"
+					cloverFields="productName;orderId">
+			</Mapping>
+			<Mapping element="address" outPort="2"
+					xmlFields="../{}id;{}city;{}country;{}name;{}state;{}street;{}type;{}zip"
+					cloverFields="orderId;city;country;name;state;street;type;zip">
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Node guiName="SubgraphInput" guiX="45" guiY="-2" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="110" name="0"/>
+</Node>
+<Node guiName="SubgraphOutput" guiX="695" guiY="15" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="242" name="0"/>
+<Port guiY="292" name="1"/>
+<Port guiY="342" name="2"/>
+<Port guiY="392" name="3"/>
+</Node>
+<Edge fromNode="ORDERS_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+<Edge fromNode="ORDERS_INPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (in)" metadata="Metadata1" outPort="Port 1 (out)" toNode="SUBGRAPH_OUTPUT:1"/>
+<Edge fromNode="ORDERS_INPUT:2" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 2 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="SUBGRAPH_OUTPUT:2"/>
+</Phase>
+</Graph>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="readers" created="Tue Nov 29 15:45:13 CET 2016" description="Generate random, but reasonable, addresses in USA." guiVersion="7.2.0.8" id="1480437146118" largeIconPath="${GRAPH_DIR}/generators/GenerateAddresses64.png" licenseCode="CLP1DJAVLI67717532BY" mediumIconPath="${GRAPH_DIR}/generators/GenerateAddresses32.png" name="GenerateAddresses" nature="subgraph" showComponentDetails="true" smallIconPath="${GRAPH_DIR}/generators/GenerateAddresses16.png">
+<Global>
+<outputPorts>
+<singlePort connected="false" name="0"/>
+</outputPorts>
+<Metadata id="Metadata0" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="streetAddress" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="city" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="AddressInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" skipSourceRows="0" type="delimited">
+<Field name="name" type="string"/>
+<Field name="type" type="string"/>
+<Field name="low" type="integer"/>
+<Field name="high" type="integer"/>
+<Field name="elementarySchool" type="string"/>
+<Field name="middleCchool" type="string"/>
+<Field name="highSchool" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="IndexedAddress" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Field name="id" type="integer"/>
+<Field name="street" type="string"/>
+<Field name="low" type="integer"/>
+<Field name="high" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="IndexedArea" previewAttachmentCharset="ISO-8859-1" quotedStrings="true" recordDelimiter="\r\n" skipSourceRows="0" type="delimited">
+<Field name="zip" type="string"/>
+<Field name="city" type="string"/>
+<Field name="state" type="string"/>
+<Field name="area" type="string"/>
+<Field auto_filling="source_row_count" name="id" type="integer"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Number of addresses" name="ADDRESS_COUNT" public="true" required="true" value="10000">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<LookupTable id="LookupTable1" initialSize="512" key="id" metadata="Metadata3" name="AddressById" type="simpleLookup"/>
+<LookupTable charset="UTF-8" id="LookupTable0" initialSize="512" key="id" metadata="Metadata7" name="AreaById" type="simpleLookup"/>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="251" x="375" y="175">
+<attr name="text"><![CDATA[h3. States
+
+We remove various non-states from the data (military addresses, territories). We keep Washington DC, even though it is not a state.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="101" id="Note1" textColor="444444" width="951" x="125" y="50">
+<attr name="text"><![CDATA[h3. Generate Addresses
+This example created sample address data. It extracts ZipAndState info and Street address info from zip files and loads them into two lookup tables.
+It then randomly assembles this lookup data and returns it. It accepts a parameter ADDRESS_COUNT to control the number of addresses generated.]]></attr>
+</RichTextNote>
+<Dictionary>
+<Entry dictval.value="0" input="false" name="areaCount" output="true" type="integer"/>
+<Entry dictval.value="0" input="false" name="addressCount" output="true" type="integer"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node guiName="AddressById" guiX="970" guiY="500" id="ADDRESS_BY_ID" lookupTable="LookupTable1" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node guiName="AreaById" guiX="970" guiY="300" id="AREA_BY_ID" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node enabled="enabled" guiName="Clean, index, count" guiX="720" guiY="500" id="CLEAN_INDEX_COUNT" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+integer id = 0;
+
+function integer transform() {
+
+	$out.0.id = id++;
+	$out.0.street = cleanStreetName($in.0.name) + ($in.0.type != null ? " " + $in.0.type : "");
+	$out.0.low = minFix($in.0.low, $in.0.high);
+	$out.0.high = maxFix($in.0.low, $in.0.high);
+	dictionary.addressCount++;
+
+	return ALL;
+}
+
+function string cleanStreetName(string name) {
+    
+	if (name == null) {
+		return "";
+	}
+    
+    // Remove weird characters.
+	string clean = replace(name, '[?@#$%]', ''); 
+	
+	// Add space so that we know to uppercase the first char.
+	clean = " " + lowerCase(trim(replace(clean, '\ +', ' ')));
+
+	string final = "";
+	boolean wordBegin = false;
+
+	// Now make first letter of every word upper case.
+	for (integer i = 0; i < length(clean); ++i) {
+		string ch = charAt(clean, i);
+
+		switch (ch) {
+			case " ":
+			case "-":
+			case "(":
+			case ")":
+			case ".":
+			case "/":
+				wordBegin = true;
+				final = final + ch;
+				continue;
+
+			case ",":
+				// Comma is removed from the name.
+				wordBegin = true;
+				continue;
+		}
+
+		if (wordBegin) {
+			final = final + upperCase(ch);
+		} else {
+			final = final + ch;
+		}
+		wordBegin = false;
+	}
+
+	final = replace(final, '\ +', ' ');
+	final = replace(final, '\ ?-\ ?', '-');
+	final = trim(final);
+
+	return final;
+}
+
+function integer minFix(integer a, integer b) {
+	if (a == null || b == null) {
+		return 1;
+	}
+	return a < b ? a : b;
+}
+
+function integer maxFix(integer a, integer b) {
+	if (a == null || b == null) {
+		return 100;
+	}
+	return a > b ? a : b;
+}
+]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="zip:(${DATAIN_DIR}/data-generators/Addresses.zip)#zip_codes.csv" guiName="ZipAndState" guiX="120" guiY="300" id="DATA_READER2" type="FLAT_FILE_READER"/>
+<Node enabled="enabled" fileURL="zip:(${DATAIN_DIR}/data-generators/Addresses.zip)#addresses.csv" guiName="AddressInput" guiX="120" guiY="500" id="DATA_READER3" skipSourceRows="0" type="FLAT_FILE_READER"/>
+<Node guiName="Index and count" guiX="720" guiY="300" id="INDEX_AND_COUNT" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+integer id = 0;
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.id = id++;
+	dictionary.areaCount++;
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Remove military and territories" guiX="395" guiY="300" id="REMOVE_MILITARY_AND_TERRITORIES" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+// Ignore military addresses
+$in.0.city != "APO" && $in.0.city != "FPO" &&
+// Also ignore territories
+!in($in.0.state, ["AS", "FM", "GU", "MH", "MP", "PR", "PW", "VI"])]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Remove odd names" guiX="395" guiY="500" id="REMOVE_ODD_NAMES" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+!($in.0.name ~= ".*All.*") &&
+!($in.0.name ~= ".*Odd.*") &&
+!($in.0.name ~= ".*Even.*") &&
+!($in.0.name ~= ".*[Nn]umbe.*") &&
+length($in.0.name) > 2]]></attr>
+</Node>
+<Node guiName="SubgraphInput" guiX="45" guiY="-2" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="110" name="0"/>
+</Node>
+<Edge debugMode="true" fromNode="CLEAN_INDEX_COUNT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="ADDRESS_BY_ID:0"/>
+<Edge debugMode="false" fromNode="DATA_READER2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 0 (in)" metadata="Metadata7" outPort="Port 0 (output)" toNode="REMOVE_MILITARY_AND_TERRITORIES:0"/>
+<Edge fromNode="DATA_READER3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge16" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (output)" toNode="REMOVE_ODD_NAMES:0"/>
+<Edge debugMode="true" fromNode="INDEX_AND_COUNT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="AREA_BY_ID:0"/>
+<Edge fromNode="REMOVE_MILITARY_AND_TERRITORIES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="INDEX_AND_COUNT:0"/>
+<Edge fromNode="REMOVE_ODD_NAMES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge22" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="CLEAN_INDEX_COUNT:0"/>
+</Phase>
+<Phase number="1">
+<Node guiName="Generate addresses" guiX="120" guiY="700" id="GENERATE_ADDRESSES" recordsNumber="${ADDRESS_COUNT}" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+import "${TRANS_DIR}/Common.ctl";
+
+function integer generate() {
+
+	IndexedArea area = lookup(AreaById).get(randomInteger(0, dictionary.areaCount - 1));
+	$out.0.state = area.state;
+	$out.0.postalCode = area.zip;
+	$out.0.city = area.city;
+	$out.0.country = "USA";
+		
+	IndexedAddress address = lookup(AddressById).get(randomInteger(0, dictionary.addressCount - 1));
+	string streetNoPrefix = getRandomIntGaussian(1, 5000) + " ";
+	$out.0.streetAddress =  streetNoPrefix + address.street;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SubgraphOutput" guiX="1145" guiY="15" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="617" name="0"/>
+<Port guiY="767" name="1"/>
+</Node>
+<Edge debugMode="true" fromNode="GENERATE_ADDRESSES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+</Phase>
+</Graph>

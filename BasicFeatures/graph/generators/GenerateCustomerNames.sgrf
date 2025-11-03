@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="readers" created="Mon Nov 28 12:47:27 CET 2016" guiVersion="7.2.0.8" id="1480349760780" largeIconPath="${GRAPH_DIR}/generators/GenerateCustomerNames64.png" licenseCode="CLP1DJAVLI67717532BY" mediumIconPath="${GRAPH_DIR}/generators/GenerateCustomerNames32.png" name="GenerateCustomerNames" nature="subgraph" showComponentDetails="true" smallIconPath="${GRAPH_DIR}/generators/GenerateCustomerNames16.png">
+<Global>
+<outputPorts>
+<singlePort connected="false" name="0"/>
+</outputPorts>
+<Metadata fileURL="${META_DIR}/common/StringList.fmt" id="Metadata2"/>
+<Metadata id="Metadata1" previewAttachment="zip:(${DATAIN_DIR}/DataGenerators/names.zip)#last_names.csv" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="," name="LastName" previewAttachment="zip:(${DATAIN_DIR}/DataGenerators/names.zip)#last_names.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field label="Last name" name="name" type="string"/>
+<Field label="Rank" name="rank" type="integer"/>
+<Field label="Number of occurrences" name="count" type="integer"/>
+<Field eofAsDelimiter="true" label="Proportion per 100k people" name="prop100k" scale="2" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata4">
+<Record fieldDelimiter="|" name="Name" recordDelimiter="\r\n" type="delimited">
+<Field name="firstName" type="string"/>
+<Field name="middleInitial" type="string"/>
+<Field name="lastName" type="string"/>
+<Field name="fullName" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
+<Record name="NameDistribution" previewAttachmentCharset="ISO-8859-1" type="fixed">
+<Field name="name" size="15" type="string"/>
+<Field length="5" name="averageFrequency" scale="3" size="6" type="decimal"/>
+<Field length="5" name="totalFrequency" scale="3" size="6" type="decimal"/>
+<Field name="id" size="8" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="|" name="NameLists" recordDelimiter="\n" type="delimited">
+<Field containerType="list" name="firstNames" type="string"/>
+<Field containerType="list" name="lastNames" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Customer count" name="CUSTOMER_COUNT" public="true" required="true" value="10000">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Customers with middle name (percent)" name="MIDDLE_NAME_PERCENT" public="true" required="false" value="40">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Combine name lists" guiX="595" guiY="225" id="COMBINE_NAME_LISTS" type="COMBINE">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.firstNames = $in.0.value;
+	$out.0.lastNames = $in.1.value;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Convert to list" guiX="395" guiY="350" id="CONVERT_TO_LIST" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+import "${TRANS_DIR}/Common.ctl";
+
+string[] result;
+
+function integer append() {
+	push(result, camelCaseName($in.0.name));
+	return OK;
+}
+
+function integer transform() {
+	$out.0.value = result;
+	return OK;
+}
+]]></attr>
+</Node>
+<Node guiName="Convert to list" guiX="395" guiY="150" id="CONVERT_TO_LIST1" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+import "${TRANS_DIR}/Common.ctl";
+
+string[] result;
+
+function integer append() {
+	push(result, camelCaseName($in.0.name));
+	return OK;
+}
+
+function integer transform() {
+	$out.0.value = result;
+	return OK;
+}
+]]></attr>
+</Node>
+<Node fileURL="zip:(${DATAIN_DIR}/data-generators/Names.zip)#first_names_female.dat;zip:(${DATAIN_DIR}/data-generators/Names.zip)#first_names_male.dat;" guiName="First names" guiX="145" guiY="150" id="FIRST_NAMES" type="FLAT_FILE_READER"/>
+<Node guiName="Generate names" guiX="795" guiY="225" id="GENERATE_NAMES" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+string[] letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
+function integer count() {
+	return ${CUSTOMER_COUNT};
+}
+
+function integer transform(integer i) {
+	// TODO use better last name selection - names are ordered by rank, so most frequent are first
+	$out.0.firstName = $in.0.firstNames[randomInteger(0, length($in.0.firstNames) - 1)];
+	$out.0.lastName = $in.0.lastNames[randomInteger(0, length($in.0.lastNames) - 1)];
+	
+	if (random() < ${MIDDLE_NAME_PERCENT} / 100.0) {
+		// 90% of names will have middle name
+		$out.0.middleInitial = letters[randomInteger(0, length(letters) - 1)];
+		$out.0.fullName = $out.0.firstName + " " + $out.0.middleInitial + " " + $out.0.lastName;
+	} else {
+		$out.0.fullName = $out.0.firstName + " " + $out.0.lastName;
+	}
+	
+	return OK;
+}
+]]></attr>
+</Node>
+<Node fileURL="zip:(${DATAIN_DIR}/data-generators/Names.zip)#last_names.csv" guiName="Last names" guiX="145" guiY="350" id="LAST_NAMES" type="FLAT_FILE_READER"/>
+<Node guiName="SubgraphInput" guiX="45" guiY="-2" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="110" name="0"/>
+</Node>
+<Node guiName="SubgraphOutput" guiX="1095" guiY="15" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="242" name="0"/>
+<Port guiY="517" name="1"/>
+</Node>
+<Edge fromNode="COMBINE_NAME_LISTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="GENERATE_NAMES:0"/>
+<Edge fromNode="CONVERT_TO_LIST:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="COMBINE_NAME_LISTS:1"/>
+<Edge fromNode="CONVERT_TO_LIST1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="COMBINE_NAME_LISTS:0"/>
+<Edge fromNode="FIRST_NAMES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="CONVERT_TO_LIST1:0"/>
+<Edge fromNode="GENERATE_NAMES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+<Edge fromNode="LAST_NAMES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (output)" toNode="CONVERT_TO_LIST:0"/>
+</Phase>
+</Graph>

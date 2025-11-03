@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Jun 12 12:23:56 CEST 2017" guiVersion="7.2.0.8" id="1497264769632" licenseCode="CLP1DJAVLI10291612BY" name="GenerateAll" nature="jobflow" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record eofAsDelimiter="true" fieldDelimiter="|" name="Site" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="siteName" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter name="VISITS_MIN" value="200000"/>
+<GraphParameter name="VISITS_MAX" value="400000"/>
+<GraphParameter name="VISITORS_MIN" value="20000"/>
+<GraphParameter name="VISITORS_MAX" value="40000"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="101" id="Note0" textColor="444444" width="526" x="100" y="25">
+<attr name="text"><![CDATA[h3. GenerateAll
+
+This job orchestrates execution of three graphs which generate sample data used by various other examples in this project
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="GenerateCustomers" guiX="95" guiY="175" id="GENERATE_CUSTOMERS" jobURL="${GRAPH_DIR}/generators/GenerateCustomers.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.CUSTOMER_COUNT = "5000";
+	$out.1.MIDDLE_NAME_PERCENT = "80";
+	$out.1.PERCENT_INACTIVE_ACCOUNTS = "25";
+	$out.1.RANDOM_EMAIL_PERCENT = "1";
+	$out.1.EMAIL_NUMERIC_SUFFIX_PERCENT = "5";
+	$out.1.OLDEST_ACCOUNT_DATE = "2010-01-01";
+	$out.1.DUPLICATE_RECORDS_PERCENT = "3";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+</Phase>
+<Phase number="1">
+<Node guiName="GenerateOrders" guiX="295" guiY="175" id="GENERATE_ORDERS" jobURL="${GRAPH_DIR}/generators/GenerateOrders.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.CUSTOMERS_WITH_ORDERS_PERCENT = "90";
+	$out.1.MIN_ORDERS_PER_CUSTOMER = "1";
+	$out.1.MAX_ORDERS_PER_CUSTOMER = "8";
+	$out.1.MIN_ITEMS_PER_ORDER = "1";
+	$out.1.MAX_ITEMS_PER_ORDER = "15";
+	$out.1.ORDER_MIN_DATE = num2str(getYear(today()) - 1) + "-01-01";
+	$out.1.ORDER_MAX_DATE = date2str(today(), "yyyy-MM-dd");
+
+	return ALL;
+}
+]]></attr>
+</Node>
+</Phase>
+<Phase number="2">
+<Node guiName="GeneratePayments" guiX="495" guiY="175" id="GENERATE_PAYMENTS" jobURL="${GRAPH_DIR}/generators/GeneratePayments.grf" type="EXECUTE_GRAPH"/>
+</Phase>
+</Graph>

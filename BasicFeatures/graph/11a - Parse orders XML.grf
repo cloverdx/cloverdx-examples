@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Sep 19 11:12:22 CEST 2017" guiVersion="7.2.0.8" id="1505822916492" licenseCode="CLP1DJAVLI50596644BY" name="11e01 - Parse orders" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Address.fmt" id="Metadata1"/>
+<Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata0"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="751" x="200" y="100">
+<attr name="text"><![CDATA[h3. Parse orders XML
+
+Ths graph demonstrated the use of the [XML Extract |element://ORDERS] component. The component reads a zip file containing a set of XML documents that describe purchases. The XML documents have nested elements. XML Extract uses a SAX parser and can process very large files while consuming minimal memory. The parser emits  top level order information on Port 0, Line Item information on Port 1 and Address information on Port 2. The parerent Order ID is included on each port to simplify subsequent re-association of data.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Address" guiX="645" guiY="575" id="ADDRESS" type="TRASH"/>
+<Node guiName="LineItem" guiX="645" guiY="425" id="LINE_ITEM" type="TRASH"/>
+<Node guiName="Order" guiX="645" guiY="275" id="ORDER" type="TRASH"/>
+<Node guiName="Orders" guiX="270" guiY="400" id="ORDERS" schema="${META_DIR}/online-store/Orders.xsd" sourceUri="zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml" type="XML_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="orders">
+		<Mapping element="order" outPort="0"
+				xmlFields="{}date"
+				cloverFields="orderDatetime">
+			<Mapping element="item" outPort="1"
+					xmlFields=".;../{}id"
+					cloverFields="productName;orderId">
+			</Mapping>
+			<Mapping element="address" outPort="2"
+					xmlFields="../{}id;{}city;{}country;{}name;{}state;{}street;{}type;{}zip"
+					cloverFields="orderId;city;country;name;state;street;type;zip">
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Edge fromNode="ORDERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ORDER:0"/>
+<Edge fromNode="ORDERS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="LINE_ITEM:0"/>
+<Edge fromNode="ORDERS:2" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 2 (out)" toNode="ADDRESS:0"/>
+</Phase>
+</Graph>

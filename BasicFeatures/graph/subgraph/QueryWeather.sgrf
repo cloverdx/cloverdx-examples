@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="readers" created="Mon Sep 04 10:57:43 CEST 2017" guiVersion="7.2.0.8" id="1504534238113" largeIconPath="${GRAPH_DIR}/subgraph/QueryWeather64.png" licenseCode="CLP1DJAVLI50596644BY" mediumIconPath="${GRAPH_DIR}/subgraph/QueryWeather32.png" name="QueryWeather" nature="subgraph" showComponentDetails="true" smallIconPath="${GRAPH_DIR}/subgraph/QueryWeather16.png">
+<Global>
+<outputPorts>
+<singlePort connected="false" name="0"/>
+<singlePort connected="false" name="1"/>
+<singlePort connected="false" keepEdge="true" name="2" required="false"/>
+</outputPorts>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="|" name="ErrorMessage" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="httpStatusCode" type="integer"/>
+<Field name="errorMessage" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="Status" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="cod" type="string"/>
+<Field name="message" type="string"/>
+<Field name="cnt" type="integer"/>
+<Field name="city_name" type="string"/>
+<Field name="city_country" type="string"/>
+<Field name="geo_lat" type="number"/>
+<Field name="geo_lon" type="number"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="\t" name="WeatherMain" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="dt" type="long"/>
+<Field format="yyyy-MM-dd HH:mm" label="Time" name="date_time" type="date"/>
+<Field label="Temperature" name="temp" scale="1" type="decimal"/>
+<Field label="Min temperature" name="temp_min" scale="1" type="decimal"/>
+<Field label="Max temperature" name="temp_max" scale="1" type="decimal"/>
+<Field label="Ground level pressure" name="grnd_level" scale="1" type="decimal"/>
+<Field label="Sea level pressure" name="sea_level" type="decimal"/>
+<Field label="Humidity" name="humidity" scale="1" type="decimal"/>
+<Field label="Weather id" name="weather_id" type="integer"/>
+<Field label="Weather description" name="weather_desc" type="string"/>
+<Field label="Cloud cover" name="cloud_cover" type="number"/>
+<Field label="Wind speed" name="wind_speed" type="number"/>
+<Field label="Wind angle" name="wind_angle" type="number"/>
+<Field label="Wind direction" name="wind_direction" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="API key" name="API_KEY" public="true" required="true"/>
+<GraphParameter label="City" name="CITY" public="true" required="true"/>
+<GraphParameter label="Time zone offset from UTC (minutes)" name="TIME_ZONE_UTC_OFFSET" public="true" value="0">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Fail on error" name="FAIL_ON_ERROR" public="true" value="false">
+<SingleType name="bool"/>
+</GraphParameter>
+<GraphParameter name="__FAIL_ON_ERROR" public="false" required="false">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return ${FAIL_ON_ERROR} == true ? "enabled" : "disabled";
+}
+]]></attr>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="901" x="150" y="25">
+<attr name="text"><![CDATA[h3. Query Weather
+
+This subgraph uses a REST Connector to call a weather API. Parameters are uses to specify the API KEY the City to forecast. 
+* A Map component converts the  weather data into Celcuis and performs a transfomation on the API returned date.
+* Port 0 of the subgraph returns the REST call status
+* Port 1 of the subgraph returns the weather data
+* Port 2 of the subgraph is optional and returns any errors encountered in calling the API or parsing the response.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="API success?" guiX="895" guiY="275" id="API_SUCCESS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	if ($in.0.cod == "200") {
+		$out.0.* = $in.0.*;
+		
+		return OK;
+	} else {
+		$out.1.errorMessage = "API error: " + $in.0.message;
+		
+		return 1;
+	}
+
+}
+]]></attr>
+</Node>
+<Node guiName="Call success?" guiX="395" guiY="275" id="CALL_SUCCESS1" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	if ($in.0.statusCode == 200) {
+		$out.0.* = $in.0.*;
+		
+		return OK;
+	} else {
+		$out.1.httpStatusCode = $in.0.statusCode;
+		$out.1.errorMessage = "HTTP error: " + $in.0.errorMessage;
+		
+		return 1;
+	}
+
+}
+]]></attr>
+</Node>
+<Node guiName="Concatenate" guiX="1145" guiY="575" id="CONCATENATE" type="CONCATENATE"/>
+<Node enabled="${__FAIL_ON_ERROR}" guiName="Fail" guiX="1645" guiY="775" id="FAIL" type="FAIL"/>
+<Node guiName="Internal error" guiX="395" guiY="625" id="INTERNAL_ERROR" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = "Internal error: " + $in.0.errorMessage;
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Parse" guiX="645" guiY="275" id="PARSE" schema="${META_DIR}/weather/weather_json.xsd" sourceUri="port:$0.content:discrete" type="JSON_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="json_object" outPort="0"
+			xmlFields="{}cnt;{}cod;{}message"
+			cloverFields="cnt;cod;message">
+		<Mapping element="list" outPort="1"
+				xmlFields="{}dt"
+				cloverFields="dt">
+			<Mapping element="main" useParentRecord="true"
+					xmlFields="{}grnd_level;{}humidity;{}sea_level;{}temp;{}temp_max;{}temp_min"
+					cloverFields="grnd_level;humidity;sea_level;temp;temp_max;temp_min">
+			</Mapping>
+			<Mapping element="weather" useParentRecord="true"
+					xmlFields="{}id;{}main"
+					cloverFields="weather_id;weather_desc">
+			</Mapping>
+			<Mapping element="clouds" useParentRecord="true"
+					xmlFields="{}all"
+					cloverFields="cloud_cover">
+			</Mapping>
+			<Mapping element="wind" useParentRecord="true"
+					xmlFields="{}deg;{}speed"
+					cloverFields="wind_angle;wind_speed">
+			</Mapping>
+		</Mapping>
+		<Mapping element="city" useParentRecord="true"
+				xmlFields="{}country;{}name"
+				cloverFields="city_country;city_name">
+			<Mapping element="coord" useParentRecord="true"
+					xmlFields="{}lat;{}lon"
+					cloverFields="geo_lat;geo_lon">
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Node guiName="SimpleCopy" guiX="1395" guiY="575" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="SubgraphInput" guiX="45" guiY="22" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="267" name="0"/>
+</Node>
+<Node guiName="Weather API" guiX="145" guiY="275" id="WEATHER_API" type="HTTP_CONNECTOR" url="http://api.openweathermap.org/data/2.5/forecast">
+<attr name="errorOutputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.3.appid = "${API_KEY}";
+	$out.3.q = "${CITY}";
+
+	return ALL;
+}
+]]></attr>
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+<attr name="requestParameters"><![CDATA[appid=
+q=
+]]></attr>
+</Node>
+<Edge fromNode="API_SUCCESS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+<Edge fromNode="API_SUCCESS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 1 (out)" toNode="CONCATENATE:0"/>
+<Edge fromNode="CALL_SUCCESS1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (input)" outPort="Port 0 (out)" toNode="PARSE:0"/>
+<Edge fromNode="CALL_SUCCESS1:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 1 (in)" metadata="Metadata3" outPort="Port 1 (out)" toNode="CONCATENATE:1"/>
+<Edge fromNode="CONCATENATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+<Edge fromNode="INTERNAL_ERROR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 2 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="CONCATENATE:2"/>
+<Edge fromNode="PARSE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="API_SUCCESS:0"/>
+<Edge fromNode="PARSE:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 1 (out)" toNode="UNITS:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 2 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:2"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge15" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="FAIL:0"/>
+<Edge fromNode="WEATHER_API:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CALL_SUCCESS1:0"/>
+<Edge fromNode="WEATHER_API:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="INTERNAL_ERROR:0"/>
+</Phase>
+<Phase number="5">
+<Node guiName="SubgraphOutput" guiX="1845" guiY="22" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="267" name="0"/>
+<Port guiY="392" name="1"/>
+<Port guiY="567" name="2"/>
+<Port guiY="667" name="3"/>
+</Node>
+<Node guiName="Units" guiX="895" guiY="400" id="UNITS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+decimal KELVIN_DELTA = 273.15d;
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	
+	$out.0.temp = kelvinToCelsius($in.0.temp);
+	$out.0.temp_min = kelvinToCelsius($in.0.temp_min);
+	$out.0.temp_max = kelvinToCelsius($in.0.temp_max);
+	
+	$out.0.date_time = long2date($in.0.dt * 1000); // Input is Unix epoch in seconds, CloverETL expects milliseconds
+	$out.0.date_time = dateAdd($out.0.date_time, ${TIME_ZONE_UTC_OFFSET}, minute); // Shift to correct time zone
+
+	$out.0.wind_direction = getWindDirection($in.0.wind_angle);
+	
+	return ALL;
+}
+
+// Convert from Kelvin to degress Celsius and round to one decimal place.
+function decimal kelvinToCelsius(decimal k) {
+	return round(k - KELVIN_DELTA, 1);
+}
+
+// This can be done nicely with range lookup - see the subgraph version and lookups module.
+// This is a simplified version which does not output all 16 meteorogical directions, but rather just 8 to keep the code short.
+// Full table at http://snowfence.umn.edu/Components/winddirectionanddegreeswithouttable3.htm
+function string getWindDirection(number angle) {
+	if (angle > 22.5 && angle <= 67.5) {
+		return "NE";
+	} else if (angle <= 112.5) {
+		return "E";
+	} else if (angle <= 157.5) {
+		return "SE";
+	} else if (angle <= 202.5) {
+		return "S";
+	} else if (angle <= 247.5) {
+		return "SW";
+	} else if (angle <= 292.5) {
+		return "W";
+	} else if (angle <= 337.5) {
+		return "NW";
+	} else { // 337.5 < angle <= 22.5
+		return "N";
+	}
+}
+
+]]></attr>
+</Node>
+<Edge fromNode="UNITS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:1"/>
+</Phase>
+</Graph>

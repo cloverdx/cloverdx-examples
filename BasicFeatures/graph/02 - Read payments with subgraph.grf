@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Jun 05 09:51:14 CEST 2017" guiVersion="7.2.0.8" id="1496673237922" licenseCode="CLP1DJAVLI10291612BY" name="06e02 - Reading payments with subgraph" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note0" textColor="444444" width="901" x="125" y="25">
+<attr name="text"><![CDATA[h3. Read Payments with subgraph
+
+This CloverDX graph calls a subgraph to read payments data.
+
+The subgraph reads data as strings and then converts fields to required data types (e.g. date, string, numeric). Valid records are returned on output port 0. Invalid records are returns on output port 1. 
+
+Valid records are sent to a FlatFileWrtier component which writes them to a csv file in the data-out directory
+
+Invalid records are sent to a FlatFileWrtier component which writes them to a csv file in the data-out directory
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAOUT_DIR}/CleanPayments.csv" guiName="Clean payments" guiX="520" guiY="275" id="CLEAN_PAYMENTS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node __INPUT_FILE_URL="${DATAIN_DIR}/Payments-*.csv" guiName="PaymentsReader" guiX="220" guiY="275" id="PAYMENTS_READER" jobURL="${SUBGRAPH_DIR}/PaymentsReader.sgrf" type="SUBGRAPH"/>
+<Node fileURL="${DATAOUT_DIR}/PaymentErrors.csv" guiName="Payment errors" guiX="520" guiY="475" id="PAYMENT_ERRORS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="PAYMENTS_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CLEAN_PAYMENTS:0"/>
+<Edge fromNode="PAYMENTS_READER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="PAYMENT_ERRORS:0"/>
+</Phase>
+</Graph>

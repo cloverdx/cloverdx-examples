@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Fri Feb 09 13:56:38 CET 2018" guiVersion="7.2.0.8" id="1518182014715" licenseCode="CLP1DJAVLI71979440BY" name="13 - Customer leaderboard - SQL" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="\t" name="CustomerContact" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="fullName" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field name="totalPaid" type="decimal"/>
+</Record>
+</Metadata>
+<Connection dbConfig="${CONN_DIR}/TrainingDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="database.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="601" x="75" y="25">
+<attr name="text"><![CDATA[h3. Customers Leaderboard - SQL
+
+The example queries a database for payments and writes the recults to a file.
+* A [Database Reader|element://CUSTOMERS_PAYMENTS1] component issues a query that retrieves sums of payment data by customer grouped by customer and ordered by total value.
+* A [Deduplication|element://TAKE_TOP_10] component reduces the list to the top 10 customers.
+* A [Flatfile Writer |element://WRITE_CUSTOMER_LEADERBOARD] writes the report to a file.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" fetchSize="${FETCH_SIZE}" guiName="customers, payments" guiX="70" guiY="225" id="CUSTOMERS_PAYMENTS1" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[select
+	active_customers.full_name,
+	active_customers.email,
+	active_customers.phone,
+	payment_totals.total_paid
+from
+	(select id, full_name, email, phone from customers where is_active = true) active_customers
+	join
+	(select customer_id, sum(paid_amount) total_paid from payments group by customer_id) payment_totals
+	on active_customers.id = payment_totals.customer_id
+order by total_paid desc]]></attr>
+</Node>
+<Node guiName="Take top 10" guiX="295" guiY="225" id="TAKE_TOP_10" noDupRecord="10" type="DEDUP"/>
+<Node fileURL="${DATAOUT_DIR}/08e01a - Customer leaderboard.csv" guiName="Write customer leaderboard" guiX="495" guiY="225" id="WRITE_CUSTOMER_LEADERBOARD" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="CUSTOMERS_PAYMENTS1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="TAKE_TOP_10:0"/>
+<Edge fromNode="TAKE_TOP_10:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 0 (unique)" toNode="WRITE_CUSTOMER_LEADERBOARD:0"/>
+</Phase>
+</Graph>

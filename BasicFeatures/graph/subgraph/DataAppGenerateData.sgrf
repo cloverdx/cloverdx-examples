@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="readers" created="Tue Aug 13 16:08:51 CEST 2024" description="Generate simple random data for various Data App and Data Service tests." guiVersion="6.6.0.8" id="1723560109612" licenseCode="CLCDSCLOVE85208925SP" name="DataAppGenerateData" nature="subgraph" showComponentDetails="true">
+<Global>
+<outputPorts>
+<singlePort connected="false" name="0"/>
+</outputPorts>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="TestRec" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Id" name="anInteger" type="integer"/>
+<Field format="yyyy-MM-dd" label="Long column name" name="aDate" type="date"/>
+<Field label="Even longer column name with many words" name="aString" type="string"/>
+<Field name="field0" type="string"/>
+<Field name="field1" type="string"/>
+<Field name="field2" type="string"/>
+<Field name="field3" type="string"/>
+<Field name="field4" type="string"/>
+<Field name="field5" type="string"/>
+<Field name="field6" type="string"/>
+<Field name="field7" type="string"/>
+<Field name="field8" type="string"/>
+<Field name="field9" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="129" id="Note0" textColor="444444" width="341" x="130" y="-21">
+<attr name="text"><![CDATA[h3. Description
+
+Simple data generator used in several "test output" data apps.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="DataGenerator" guiX="214" guiY="142" id="DATA_GENERATOR" recordsNumber="500" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+integer i = 0;
+
+function integer generate() {
+	$out.0.anInteger = i++;
+	$out.0.aDate = randomDate(2024-01-01, 2024-12-31);
+	$out.0.aString = randomString(5, 80);
+	
+	for (integer i = 0; i < 10; ++i) {
+		setStringValue($out.0, "field" + i, randomString(5, 30));
+	}
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SubgraphInput" guiX="50" guiY="-165" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="110" name="0"/>
+</Node>
+<Node guiName="SubgraphOutput" guiX="637" guiY="-165" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="159" name="0"/>
+<Port guiY="229" name="1"/>
+</Node>
+<Edge fromNode="DATA_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+</Phase>
+</Graph>

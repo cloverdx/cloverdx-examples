@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Wed Jul 26 10:48:21 CEST 2017" guiVersion="7.0.0.15" id="1501072174043" licenseCode="Expired" name="09e04 - DummyJob" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameter label="Expected execution status" name="EXECUTION_STATUS" public="true" required="false" value="RANDOM">
+<SingleType allowCustomValues="false" name="simpleEnum" values="FAIL|Fail;SUCCEED|Succeed;RANDOM|Random"/>
+</GraphParameter>
+<GraphParameter label="Delay (milliseconds)" name="DELAY" public="true" required="false" value="10000">
+<attr name="description"><![CDATA[Use zero for random random delay between 2 and 20 seconds.]]></attr>
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Failure probability (percent)" name="FAILURE_PROBABILITY" public="true" value="50">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="326" x="100" y="175">
+<attr name="text"><![CDATA[h3. Description
+
+This is a dummy graph that can be used to test various ways of executing other jobs in CloverETL wihtout having to build complex job hierarchies.
+
+It can simulate a job that always succeeds, always fails or fails at random with certain probability (configured via EXECUTION_STATUS parameter).
+It can also simulate a job that runs for certain amount of time (configured via DELAY parameter).]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="SetJobOutput" guiX="195" guiY="450" id="SET_JOB_OUTPUT" type="SET_JOB_OUTPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+
+	integer delay = str2integer("${DELAY}") : 0; // If the conversion failed, use 0.
+
+	if (delay == 0) {
+		// Zero delay means "pick random delay".
+		delay = randomInteger(2000, 20000);
+	}
+
+	sleep(delay);
+
+	// Determine whether the job should fail or not.
+	string failMsg = null; // null means do not fail
+	switch ("${EXECUTION_STATUS}") {
+		case "SUCCEED":
+			// Nothing needed here.
+			break;
+			
+		case "FAIL":
+			failMsg = "This job failed because you said so.";
+			break;
+		
+		case "RANDOM":
+			number failureProb = (str2double("${FAILURE_PROBABILITY}") : 50.0) / 100.0;
+			if (failureProb < 0.0) {
+				failureProb = 0.0;
+			}
+			if (failureProb > 1.0) {
+				failureProb = 1.0;
+			}
+			failMsg = random() < failureProb ? getFailMessage() : null;
+			break;
+			
+		default:
+			failMsg = "This job failed because it did not know what to do.";
+			break;
+	}
+	
+	if (failMsg != null) {
+		raiseError(failMsg);
+	}
+
+	return ALL;
+}
+
+string[] __MESSAGES = [
+	"the stars did not align properly.",
+	"it was feelin' sad \u2639.",
+	"it does not like to be told what to do.",
+	"it did not get what it wanted.",
+	"life's not fair.",
+	"the small random voice in its processor said so.",
+	"]]>💩<![CDATA[ happens.",
+	"punk's not dead! Yeah!"
+];
+
+function string getFailMessage() {
+	string suffix;
+	if (in(date2str(today(), "MMdd"), ["1224", "1225"]) && random() < 0.8) {
+		suffix = "it is Christmas and it does not like working on holidays. You should get a break too!";
+	} else {
+		suffix = __MESSAGES[randomInteger(0, length(__MESSAGES) - 1)];
+	}
+	return "This job failed because " + suffix;
+}
+]]></attr>
+</Node>
+</Phase>
+</Graph>

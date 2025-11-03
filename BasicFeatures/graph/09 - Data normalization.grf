@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Aug 22 09:52:28 CEST 2017" guiVersion="7.2.0.8" id="1503407953813" licenseCode="CLP1DJAVLI50596644BY" name="10e01 - Data normalization" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="\t" name="PhoneNumber" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="customerId" type="long"/>
+<Field name="order" type="integer"/>
+<Field name="phone" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note0" textColor="444444" width="751" x="150" y="50">
+<attr name="text"><![CDATA[h3. Data Normalization
+
+The example demonstrates the use of the [Normalizer|element://PHONE_NUMBERS] component. An input data file contains customer information including phone numbers. It is possible that some rows contain multiple phone numbers separated by commas. The graph creates output records with customer id and phone number. If a customer has multiple phone numbers there will be one output record for each phone number.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="170" guiY="225" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node guiName="Phone numbers" guiX="370" guiY="225" id="PHONE_NUMBERS" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+string[] phoneNumbers;
+clean();
+
+function integer count() {
+	phoneNumbers = split($in.0.phone, ",");
+	return length(phoneNumbers);
+}
+
+function integer transform(integer i) {
+	$out.0.customerId = $in.0.id;
+	$out.0.order = i;
+	$out.0.phone = trim(phoneNumbers[i]);
+	
+	return OK;
+}
+
+function void clean() {
+	clear(phoneNumbers);
+}
+]]></attr>
+</Node>
+<Node charset="UTF-8" fileURL="${DATAOUT_DIR}/PhoneNumbers.csv" guiName="PhoneNumbers.csv" guiX="570" guiY="225" id="PHONE_NUMBERS_CSV" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="PHONE_NUMBERS:0"/>
+<Edge fromNode="PHONE_NUMBERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="PHONE_NUMBERS_CSV:0"/>
+</Phase>
+</Graph>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="others" created="Thu Oct 31 18:06:29 CET 2019" guiVersion="7.2.0.8" id="1572609723418" licenseCode="Commercial Devel" mediumIconPath="clover:/plugin/com.opensys.clover.mongodb/icons/others/MongoDBExecute" name="MongoDBExecute" nature="subgraph" showComponentDetails="true">
+<Global>
+<outputPorts>
+<singlePort connected="true" name="0"/>
+<singlePort connected="true" keepEdge="false" name="1" required="false"/>
+</outputPorts>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="ConnectionProperties" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="jdbcUrl" type="string"/>
+<Field name="host" type="string"/>
+<Field name="username" type="string"/>
+<Field name="password" type="string"/>
+<Field name="instance" type="string"/>
+<Field name="authenticationDatabase" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record eofAsDelimiter="true" name="FileContent" type="delimited">
+<Field name="content" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="ExecuteScript_RunResult">
+<Record fieldDelimiter="|" name="ScriptExecutionFailResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="stdOut" type="string"/>
+<Field name="errOut" type="string"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="startTime" trim="true" type="date"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="endTime" trim="true" type="date"/>
+<Field name="duration" trim="true" type="long"/>
+<Field name="exitValue" trim="true" type="long"/>
+<Field name="reachedTimeout" trim="true" type="boolean"/>
+<Field name="errException" type="string"/>
+<Field name="errMessage" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="ExecuteScript_RunResult1">
+<Record fieldDelimiter="|" name="ScriptExecutionSuccessResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="stdOut" type="string"/>
+<Field name="errOut" type="string"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="startTime" trim="true" type="date"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="endTime" trim="true" type="date"/>
+<Field name="duration" trim="true" type="long"/>
+<Field name="exitValue" trim="true" type="long"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Connection string" name="CONNECTION_STRING" public="true" required="false">
+<attr name="description"><![CDATA[Example: mongodb://user:pass@host:port/database_name?authSource=admin]]></attr>
+</GraphParameter>
+<GraphParameter label="Externalized connection cfg URL" name="CONNECTION_CFG_URL" public="true">
+<attr name="description"><![CDATA[URL of the MongoDB connection cfg file.]]></attr>
+<SingleType multiple="false" name="file" selectionMode="file_only"/>
+</GraphParameter>
+<GraphParameter label="Script" name="SCRIPT" public="true" required="true">
+<ComponentReference referencedComponent="EXECUTE_SCRIPT" referencedProperty="script"/>
+</GraphParameter>
+<GraphParameter label="Mongo utility full path" name="MONGO" public="true" required="true" secure="false" value="D:/Apps/MongoDB/bin/mongo.exe">
+<SingleType name="string"/>
+</GraphParameter>
+<GraphParameter category="advanced" label="Use TLS" name="TLS" public="true" value="false">
+<SingleType name="bool"/>
+</GraphParameter>
+<GraphParameter category="advanced" label="Quiet mode" name="QUIET_MODE" public="true" value="true">
+<SingleType name="bool"/>
+</GraphParameter>
+<GraphParameter name="TLS_PARAM">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return lowerCase("${TLS}") == "true" ? "--tls --tlsAllowInvalidCertificates" : "";
+}
+]]></attr>
+</GraphParameter>
+<GraphParameter name="QUIET_PARAM">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return lowerCase("${QUIET_MODE}") == "true" ? "--quiet" : "";
+}
+]]></attr>
+</GraphParameter>
+<GraphParameter name="CFG_FILE_ENABLED">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return isBlank(getParamValue("CONNECTION_CFG_URL")) ? "disabled" : "enabled";
+}
+]]></attr>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node enabled="${CFG_FILE_ENABLED}" guiName="Cfg to URL" guiX="220" guiY="275" id="CFG_TO_URL" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	string[] lines = split($in.0.content, "[\n\r]");
+	map[string, string] config;
+	
+	foreach (string line: lines) {
+		line = trim(line);
+		line = replace(line, "\\\\(.)" , "$1"); // Undo escapes from URL
+		if (startsWith(line, "#") || isBlank(line)) {
+			continue;
+		}
+		
+		string[] parts = split(line, "=", 2);
+		config[parts[0]] = parts[1];
+	}
+	
+	$out.0.host = config["host"];
+	$out.0.username = config["username"];
+	$out.0.password = config["password"];
+	$out.0.instance = config["instance"];
+	$out.0.authenticationDatabase = config["authenticationDatabase"];
+	
+	// mongodb://mongoadm:mongoadm123@127.0.0.1:37017/mongodemo?authSource=admin
+	
+	$out.0.jdbcUrl = "mongodb://mongoadm:" + escapeUrlFragment($out.0.password) + "@" + $out.0.host + "/" + $out.0.instance + "?authSource=" + $out.0.authenticationDatabase;
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Concatenate" guiX="420" guiY="275" id="CONCATENATE" type="CONCATENATE"/>
+<Node guiName="ExecuteScript" guiX="820" guiY="275" id="EXECUTE_SCRIPT" scriptFileExtension="js" type="EXECUTE_SCRIPT">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.interpreter = "${MONGO} " + $in.0.jdbcUrl + "${TLS_PARAM} ${QUIET_PARAM} ${}";
+
+	return ALL;
+}
+]]></attr>
+<attr name="script"><![CDATA[${SCRIPT}]]></attr>
+</Node>
+<Node debugOutput="true" guiName="Fail" guiX="1220" guiY="425" id="FAIL" type="FAIL"/>
+<Node guiName="GetJobInput" guiX="20" guiY="450" id="GET_JOB_INPUT" type="GET_JOB_INPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.jdbcUrl = getParamValue("CONNECTION_STRING");
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="${CFG_FILE_ENABLED}" fileURL="${CONNECTION_CFG_URL}" guiName="Read config file" guiX="20" guiY="275" id="READ_CONFIG_FILE" type="FLAT_FILE_READER"/>
+<Node guiName="SubgraphInput" guiX="-80" guiY="-2" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="110" name="0"/>
+</Node>
+<Node guiName="SubgraphOutput" guiX="1145" guiY="15" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="292" name="0"/>
+<Port guiY="342" name="1"/>
+<Port guiY="517" name="2"/>
+</Node>
+<Node debugOutput="true" guiName="Success" guiX="1220" guiY="275" id="SUCCESS" type="SUCCESS"/>
+<Node equalNULL="true" guiName="Top" guiX="620" guiY="275" id="TOP" keep="first" noDupRecord="1" sorted="false" type="DEDUP"/>
+<Edge fromNode="CFG_TO_URL:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CONCATENATE:0"/>
+<Edge fromNode="CONCATENATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="TOP:0"/>
+<Edge fromNode="EXECUTE_SCRIPT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="ExecuteScript_RunResult1" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+<Edge fromNode="EXECUTE_SCRIPT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 1 (in)" metadata="ExecuteScript_RunResult" outPort="Port 1 (error)" toNode="SUBGRAPH_OUTPUT:1"/>
+<Edge fromNode="GET_JOB_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CONCATENATE:1"/>
+<Edge fromNode="READ_CONFIG_FILE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (output)" toNode="CFG_TO_URL:0"/>
+<Edge fromNode="SUBGRAPH_OUTPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUCCESS:0"/>
+<Edge fromNode="SUBGRAPH_OUTPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="FAIL:0"/>
+<Edge fromNode="TOP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 0 (unique)" toNode="EXECUTE_SCRIPT:0"/>
+</Phase>
+</Graph>

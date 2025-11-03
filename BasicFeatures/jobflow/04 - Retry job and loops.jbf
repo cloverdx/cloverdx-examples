@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu Jul 27 11:28:34 CEST 2017" guiVersion="7.2.0.8" id="1501150077535" licenseCode="CLP1DJAVLI50596644BY" name="09e05 - Retry job" nature="jobflow" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="LoopControl" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="currentRetryCounter" type="integer"/>
+<Field name="shouldContinue" type="boolean"/>
+<Field name="lastJobStatus" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="RunStatus" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="runId" trim="true" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="startTime" trim="true" type="date"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="endTime" trim="true" type="date"/>
+<Field name="duration" trim="true" type="long"/>
+<Field name="status" type="string"/>
+<Field name="errException" type="string"/>
+<Field name="errMessage" type="string"/>
+<Field name="errComponent" type="string"/>
+<Field name="errComponentType" type="string"/>
+<Field name="currentRetryCounter" trim="true" type="integer"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Retry count" name="RETRY_COUNT" public="true" value="5">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Child job failure probability (in %)" name="JOB_FAILURE_PROBABILITY" public="true" value="80">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="225" id="Note0" textColor="444444" width="751" x="175" y="-100">
+<attr name="text"><![CDATA[h3. Retry job and loops
+
+The example deomstrates the use of the Loop component to introduce iteratation in job orchestration.
+
+The loop will run as long as the [Loop body|element://LOOP_BODY] keeps failing. The body of the loop can contain any number of components and can return any data. The [Check status|element://CHECK_STATUS] component is responsible for figuring out whether another loop is needed or not. In this case it looks at the status of the Loop body execution and stops the loop once it is successful or once 5 retries have been reached.
+
+Job parameters {{RETRY_COUNT}} and {{JOB_FAILURE_PROBABILITY}} allow you to control how often the Loop body fails and how many times to retry. Play with different values to see the loop behavior.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Check status" guiX="795" guiY="450" id="CHECK_STATUS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.lastJobStatus = $in.0.status;
+	$out.0.shouldContinue = $in.0.currentRetryCounter < ${RETRY_COUNT} && $in.0.status != "FINISHED_OK";
+	$out.0.currentRetryCounter = $in.0.currentRetryCounter + ($out.0.shouldContinue ? 1 : 0);
+
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node errorMessage="Job execution failed during all retries." guiName="Fail" guiX="795" guiY="300" id="FAIL" type="FAIL"/>
+<Node guiName="GetJobInput" guiX="195" guiY="275" id="GET_JOB_INPUT" type="GET_JOB_INPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.currentRetryCounter = 1;
+	$out.0.shouldContinue = true;
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Loop" guiX="395" guiY="275" id="LOOP" type="LOOP">
+<attr name="whileCondition"><![CDATA[//#CTL2
+$in.0.shouldContinue == true]]></attr>
+</Node>
+<Node guiName="Loop body" guiX="595" guiY="450" id="LOOP_BODY" jobURL="${GRAPH_DIR}/misc/DummyJob.grf" redirectErrorOutput="true" stopOnFail="false" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.EXECUTION_STATUS = "RANDOM";
+	$out.1.DELAY = "100";
+	$out.1.FAILURE_PROBABILITY = "${JOB_FAILURE_PROBABILITY}";
+
+	return ALL;
+}
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.1.*;
+	$out.0.currentRetryCounter = $in.0.currentRetryCounter;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Succeeded?" guiX="595" guiY="275" id="SUCCEEDED" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.lastJobStatus == "FINISHED_OK"]]></attr>
+</Node>
+<Node guiName="Success" guiX="795" guiY="150" id="SUCCESS" type="SUCCESS">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.message = "Job succeeded after " + $in.0.currentRetryCounter + " retries.";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="CHECK_STATUS:0" guiBendpoints="952:475|952:610|377:610|377:325" guiLocks="952|377|610" guiRouter="Manual" id="Edge4" inPort="Port 1 (back from loop)" outPort="Port 0 (out)" toNode="LOOP:1"/>
+<Edge fromNode="GET_JOB_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (input token)" metadata="Metadata0" outPort="Port 0 (out)" toNode="LOOP:0"/>
+<Edge fromNode="LOOP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (end of loop)" toNode="SUCCEEDED:0"/>
+<Edge fromNode="LOOP:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 1 (continue loop)" toNode="LOOP_BODY:0"/>
+<Edge fromNode="LOOP_BODY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="CHECK_STATUS:0"/>
+<Edge fromNode="SUCCEEDED:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="SUCCESS:0"/>
+<Edge fromNode="SUCCEEDED:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 1 (rejected)" toNode="FAIL:0"/>
+</Phase>
+</Graph>

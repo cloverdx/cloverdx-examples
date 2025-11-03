@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Wed Jul 26 10:48:21 CEST 2017" guiVersion="7.2.0.8" id="1501082466220" licenseCode="Expired" name="09e03b - Count visitors async" nature="jobflow" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="726" x="150" y="25">
+<attr name="text"><![CDATA[h3. Count Visitors Async
+
+The example joblow orchestrates the execution of the Count Unique Visitors graph. It scans the data-out subdirectory abnd sends any zip file it finds to Count Unique Visitors. In this case, Count Unique Visitors is run asynchronously and in parallel. Each instance starts and immediately returns a status. The [Monitor Workers|element://MONITOR_WORKERS] component monitors each parallel execution. It emits a token for each monitored instance once that instance has completed.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node executionType="asynchronous" guiName="Count visitors" guiX="345" guiY="225" id="COUNT_VISITORS" jobURL="${GRAPH_DIR}/08a - Count unique visitors.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = "zip:(" + $in.0.URL + ")#log.txt";
+	$out.1.OUTPUT_FILE_URL = "${DATAOUT_DIR}/" + getFileNameWithoutExtension($in.0.URL) + "-visits.txt";
+	$out.0.executionLabel = $in.0.name;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/*.zip" guiName="Find logs" guiX="145" guiY="225" id="FIND_LOGS" type="LIST_FILES"/>
+<Node guiName="Monitor workers" guiX="545" guiY="225" id="MONITOR_WORKERS" jobURL="${GRAPH_DIR}/08a - Count unique visitors.grf" type="MONITOR_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.runId = $in.0.runId;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Success" guiX="745" guiY="225" id="SUCCESS" type="SUCCESS"/>
+<Edge fromNode="COUNT_VISITORS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="MONITOR_WORKERS:0"/>
+<Edge fromNode="FIND_LOGS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="COUNT_VISITORS:0"/>
+<Edge fromNode="MONITOR_WORKERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUCCESS:0"/>
+</Phase>
+</Graph>

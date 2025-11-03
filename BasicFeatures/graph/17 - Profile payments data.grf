@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue May 31 15:09:48 CEST 2022" guiVersion="7.2.0.8" id="1654080373138" licenseCode="CLP1DCLOVE94730539BY" name="17 - Profile payments data" showComponentDetails="true">
+<Global>
+<Metadata com.cloveretl.profiler.engine.components.mapping.metrics="mapping.metrics" id="Metadata0">
+<Record com.cloveretl.profiler.engine.components.mapping.metrics="mapping.metrics" fieldDelimiter="," name="RunResults" recordDelimiter="\n" type="delimited">
+<Field name="inputRecordCount" trim="true" type="long"/>
+<Field name="paymentId__null_cnt" trim="true" type="long"/>
+<Field name="orderId__null_cnt" trim="true" type="long"/>
+<Field name="customerId__null_cnt" trim="true" type="long"/>
+<Field name="paymentType__null_cnt" trim="true" type="long"/>
+<Field containerType="map" name="paymentType__freq_histogram" trim="true" type="long"/>
+<Field length="12" name="paidAmount__min" scale="2" trim="true" type="decimal"/>
+<Field name="paidAmount__median" trim="true" type="number"/>
+<Field length="12" name="paidAmount__max" scale="2" trim="true" type="decimal"/>
+<Field name="paidAmount__null_cnt" trim="true" type="long"/>
+<Field containerType="map" name="paidAmount__interval_histogram" trim="true" type="long"/>
+<Field name="paymentDate__min" trim="true" type="date"/>
+<Field name="paymentDate__max" trim="true" type="date"/>
+<Field name="paymentDate__null_cnt" trim="true" type="long"/>
+<Field containerType="map" name="paymentDate__interval_histogram" trim="true" type="long"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="926" x="129" y="46">
+<attr name="text"><![CDATA[h3. Profile payments
+
+The example demonstrates use of the ProfilerProbe filter component to perfrom statistical quality assessment of incoming data.
+
+Payments data (read by a subgraph) is passed to a [Profiler Probe|element://PROFILER_PROBE] component which performs statistical data quality tests including min, max and average length or numeric value, null percentage and value frequency counts.  Original records are emitted on port 0.  Statistics are emitted on port 1.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Data profile" guiX="545" guiY="375" id="DATA_PROFILE" type="TRASH"/>
+<Node guiName="Payments" guiX="545" guiY="225" id="PAYMENTS" type="TRASH"/>
+<Node __INPUT_FILE_URL="${DATAIN_DIR}/Payments-*.csv" guiName="PaymentsReader" guiX="145" guiY="225" id="PAYMENTS_READER" jobURL="${SUBGRAPH_DIR}/PaymentsReader.sgrf" type="SUBGRAPH"/>
+<Node guiName="ProfilerProbe" guiX="345" guiY="225" id="PROFILER_PROBE" persistResults="false" type="PROFILER_PROBE">
+<attr name="metrics"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<listOfFunctions>
+    <metadataField name="paymentId" type="long">
+        <function name="null_cnt"/>
+    </metadataField>
+    <metadataField name="orderId" type="long">
+        <function name="null_cnt"/>
+    </metadataField>
+    <metadataField name="customerId" type="long">
+        <function name="null_cnt"/>
+    </metadataField>
+    <metadataField name="paymentType" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+        <function name="freq_histogram" MaxUniqueValues="10000"/>
+    </metadataField>
+    <metadataField name="paidAmount" type="decimal">
+        <function name="min"/>
+        <function name="median"/>
+        <function name="max"/>
+        <function name="null_cnt"/>
+        <function name="interval_histogram" ShowOuter="" MinValue="" BucketsCount="" MaxValue=""/>
+    </metadataField>
+    <metadataField name="paymentDate" type="date">
+        <function name="min"/>
+        <function name="max"/>
+        <function name="null_cnt"/>
+        <function name="interval_histogram" StartDate="" ShowOuter="" EndDate="" Interval=""/>
+    </metadataField>
+</listOfFunctions>
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.inputRecordCount = $in.0.inputRecordCount;
+	$out.1.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="PAYMENTS_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="PROFILER_PROBE:0"/>
+<Edge fromNode="PROFILER_PROBE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (copy of input)" toNode="PAYMENTS:0"/>
+<Edge fromNode="PROFILER_PROBE:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 1 (results)" toNode="DATA_PROFILE:0"/>
+</Phase>
+</Graph>

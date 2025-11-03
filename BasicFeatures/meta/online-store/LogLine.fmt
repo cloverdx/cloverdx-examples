@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="\t" name="LogLine" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Field name="clientIp" type="string"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="timestamp" timeZone="UTC" type="date"/>
+<Field name="url" type="string"/>
+<Field name="httpResponse" type="integer"/>
+<Field name="userAgent" type="string"/>
+</Record>

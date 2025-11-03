@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Wed Jul 26 10:48:21 CEST 2017" guiVersion="7.2.0.8" id="1501080836430" licenseCode="Expired" name="09e03 - Count unique visitors" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/LogLine.fmt" id="Metadata0"/>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="\t" name="UniqueVisits" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Timestamp" name="timestamp" type="string"/>
+<Field label="Visits" name="visits" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="Visit" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="UID" type="byte"/>
+<Field name="timestamp" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Input File URL" name="INPUT_FILE_URL" public="true" required="false" value="zip:(${DATAOUT_DIR}/cloverdx.com.zip)!log.txt">
+<ComponentReference referencedComponent="READ_LOG" referencedProperty="fileURL"/>
+</GraphParameter>
+<GraphParameter label="Output File URL" name="OUTPUT_FILE_URL" public="true" required="false" value="${DATAOUT_DIR}/Visits.txt">
+<ComponentReference referencedComponent="WRITE_REPORT" referencedProperty="fileURL"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note0" textColor="444444" width="926" x="100" y="25">
+<attr name="text"><![CDATA[h3. Count unique visitors
+
+_Count unique visitors.grf_ reads a web log and generates a summary report of traffic by month.
+
+* A [Flatfile Reader|element://READ_LOG] reads the input file specified by the parameter *INPUT_FILE_URL*. Here the default value for trhe input file name specifies the zip protocol. The component opens the zip and looks for a file called log.txt.
+* A [Map|element://UID_AND_TIMESTAMP] enriches the inpuit stream by creating a UID and adding a year-month representation of the log entry time.
+* An [Aggregate|element://AGGREGATE] component counts the unique vists by month
+* A [Sort|element://EXT_SORT] component sorts the monthly counts by date
+* A [Flatfile Writer|element://WRITE_REPORT] writes the report to a file specified by the parameter *OUTPUT_FILE_URL*]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node aggregateKey="timestamp" equalNULL="true" guiName="Aggregate" guiX="495" guiY="275" id="AGGREGATE" mapping="$timestamp:=$timestamp;$visits:=countunique($UID);" sorted="false" type="AGGREGATE"/>
+<Node guiName="ExtSort" guiX="695" guiY="275" id="EXT_SORT" sortKey="timestamp(a)" type="EXT_SORT"/>
+<Node fileURL="${INPUT_FILE_URL}" guiName="Read log" guiX="95" guiY="275" id="READ_LOG" type="FLAT_FILE_READER"/>
+<Node guiName="UID and timestamp" guiX="295" guiY="275" id="UID_AND_TIMESTAMP" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.UID = sha256($in.0.clientIp + $in.0.userAgent);
+	$out.0.timestamp = date2str($in.0.timestamp, "yyyyMM");
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${OUTPUT_FILE_URL}" guiName="Write report" guiX="895" guiY="275" id="WRITE_REPORT" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="EXT_SORT:0"/>
+<Edge fromNode="EXT_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="WRITE_REPORT:0"/>
+<Edge fromNode="READ_LOG:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="UID_AND_TIMESTAMP:0"/>
+<Edge fromNode="UID_AND_TIMESTAMP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="AGGREGATE:0"/>
+</Phase>
+</Graph>

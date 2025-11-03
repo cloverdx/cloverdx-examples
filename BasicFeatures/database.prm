@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GraphParameters>
+<GraphParameter name="DATABASE" value="postgresql">
+<SingleType allowCustomValues="true" name="simpleEnum" values="mysql|MySQL;oracle|Oracle;postgresql|PostgreSQL"/>
+</GraphParameter>
+<GraphParameter name="BATCH_SIZE" value="10000"/>
+<GraphParameter name="FETCH_SIZE" value="${BATCH_SIZE}"/>
+<GraphParameter name="COMMIT_SIZE" value="20000"/>
+</GraphParameters>

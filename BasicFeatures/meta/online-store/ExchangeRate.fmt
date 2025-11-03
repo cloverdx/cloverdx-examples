@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter=";" name="ExchangeRate" recordDelimiter="\r\n" type="delimited">
+<Field name="base" type="string"/>
+<Field name="target" type="string"/>
+<Field length="24" name="rate" scale="12" type="decimal"/>
+</Record>

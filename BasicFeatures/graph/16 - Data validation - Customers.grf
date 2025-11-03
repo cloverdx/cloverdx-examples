@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Wed Jun 02 10:56:14 CEST 2021" guiVersion="7.2.0.8" id="1622710783308" licenseCode="CLP1DCLOVE94730539BY" name="16 - Data validation - Customers" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata1"/>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="\t" name="CustomersInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="string"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field name="accountCreated" type="string"/>
+<Field eofAsDelimiter="true" name="isActive" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="\t" name="CustomersInputWithPhone" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="string"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone1" type="string"/>
+<Field name="phone2" type="string"/>
+<Field name="phoneAll" type="string"/>
+<Field name="accountCreated" type="string"/>
+<Field eofAsDelimiter="true" name="isActive" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Validator_ValidationResult">
+<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="recordNo" trim="true" type="long"/>
+<Field name="validationMessage" type="string"/>
+<Field name="ruleName" type="string"/>
+<Field name="ruleType" type="string"/>
+<Field name="fieldName" type="string"/>
+<Field name="fieldValue" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Validator_ValidationResult1">
+<Record fieldDelimiter="|" name="ValidationResultSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="validationMessage" type="string"/>
+<Field name="ruleName" type="string"/>
+<Field name="ruleType" type="string"/>
+<Field name="fieldName" type="string"/>
+<Field name="errorCount" type="long"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note0" textColor="444444" width="926" x="150" y="25">
+<attr name="text"><![CDATA[h3. Data Validation - Customers
+
+The example demonstrates use of the Validator component to assess quality of incoming data.
+
+A [Validator|element://VALIDATOR] component contains a series of data quality checks including field length, field non-null and phone number and date syntax. Valid records are emitted on port 0, invalid record information is emitted on port 1 ]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node aggregateKey="validationMessage;ruleName;fieldName;ruleType" equalNULL="true" guiName="Aggregate" guiX="1145" guiY="550" id="AGGREGATE" mapping="$validationMessage:=$validationMessage;$ruleName:=$ruleName;$ruleType:=$ruleType;$fieldName:=$fieldName;$errorCount:=count();" sorted="false" type="AGGREGATE"/>
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="145" guiY="225" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node fileURL="${DATAOUT_DIR}/CustomerValidationErrors.txt" guiName="CustomerValidationErrors.txt" guiX="1245" guiY="375" id="CUSTOMER_VALIDATION_ERRORS_TXT" type="FLAT_FILE_WRITER"/>
+<Node guiName="Reformat" guiX="745" guiY="375" id="REFORMAT" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.fieldName = toString($in.0.validatedFieldNames);
+	$out.0.fieldValue = toString($in.0.validatedValues);
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SimpleCopy" guiX="945" guiY="375" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="Split phones" guiX="345" guiY="225" id="SPLIT_PHONES" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	splitPhones();
+
+	return ALL;
+}
+
+function void splitPhones() {
+	string phoneStr = trim($in.0.phone);
+	if (isEmpty(phoneStr)) {
+		return;
+	}
+	
+	string[] phones = split(phoneStr, ",");
+	
+	if (length(phones) >= 1) {
+		$out.0.phone1 = trim(phones[0]);
+	}
+
+	if (length(phones) >= 2) {
+		$out.0.phone2 = trim(phones[1]);
+	}
+
+	$out.0.phoneAll = phoneStr;
+}
+]]></attr>
+</Node>
+<Node guiName="Validation report" guiX="1320" guiY="550" id="VALIDATION_REPORT" type="TRASH"/>
+<Node guiName="Validator" guiX="545" guiY="225" id="VALIDATOR" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="false" inputField="" name="Copy all fields by name" outputField=""/>
+        <group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="Name" statusCode="">
+            <children>
+                <stringLength acceptEmpty="false" customRejectMessage="" description="" enabled="true" inputField="fullName" max="100" min="5" name="String Length" outputField="fullName" trimInput="true">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                </stringLength>
+                <patternMatch acceptEmpty="false" customRejectMessage="" description="" enabled="true" ignoreCase="false" inputField="fullName" name="Pattern Match" outputField="fullName" trimInput="false">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                    <pattern>[^ ]+ .+</pattern>
+                </patternMatch>
+            </children>
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+            <imports/>
+        </group>
+        <group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="Address" statusCode="">
+            <children>
+                <nonEmptyField customRejectMessage="" description="" enabled="true" goal="NONEMPTY" inputField="streetAddress" name="Empty/Nonempty field" outputField="streetAddress" trimInput="false"/>
+                <nonEmptyField customRejectMessage="" description="" enabled="true" goal="NONEMPTY" inputField="city" name="Empty/Nonempty field1" outputField="city" trimInput="false"/>
+                <nonEmptyField customRejectMessage="" description="" enabled="true" goal="NONEMPTY" inputField="state" name="Empty/Nonempty field2" outputField="state" trimInput="false"/>
+                <nonEmptyField customRejectMessage="" description="" enabled="true" goal="NONEMPTY" inputField="country" name="Empty/Nonempty field3" outputField="country" trimInput="false"/>
+                <nonEmptyField customRejectMessage="" description="" enabled="true" goal="NONEMPTY" inputField="postalCode" name="Empty/Nonempty field4" outputField="postalCode" trimInput="false"/>
+            </children>
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+            <imports/>
+        </group>
+        <email acceptEmpty="true" allowGroupAddresses="false" allowNoTLD="false" customRejectMessage="" description="" enabled="true" inputField="email" name="Email" outputField="email" plainAddress="false" trimInput="true">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </email>
+        <group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="Phones" statusCode="">
+            <children>
+                <phoneNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="phone2" name="phone2" outputField="phone" outputFormat="INTERNATIONAL" region="US - United States (+1)" trimInput="false">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                    <pattern/>
+                </phoneNumber>
+                <phoneNumber acceptEmpty="false" customRejectMessage="" description="" enabled="true" inputField="phone1" name="phone1" outputField="phone" outputFormat="INTERNATIONAL" region="US - United States (+1)" trimInput="false">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                    <pattern/>
+                </phoneNumber>
+            </children>
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+            <imports/>
+        </group>
+        <isDate acceptEmpty="false" customRejectMessage="" description="" enabled="true" inputField="accountCreated" name="Is Date" outputField="accountCreated" trimInput="false">
+            <languageSetting dateFormat="yyyy-MM-dd" locale="en.US" numberFormat="" timezone=""/>
+        </isDate>
+        <if conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="IF" statusCode="">
+            <children>
+                <enumMatch acceptEmpty="false" customRejectMessage="" description="" enabled="true" ignoreCase="true" inputField="isActive" name="Enum Match" outputField="" trimInput="true" useType="STRING">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                    <values>
+                        <value>true</value>
+                        <value>false</value>
+                    </values>
+                </enumMatch>
+                <then conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="THEN" statusCode="">
+                    <children>
+                        <transform customRejectMessage="" description="" enabled="true" inputField="" name="Transform" outputField="">
+                            <transform><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.isActive = trim(lowerCase($in.0.isActive)) == "true";
+
+	return ALL;
+}
+]]]]><![CDATA[></transform>
+                        </transform>
+                    </children>
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                    <imports/>
+                </then>
+                <else conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="ELSE" statusCode="">
+                    <children/>
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                    <imports/>
+                </else>
+            </children>
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+            <imports/>
+        </if>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <imports/>
+</group>
+]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Valid records" guiX="745" guiY="225" id="VALID_RECORDS" type="SUCCESS"/>
+<Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Validator_ValidationResult1" outPort="Port 0 (out)" toNode="VALIDATION_REPORT:0"/>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="SPLIT_PHONES:0"/>
+<Edge debugMode="all" fromNode="REFORMAT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Validator_ValidationResult" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CUSTOMER_VALIDATION_ERRORS_TXT:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="AGGREGATE:0"/>
+<Edge fromNode="SPLIT_PHONES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="VALIDATOR:0"/>
+<Edge fromNode="VALIDATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (valid)" toNode="VALID_RECORDS:0"/>
+<Edge fromNode="VALIDATOR:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 1 (invalid)" toNode="REFORMAT:0"/>
+</Phase>
+</Graph>

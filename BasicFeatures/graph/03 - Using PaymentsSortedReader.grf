@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Jun 05 09:51:14 CEST 2017" guiVersion="7.2.0.8" id="1496673237922" licenseCode="CLP1DJAVLI10291612BY" name="06e03 - Using PaymentsSortedReader" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note0" textColor="444444" width="525" x="25" y="-150">
+<attr name="text"><![CDATA[h3. Subgraph reading data in +sorted+ mode
+
+Use a subgraph to read and validate payments files. Configure the subgraph to sort data by paymentDate]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note1" textColor="444444" width="525" x="700" y="-150">
+<attr name="text"><![CDATA[h3. Subgraph reading data in +unsorted+ mode
+
+Use the same subgraph to read and validate payments files. Do not sort the input so the output data is ordered as it is in the input files.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAOUT_DIR}/CleanPayments.csv" guiName="Clean payments" guiX="370" guiY="25" id="CLEAN_PAYMENTS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/CleanPayments.csv" guiName="Clean payments" guiX="1045" guiY="25" id="CLEAN_PAYMENTS1" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node __INPUT_FILE_URL="${DATAIN_DIR}/Payments-*.csv" __SORT_KEY="paymentDate(a)" guiName="PaymentsSortedReader" guiX="70" guiY="25" id="PAYMENTS_SORTED_READER" jobURL="${SUBGRAPH_DIR}/PaymentsSortedReader.sgrf" type="SUBGRAPH"/>
+<Node __INPUT_FILE_URL="${DATAIN_DIR}/Payments-*.csv" guiName="PaymentsSortedReader" guiX="745" guiY="25" id="PAYMENTS_SORTED_READER1" jobURL="${SUBGRAPH_DIR}/PaymentsSortedReader.sgrf" type="SUBGRAPH"/>
+<Node fileURL="${DATAOUT_DIR}/PaymentErrors.csv" guiName="Payment errors" guiX="370" guiY="200" id="PAYMENT_ERRORS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/PaymentErrors.csv" guiName="Payment errors" guiX="1045" guiY="200" id="PAYMENT_ERRORS1" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="PAYMENTS_SORTED_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CLEAN_PAYMENTS:0"/>
+<Edge fromNode="PAYMENTS_SORTED_READER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="PAYMENT_ERRORS:0"/>
+<Edge fromNode="PAYMENTS_SORTED_READER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CLEAN_PAYMENTS1:0"/>
+<Edge fromNode="PAYMENTS_SORTED_READER1:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="PAYMENT_ERRORS1:0"/>
+</Phase>
+</Graph>

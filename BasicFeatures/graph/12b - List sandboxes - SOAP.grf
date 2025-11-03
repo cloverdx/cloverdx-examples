@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Sep 05 09:50:08 CEST 2017" guiVersion="7.2.0.8" id="1504621619273" licenseCode="CLP1DJAVLI50596644BY" name="12e03 - List sandboxes" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="Credentials" recordDelimiter="\r\n" type="delimited">
+<Field name="userName" type="string"/>
+<Field name="password" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="Sandbox" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="code" type="string"/>
+<Field name="name" type="string"/>
+<Field name="rootPath" type="string"/>
+<Field name="ownerUserName" type="string"/>
+<Field name="distributionType" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="|" name="SessionToken" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Field name="sessionToken" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="CloverETL Server URL" name="CLOVERETL_SERVER_URL" public="true" value="http://localhost:8080/clover"/>
+<GraphParameter label="User name" name="USER_NAME" public="true" value="clover"/>
+<GraphParameter label="Password" name="PASSWORD" public="true" value="clover"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="876" x="75" y="25">
+<attr name="text"><![CDATA[h3. List Sandboxes - SOAP
+
+This example demonstrates interaction with a SOAP Web service using the WebServiceClient component. For convenience, the SOAP endpoint is a CloverDX Server, which provides a SOAP based administration API. There are three SOAP calls in this job.
+* [Login|element://LOGIN] is passed user credentials and retuirns a session token
+* [GetSandboxes|element://GET_SANDBOXES] is passed the session token and returns a list of sandboxes on the target CloverDX Server
+* [Logout|element://LOGOUT] terminates the session. Note Logout runs in phase 5 of this job so it it the last component to execute. ]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="GetJobInput" guiX="45" guiY="325" id="GET_JOB_INPUT" type="GET_JOB_INPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.userName = "${USER_NAME}";
+	$out.0.password = "${PASSWORD}";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="GetSandboxes" guiX="845" guiY="250" id="GET_SANDBOXES" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#GetSandboxes" type="WEB_SERVICE_CLIENT" wsdlURL="${CLOVERETL_SERVER_URL}/webservice?wsdl">
+<attr name="requestStructure"><![CDATA[<clov:GetSandboxes xmlns:clov="http://server.cloveretl.com/CloverServerWS/">
+  <sessionToken>$sessionToken</sessionToken>
+</clov:GetSandboxes>
+
+]]></attr>
+<attr name="responseMapping"><![CDATA[<Mappings>
+	<Mapping element="Clov:GetSandboxesResponse">
+		<Mapping element="sandboxes" outPort="0">
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+<attr name="namespaceBindings"><![CDATA[Clov=http://server.cloveretl.com/CloverServerWS/
+incl=http://www.w3.org/2004/08/xop/include
+XMLS=http://www.w3.org/2001/XMLSchema]]></attr>
+</Node>
+<Node guiName="Login" guiX="245" guiY="325" id="LOGIN" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#Login" type="WEB_SERVICE_CLIENT" wsdlURL="${CLOVERETL_SERVER_URL}/webservice?wsdl">
+<attr name="requestStructure"><![CDATA[<clov:Login xmlns:clov="http://server.cloveretl.com/CloverServerWS/">
+  <username>$userName</username>
+  <password>$password</password>
+</clov:Login>
+
+]]></attr>
+<attr name="responseMapping"><![CDATA[<Mappings>
+	<Mapping element="Clov:LoginResponse">
+		<Mapping element="session" outPort="0">
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+<attr name="namespaceBindings"><![CDATA[Clov=http://server.cloveretl.com/CloverServerWS/
+incl=http://www.w3.org/2004/08/xop/include
+XMLS=http://www.w3.org/2001/XMLSchema]]></attr>
+</Node>
+<Node errorMessage="Unable to login: check your user name and password." guiName="Login fail" guiX="645" guiY="475" id="LOGIN_FAIL" type="FAIL"/>
+<Node guiName="SimpleCopy" guiX="645" guiY="325" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="Success" guiX="1045" guiY="250" id="SUCCESS" type="SUCCESS"/>
+<Node guiName="Valid token?" guiX="445" guiY="325" id="VALID_TOKEN" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.sessionToken != null]]></attr>
+</Node>
+<Edge fromNode="GET_JOB_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (request)" metadata="Metadata0" outPort="Port 0 (out)" toNode="LOGIN:0"/>
+<Edge fromNode="GET_SANDBOXES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (response)" toNode="SUCCESS:0"/>
+<Edge fromNode="LOGIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata7" outPort="Port 0 (response)" toNode="VALID_TOKEN:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (request)" outPort="Port 0 (out)" toNode="GET_SANDBOXES:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (request)" outPort="Port 1 (out)" toNode="LOGOUT:0"/>
+<Edge fromNode="VALID_TOKEN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="SIMPLE_COPY:0"/>
+<Edge fromNode="VALID_TOKEN:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 1 (rejected)" toNode="LOGIN_FAIL:0"/>
+</Phase>
+<Phase number="5">
+<Node guiName="Logout" guiX="845" guiY="400" id="LOGOUT" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#Logout" type="WEB_SERVICE_CLIENT" wsdlURL="${CLOVERETL_SERVER_URL}/webservice?wsdl">
+<attr name="requestStructure"><![CDATA[<clov:Logout xmlns:clov="http://server.cloveretl.com/CloverServerWS/">
+  <sessionToken>$sessionToken</sessionToken>
+</clov:Logout>
+
+]]></attr>
+<attr name="responseMapping"><![CDATA[<Mappings>
+</Mappings>
+]]></attr>
+<attr name="namespaceBindings"><![CDATA[Clov=http://server.cloveretl.com/CloverServerWS/
+incl=http://www.w3.org/2004/08/xop/include
+XMLS=http://www.w3.org/2001/XMLSchema]]></attr>
+</Node>
+</Phase>
+</Graph>

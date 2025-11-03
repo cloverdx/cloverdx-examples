@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Sun Nov 27 10:51:46 CET 2016" guiVersion="7.2.0.8" id="1480332762684" licenseCode="CLP1DJAVLI67717532BY" name="GenerateCustomers" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/common/StateCode.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="\t" name="AreaCode" recordDelimiter="\r\n" type="delimited">
+<Field name="stateName" type="string"/>
+<Field name="areaCodes" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata4">
+<Record fieldDelimiter="\t" name="AreaCodeList" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="stateName" type="string"/>
+<Field name="stateCode" type="string"/>
+<Field containerType="list" name="areaCodes" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="\t" name="CustomerExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="long"/>
+<Field name="randomOrder" type="long"/>
+<Field name="firstName" type="string"/>
+<Field name="middleInitial" type="string"/>
+<Field name="lastName" type="string"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="accountCreated" type="date"/>
+<Field name="isActive" type="boolean"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Number of customers to generate" name="CUSTOMER_COUNT" public="true" required="true" value="20000">
+<ComponentReference referencedComponent="GENERATE_CUSTOMER_NAMES" referencedProperty="__CUSTOMER_COUNT"/>
+</GraphParameter>
+<GraphParameter label="Customers with middle name (percent)" name="MIDDLE_NAME_PERCENT" public="true" required="true" value="80">
+<ComponentReference referencedComponent="GENERATE_CUSTOMER_NAMES" referencedProperty="__MIDDLE_NAME_PERCENT"/>
+</GraphParameter>
+<GraphParameter label="Inactive accounts (percent)" name="PERCENT_INACTIVE_ACCOUNTS" public="true" required="true" value="25">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameter label="Percentage of random emails" name="RANDOM_EMAIL_PERCENT" public="true" required="true" value="1">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameter label="Percentage of emails with numeric suffixes" name="EMAIL_NUMERIC_SUFFIX_PERCENT" public="true" required="true" value="5">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameter label="Oldest acccount date" name="OLDEST_ACCOUNT_DATE" public="true" required="true" value="2010-01-01">
+<SingleType format="yyyy-MM-dd" name="datetime"/>
+</GraphParameter>
+<GraphParameter label="Duplicate records (percent)" name="DUPLICATE_RECORDS_PERCENT" public="true" value="3">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<LookupTable charset="UTF-8" id="LookupTable0" initialSize="512" key="stateCode" metadata="Metadata4" name="AreaCodesByStateLkp" type="simpleLookup"/>
+<LookupTable fileURL="${LOOKUP_DIR}/USAStateCodes.txt" id="LookupTable1" initialSize="512" key="name" metadata="Metadata2" name="StateCodeByNameLkp" type="simpleLookup"/>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="1076" x="75" y="25">
+<attr name="text"><![CDATA[h3. Generate Customers
+
+This graph creates a customers.csv file used by other examples in this project. It calls two lower level graphss to generate customer names and customer addresses. It loads aread codes phone area codes intoi a lookup table. It then  joins together Names and addresses,  and adds synthesized email and phone numbers. A normalizer introduces random duplicates to add realistic data. Note the phase numbers. The area code lookup is popualted in phase 0 before that lookup is referenced in phase 5.  
+]]></attr>
+</RichTextNote>
+<Dictionary>
+<Entry contentType="string" input="false" name="allStateCodes" output="false" type="list"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node guiName="Add address" guiX="520" guiY="200" id="ADD_ADDRESS" type="COMBINE">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.streetAddress = $in.1.streetAddress;
+	$out.0.postalCode = $in.1.postalCode;
+	$out.0.city = $in.1.city;
+	$out.0.state = $in.1.state;
+	$out.0.country = $in.1.country;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Add basic details" guiX="320" guiY="200" id="ADD_BASIC_DETAILS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+date OLDEST_ACCOUNT = ${OLDEST_ACCOUNT_DATE};
+integer id = 0;
+
+function integer transform() {
+	$out.0.id = id++;
+	$out.0.randomOrder = randomLong();
+	$out.0.firstName = $in.0.firstName;
+	$out.0.middleInitial = $in.0.middleInitial;
+	$out.0.lastName = $in.0.lastName;
+	$out.0.fullName = $in.0.fullName;
+	$out.0.accountCreated = randomDate(OLDEST_ACCOUNT, today());
+	$out.0.isActive = random() >= ${PERCENT_INACTIVE_ACCOUNTS} / 100.0;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Add state code" guiX="470" guiY="550" id="ADD_STATE_CODE" joinKey="stateName" leftOuterJoin="true" lookupTable="LookupTable1" type="LOOKUP_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+string[] tmp;
+dictionary.allStateCodes = tmp;
+clear(dictionary.allStateCodes);
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.stateCode = $in.1.code;
+
+	push(dictionary.allStateCodes, $in.1.code);
+
+	return ALL;
+}
+
+function void postExecute() {
+	printLog(info, "All states: " + join(",", dictionary.allStateCodes));
+}]]></attr>
+</Node>
+<Node fileURL="${DATAIN_DIR}/data-generators/AreaCodesUSA.txt" guiName="Area codes" guiX="70" guiY="550" id="AREA_CODES" type="FLAT_FILE_READER"/>
+<Node guiName="AreaCodesByStateLkp" guiX="670" guiY="550" id="AREA_CODES_BY_STATE_LKP" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node guiName="Decode list" guiX="270" guiY="550" id="DECODE_LIST" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.stateName = $in.0.stateName;
+	$out.0.areaCodes = split($in.0.areaCodes, ", ");
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Duplicate" guiX="720" guiY="200" id="DUPLICATE" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+integer id = ${CUSTOMER_COUNT}; // Duplicate ids start after normal ids.
+
+function integer count() {
+	if (random() < ${DUPLICATE_RECORDS_PERCENT} / 100.0) {
+		// Generate duplicate records for small fraction of customers.		
+		return randomInteger(2, 4);
+	} else {
+		// Single record only - the original.
+		return 1;
+	}
+}
+
+function integer transform(integer i) {
+	$out.0.* = $in.0.*;
+	
+	if (i == 0) {
+		// First record is always copy of the original - this is the non-duplicated one.
+		return OK;
+	}
+	
+	// Subsequent records are changed a bit - change the id.
+	$out.0.id = id++;
+	$out.0.randomOrder = randomLong();
+	$out.0.accountCreated = randomDate($in.0.accountCreated, today());
+	$out.0.isActive = random() < 0.5;
+	
+	return OK;
+}
+]]></attr>
+</Node>
+<Node __ADDRESS_COUNT="${CUSTOMER_COUNT}" guiName="GenerateAddresses" guiX="70" guiY="350" id="GENERATE_ADDRESSES" jobURL="${GRAPH_DIR}/generators/GenerateAddresses.sgrf" type="SUBGRAPH"/>
+<Node __CUSTOMER_COUNT="${CUSTOMER_COUNT}" __MIDDLE_NAME_PERCENT="${MIDDLE_NAME_PERCENT}" guiName="GenerateCustomerNames" guiX="70" guiY="200" id="GENERATE_CUSTOMER_NAMES" jobURL="${GRAPH_DIR}/generators/GenerateCustomerNames.sgrf" type="SUBGRAPH"/>
+<Node guiName="Generate email" guiX="920" guiY="200" id="GENERATE_EMAIL" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	
+	// Each record get its own email address. This means duplicates have different emails.
+	$out.0.email = generateEmailAddress();	
+	
+	return ALL;
+}
+
+string[] DOMAINS = ["example.com", "example.org", "example.co.uk", "example.gov"];
+string[] JOINER_CHARS = [".", "-", "", "_"];
+
+function string generateEmailAddress() {
+	
+	string prefix;
+	
+	if (random() >= ${RANDOM_EMAIL_PERCENT} / 100.0) {
+		// Generate email from user name
+		integer prefixType = randomInteger(0, 2);
+		string joinerChar = JOINER_CHARS[randomInteger(0, length(JOINER_CHARS) - 1)];
+		
+		switch (prefixType) {
+			case 0: // $name$char$last_name@domain
+				prefix = $in.0.firstName + joinerChar + $in.0.lastName;
+				break;
+			
+			case 1: // $name$middle$last_name@domain
+				prefix = $in.0.firstName + nvl($in.0.middleInitial, "") + $in.0.lastName;
+				break;
+			
+			case 2: // $last_name$char$name@domain
+				prefix = $in.0.lastName + joinerChar + $in.0.firstName;
+				break;
+		}
+	} else {
+		// Generate random email
+		prefix = randomString(5, 10);
+	}	
+	
+	if (random() < ${EMAIL_NUMERIC_SUFFIX_PERCENT} / 100.0) {
+		// Add numeric suffix
+		prefix += randomInteger(10, 99);
+	}
+	
+	string domain = DOMAINS[randomInteger(0, length(DOMAINS) - 1)];
+	
+	return lowerCase(prefix) + "@" + domain;
+}
+]]></attr>
+</Node>
+<Edge fromNode="ADD_ADDRESS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="DUPLICATE:0"/>
+<Edge fromNode="ADD_BASIC_DETAILS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="ADD_ADDRESS:0"/>
+<Edge fromNode="ADD_STATE_CODE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (joined records)" toNode="AREA_CODES_BY_STATE_LKP:0"/>
+<Edge fromNode="AREA_CODES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (output)" toNode="DECODE_LIST:0"/>
+<Edge fromNode="DECODE_LIST:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="ADD_STATE_CODE:0"/>
+<Edge fromNode="DUPLICATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="GENERATE_EMAIL:0"/>
+<Edge fromNode="GENERATE_ADDRESSES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="ADD_ADDRESS:1"/>
+<Edge fromNode="GENERATE_CUSTOMER_NAMES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="ADD_BASIC_DETAILS:0"/>
+<Edge fromNode="GENERATE_EMAIL:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="GENERATE_PHONE:0"/>
+</Phase>
+<Phase number="5">
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers.csv" guiX="1720" guiY="200" id="CUSTOMERS_CSV" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="FastSort" guiX="1320" guiY="200" id="FAST_SORT" sortKey="randomOrder(a)" type="FAST_SORT"/>
+<Node guiName="Generate phone" guiX="1120" guiY="200" id="GENERATE_PHONE" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import "${TRANS_DIR}/Common.ctl";
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	
+	// Number is mandatory here. Most people will have just one, but there are few who have 2 or 3.
+	// Very small fraction of users will have no number - i.e. their data is incomplete.
+	integer phoneNumberCount;
+	number x = random();
+	
+	if (x < 0.7) {
+		phoneNumberCount = 1;
+	} else if (x < 0.9) {
+		phoneNumberCount = 2;
+	} else if (x < 0.995) {
+		phoneNumberCount = 3;
+	} else {
+		// phoneNumberCount = 0;
+		return ALL; // Nothing else to do here.
+	}
+
+	string[] phoneNumbers;
+	for (integer i = 0; i < phoneNumberCount; ++i) {
+		push(phoneNumbers, generatePhoneNo());
+	}
+
+	$out.0.phone = join(",", phoneNumbers);
+
+	return ALL;
+}
+
+function string generatePhoneNo() {
+	// There's a chance that "out of state" number is used.
+	string stateCode = $in.0.state;
+	if (random() < 0.5) {
+		// Pick random state from list of all states.
+		stateCode = getRandomListItem(dictionary.allStateCodes);
+	}
+	
+	return generatePhoneNoInArea(stateCode);
+}
+
+string[] PHONE_DELIMITERS = ["", ".", "-"];
+
+function string generatePhoneNoInArea(string stateCode) {
+	AreaCodeList ac = lookup(AreaCodesByStateLkp).get(stateCode);
+	if (ac == null) {
+		raiseError("Unknown state code \"" + stateCode + "\".");
+	}	
+	
+	string areaCode = getRandomListItem(ac.areaCodes);
+	string mid = num2str(randomInteger(1, 999), "000"); // Do not generate 3 zeroes.
+	string end = num2str(randomInteger(1, 9999), "0000"); // Do not generate 4 zeroes.
+
+	boolean internationalFormat = random() < 0.05;
+	string intPrefix = internationalFormat ? (random() < 0.3 ? "001" : "+1") : "";
+
+	string delim = getRandomListItem(PHONE_DELIMITERS);
+	
+	return (internationalFormat ? intPrefix + delim : "")+ areaCode + delim + mid + delim + end;
+}
+]]></attr>
+</Node>
+<Node guiName="Reformat" guiX="1520" guiY="200" id="REFORMAT" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="FAST_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="REFORMAT:0"/>
+<Edge fromNode="GENERATE_PHONE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="FAST_SORT:0"/>
+<Edge fromNode="REFORMAT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CUSTOMERS_CSV:0"/>
+</Phase>
+</Graph>

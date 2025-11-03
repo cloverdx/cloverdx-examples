@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Brano" created="Thu Feb 09 10:29:32 CET 2017" guiVersion="7.2.0.8" id="1486633945660" licenseCode="CLP1DJAVLI56082859BY" name="GeneratePayments" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/OrderPayment.fmt" id="Metadata1"/>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="OrderLineItem" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="orderId" type="long"/>
+<Field name="customerId" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="date" timeZone="UTC" type="date"/>
+<Field name="unitPrice" type="decimal"/>
+<Field name="qty" type="decimal"/>
+<Field name="itemPrice" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata5">
+<Record fieldDelimiter=";" name="OrderPaymentExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="paymentId" type="string"/>
+<Field name="orderId" type="string"/>
+<Field name="customerId" type="long"/>
+<Field name="paymentType" type="string"/>
+<Field name="paidAmount" type="decimal"/>
+<Field name="paymentDate" type="string"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="paymentDateValid" timeZone="UTC" type="date"/>
+<Field name="paidExactly" type="boolean"/>
+<Field name="yearMonthKey" type="string"/>
+<Field name="orderDate" timeZone="UTC" type="date"/>
+<Field name="totalAmount" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="|" name="OrderTotals" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="orderId" type="long"/>
+<Field name="customerId" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="orderDate" timeZone="UTC" type="date"/>
+<Field name="totalAmount" type="decimal"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="375" x="1900" y="475">
+<attr name="text"><![CDATA[h3. Payments
+
+Note that we use different metadata to write this than what is read later - this is done in order to be able to write broken payment data into a file.
+See the writer configuration for excluded fields and compare with meta/online-store/OrderPayment metadata.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note1" textColor="444444" width="1026" x="50" y="25">
+<attr name="text"><![CDATA[h3. Generate Payments
+
+This graph generates sample price data based on existing order data. It examines orders, sums prices of individual line items,  creates partial payments and occassional invalid payments and adds other random errors to produce realistic payments files.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Calculate price" guiX="245" guiY="325" id="CALCULATE_PRICE" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.itemPrice = $in.0.unitPrice * $in.0.qty;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Create invalid payments" guiX="845" guiY="250" id="CREATE_INVALID_PAYMENTS1" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	// We create invalid payments - payments with missing data - with some small probability
+	if (random() > 0.05) {
+		return SKIP;
+	}
+
+	$out.0.orderDate = $in.0.orderDate;
+	$out.0.totalAmount = $in.0.totalAmount;
+	$out.0.customerId = $in.0.customerId;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Create regular payments" guiX="845" guiY="400" id="CREATE_REGULAR_PAYMENTS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.orderId = num2str($in.0.orderId);
+	$out.0.orderDate = $in.0.orderDate;
+	$out.0.totalAmount = $in.0.totalAmount;
+	$out.0.customerId = $in.0.customerId;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="FastSort" guiX="1520" guiY="250" id="FAST_SORT1" sortKey="paymentDateValid(a)" type="FAST_SORT"/>
+<Node guiName="Introduce errors" guiX="1695" guiY="325" id="INTRODUCE_ERRORS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+string LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+integer MAX_CHANGES = 3;
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+
+	// For small number of orders the amount paid does not match. We only do this for WIRE transfers since we assume that
+	// when paying with CASH the teller will not let customer leave with unpaid order and credit card transactions paid online
+	// also are automatic and will not allow smaller payment.
+	if ($out.0.paymentType == "WIRE" && random() < 0.1) {
+		// Assume that at least 10% was paid and then add some random amount. In theory, more than required can be paid.
+		$out.0.paidAmount = 0.1 * $in.0.totalAmount + random() * $in.0.totalAmount;
+	} else {
+		$out.0.paidAmount = $in.0.totalAmount;
+	}
+
+	if (random() < 0.05) {
+		// Some of the payments will have really broken payment date - it will be missing some characters at the beginning.
+		integer cutFrom = randomInteger(1, 4);
+		$out.0.paymentDate = substring($in.0.paymentDate, cutFrom);
+	}
+	
+	// Some of the payments will have broken orderId - the value will contain letters, not just numbers and dash.
+	if (random() < 0.02 && $in.0.orderId != null) {
+		// How many modifications to make to the value.
+		integer n = randomInteger(1, max(length($in.0.orderId) / 2, 1));
+		if (n > MAX_CHANGES) {
+			n = MAX_CHANGES;
+		}
+		
+		for (integer i = 0; i < n; ++i) {
+			string ch = charAt(LETTERS, randomInteger(0, length(LETTERS) - 1));
+			integer pos = randomInteger(0, length($out.0.orderId) - 1);
+			string prefix = substring($out.0.orderId, 0, max(pos - 1, 0));
+			string suffix;
+			
+			// Random number decides whether we do a replacement or insertion of a character.
+			if (random() < 0.5) {
+				// Replacement
+				suffix = pos + 1 < length($out.0.orderId) - 1 ? substring($out.0.orderId, pos + 1) : "";
+			} else {
+				// Insertion
+				suffix = substring($out.0.orderId, pos);
+			}
+			$out.0.orderId = prefix + ch + suffix;
+		}
+	}
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Orders" guiX="45" guiY="325" id="ORDERS" schema="${META_DIR}/online-store/Orders.xsd" sourceUri="zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml" type="XML_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="orders">
+		<Mapping element="order"
+				xmlFields="{}customerId;{}id"
+				cloverFields="customerId;id">
+			<Mapping element="item" outPort="0"
+					xmlFields="../{}customerId;../{}date;../{}id;{}qty;{}unitPrice"
+					cloverFields="customerId;date;orderId;qty;unitPrice">
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Node excludeFields="paidExactly;yearMonthKey;orderDate;totalAmount;paymentDateValid" fileURL="${DATAIN_DIR}/Payments-#.csv" guiName="Payments" guiX="1895" guiY="325" id="PAYMENTS" makeDirs="true" outputFieldNames="true" partitionFileTag="keyNameFileTag" partitionKey="yearMonthKey" sortedInput="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Randomize payments" guiX="1295" guiY="250" id="RANDOMIZE_PAYMENTS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+// Generate random data in the payment - type, time stamp etc.
+
+number CARD_TYPE_THRESHOLD = 0.5;
+number CASH_TYPE_THRESHOLD = 0.9;
+
+// Start somewhere
+long lastPaymentId = randomLong(0, 10000);
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	
+	// Payments jump a bit, so that not all numbers are generated.
+	lastPaymentId += randomInteger(1, 50);
+	$out.0.paymentId = num2str(lastPaymentId);
+	
+	number type = random();
+	if (type < CARD_TYPE_THRESHOLD) {
+		$out.0.paymentType = "CARD";
+
+		// Card payments happen within short time of the order timestamp - within 5 minutes.
+		integer deltaTime = randomInteger(1, 5 * 60);
+		$out.0.paymentDateValid = dateAdd($in.0.orderDate, deltaTime, second);
+	} else if (type < CASH_TYPE_THRESHOLD) {
+		$out.0.paymentType = "CASH";
+
+		// CASH payments happen on delivery/pickup - 2+ days after order timestamp.
+		// These payments are also made only in "reasonable" hours: between 8am and 8pm (where store might be open or when drivers deliver).
+		// First get a day that is between 2 to 8 days after order was placed.
+		$out.0.paymentDateValid = dateAdd(extractDate($in.0.orderDate), randomInteger(2, 8), day);
+		
+		// Now generate random time between 8am and 8pm.
+		integer minutesSinceMidnight = randomInteger(8 * 60, 20 * 60);
+		
+		// And add the time to our date.
+		$out.0.paymentDateValid = dateAdd($out.0.paymentDateValid, minutesSinceMidnight, minute);
+	} else {
+		$out.0.paymentType = "WIRE";
+		if ($in.0.orderId != null) {
+			$out.0.orderId += "-" + randomInteger(0, 99); // WIRE payments have extra digits in the id
+		}
+
+		// WIRE payments happen 2-5 days after order was placed.
+		// We assume that banks can wire money at any time, so just generate random offset in seconds and add to the order timestamp.
+		integer deltaTime = randomInteger(2 * 24 * 60 * 60, 5 * 24 * 60 * 60);
+		$out.0.paymentDateValid = dateAdd($in.0.orderDate, deltaTime, second);
+	}
+
+	// Randomly pick one of the three possible timestamp formats.
+	number dateFormat = random();
+	if (dateFormat < 0.7) {
+		// Most common format.
+		$out.0.paymentDate = date2str($out.0.paymentDateValid, "yyyy-MM-dd HH:mm:ss");
+	} else if (dateFormat < 0.9) {
+		$out.0.paymentDate = date2str($out.0.paymentDateValid, "yyyyMMddHHmmss");
+	} else {
+		$out.0.paymentDate = date2str($out.0.paymentDateValid, "yyyyMMddHHmm");
+	}
+
+	$out.0.paidAmount = $in.0.totalAmount;	
+	
+	// Compute the "match" flag. This does not get to the output file and is here just for easier debugging and parameter tuning.
+	$out.0.paidExactly = $in.0.totalAmount == $out.0.paidAmount;
+	
+	// Calculate year-month key that is used to split the data into multiple files.
+	$out.0.yearMonthKey = date2str($out.0.paymentDateValid, "yyyy-MM");
+	
+	// Some of the orders have lower case payment type.
+	if (random() < 0.1) {
+		$out.0.paymentType = lowerCase($out.0.paymentType);
+	}
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SimpleCopy" guiX="645" guiY="325" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="SimpleGather" guiX="1095" guiY="250" id="SIMPLE_GATHER" type="SIMPLE_GATHER"/>
+<Node enabled="trash" excludeFields="paidExactly;yearMonthKey;orderDate;totalAmount;paymentDateValid" fileURL="${DATAIN_DIR}/SimplePayments.csv" guiName="SimplePayments" guiX="1895" guiY="150" id="SIMPLE_PAYMENTS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node aggregateKey="orderId" guiName="Sum prices" guiX="445" guiY="325" id="SUM_PRICES" mapping="$orderId:=$orderId;$customerId:=first($customerId);$orderDate:=first($date);$totalAmount:=sum($itemPrice);" type="AGGREGATE"/>
+<Edge fromNode="CALCULATE_PRICE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUM_PRICES:0"/>
+<Edge fromNode="CREATE_INVALID_PAYMENTS1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:0"/>
+<Edge fromNode="CREATE_REGULAR_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 1 (in)" metadata="Metadata5" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:1"/>
+<Edge fromNode="FAST_SORT1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SIMPLE_PAYMENTS:0"/>
+<Edge fromNode="FAST_SORT1:1" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="INTRODUCE_ERRORS:0"/>
+<Edge fromNode="INTRODUCE_ERRORS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="PAYMENTS:0"/>
+<Edge fromNode="ORDERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CALCULATE_PRICE:0"/>
+<Edge fromNode="RANDOMIZE_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="FAST_SORT1:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CREATE_INVALID_PAYMENTS1:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="CREATE_REGULAR_PAYMENTS:0"/>
+<Edge fromNode="SIMPLE_GATHER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="RANDOMIZE_PAYMENTS:0"/>
+<Edge fromNode="SUM_PRICES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+</Phase>
+</Graph>

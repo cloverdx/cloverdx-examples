@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Jul 16 09:44:38 CEST 2024" guiVersion="7.2.0.8" id="1721136625309" licenseCode="CloverDX-Internal-License" name="22 - New Aggregator" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter=";" name="TransactionSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field delimiter=";" name="customerId" trim="true" type="long"/>
+<Field default="0.0" delimiter=";" length="12" name="cashAmount" scale="2" trim="true" type="decimal"/>
+<Field default="0.0" delimiter=";" length="12" name="cardAmount" scale="2" trim="true" type="decimal"/>
+<Field default="0.0" delimiter=";" length="12" name="wireAmount" scale="2" trim="true" type="decimal"/>
+<Field default="0.0" delimiter=";" length="12" name="totalAmount" scale="2" trim="true" type="decimal"/>
+<Field delimiter=";" name="transactionCount" trim="true" type="long"/>
+<Field delimiter=";" name="smallAmounts" trim="true" type="long"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note0" textColor="444444" width="376" x="625" y="625">
+<attr name="text"><![CDATA[h3. Legacy implementation
+
+Prior to CloverDX 6.5 Aggregate cannot handle conditional aggregation and Denormalize must be used to get the same result (alternatively, multiple Aggregate components and filtering, but it would be much slower and more complex).]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="200" id="Note1" textColor="444444" width="776" x="75" y="25">
+<attr name="text"><![CDATA[h3. New Aggregate
+
+Since *CloverDX 6.5* you can add conditions to your aggregation mapping. This allows you to easily implement aggregations that would have required either multiple components or Denormalizer in previous versions.
+
+*Note that this example is not compatible with CloverDX 6.4 or earlier.*]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node aggregateKey="customerId" equalNULL="true" guiName="Aggregate" guiX="470" guiY="250" id="AGGREGATE" mapping="$customerId:=$customerId;$cashAmount:=sum($paidAmount,&quot;$in.0.paymentType == \&quot;CASH\&quot;&quot;);$cardAmount:=sum($paidAmount,&quot;$in.0.paymentType == \&quot;CARD\&quot;&quot;);$wireAmount:=sum($paidAmount,&quot;$in.0.paymentType == \&quot;WIRE\&quot;&quot;);$totalAmount:=sum($paidAmount);$transactionCount:=count();$smallAmounts:=count(,&quot;$in.0.paidAmount &lt; 100.0d&quot;);" sorted="true" type="AGGREGATE" zeroCountRecord="true"/>
+<Node guiName="Denormalizer" guiX="470" guiY="400" id="DENORMALIZER" key="customerId(a)" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+
+TransactionSummary result;
+clean();
+
+function integer append() {
+	result.customerId = $in.0.customerId;
+	result.totalAmount = nvl(result.totalAmount, 0.0d) + $in.0.paidAmount;
+	result.transactionCount++;
+	
+	switch ($in.0.paymentType) {
+		case "CASH":
+			result.cashAmount = nvl(result.cashAmount, 0.0d) + $in.0.paidAmount;
+			break;
+			
+		case "CARD":
+			result.cardAmount = nvl(result.cardAmount, 0.0d) + $in.0.paidAmount;
+			break;
+
+		case "WIRE":
+			result.wireAmount = nvl(result.wireAmount, 0.0d) + $in.0.paidAmount;
+			break;
+	}
+	
+	return OK;
+}
+
+function integer transform() {
+	$out.0.* = result.*;
+
+	return OK;
+}
+
+function void clean() {
+	resetRecord(result);
+	result.transactionCount = 0;
+}
+]]></attr>
+</Node>
+<Node guiName="ExtSort" guiX="270" guiY="250" id="EXT_SORT" sortKey="customerId(a)" type="EXT_SORT"/>
+<Node __INPUT_FILE_URL="${DATAIN_DIR}/Payments-*.csv" guiName="PaymentsReader" guiX="70" guiY="250" id="PAYMENTS_READER" jobURL="${SUBGRAPH_DIR}/PaymentsReader.sgrf" type="SUBGRAPH"/>
+<Node guiName="Trash" guiX="670" guiY="250" id="TRASH" type="TRASH"/>
+<Node guiName="Trash" guiX="670" guiY="400" id="TRASH1" type="TRASH"/>
+<Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="TRASH:0"/>
+<Edge fromNode="DENORMALIZER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="TRASH1:0"/>
+<Edge fromNode="EXT_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="AGGREGATE:0"/>
+<Edge fromNode="EXT_SORT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="DENORMALIZER:0"/>
+<Edge fromNode="PAYMENTS_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="EXT_SORT:0"/>
+</Phase>
+</Graph>

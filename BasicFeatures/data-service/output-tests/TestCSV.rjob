@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu May 02 13:33:47 CEST 2024" guiVersion="7.0.0.15" id="1714650198623" licenseCode="CLCDSCLOVE85208925SP" name="TestCSV" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/TestCSV</UrlPath>
+<Description>Simple test of CSV output of a Data App.</Description>
+<Category>Data App Tests</Category>
+<RequestMethod name="GET"/>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="requestEcho" recordDelimiter="\r\n" type="delimited">
+<Field name="requestBody" type="string"/>
+<Field name="requestClientIpAddress" type="string"/>
+<Field name="requestContentType" type="string"/>
+<Field name="requestEncoding" type="string"/>
+<Field name="requestHeaders" type="string"/>
+<Field name="requestMethod" type="string"/>
+<Field name="requestParameters" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="TestRec" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Id" name="anInteger" type="integer"/>
+<Field format="yyyy-MM-dd" label="Long column name" name="aDate" type="date"/>
+<Field label="Even longer column name with many words" name="aString" type="string"/>
+<Field name="field0" type="string"/>
+<Field name="field1" type="string"/>
+<Field name="field2" type="string"/>
+<Field name="field3" type="string"/>
+<Field name="field4" type="string"/>
+<Field name="field5" type="string"/>
+<Field name="field6" type="string"/>
+<Field name="field7" type="string"/>
+<Field name="field8" type="string"/>
+<Field name="field9" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="DataAppGenerateData" guiX="245" guiY="50" id="DATA_APP_GENERATE_DATA" jobURL="${SUBGRAPH_DIR}/DataAppGenerateData.sgrf" type="SUBGRAPH"/>
+<Node guiName="Input" guiX="45" guiY="50" id="RESTJOB_INPUT0" requestFormat="JSON" restJobInput="true" type="RESTJOB_INPUT"/>
+<Node attachment="false" guiName="Output" guiX="520" guiY="50" id="RESTJOB_OUTPUT0" metadataName="true" responseFormat="CSV" restJobOutput="true" topLevelArray="true" type="RESTJOB_OUTPUT"/>
+<Edge fromNode="DATA_APP_GENERATE_DATA:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="RESTJOB_OUTPUT0:0"/>
+</Phase>
+</Graph>

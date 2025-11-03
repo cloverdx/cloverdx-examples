@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Sep 11 16:38:35 CEST 2017" guiVersion="7.2.0.8" id="1505141441815" licenseCode="CLP1DJAVLI50596644BY" name="12e02b - Weather forecast with subgraph" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameter label="City" name="QUERY_CITY" public="true" required="false" value="London, UK">
+<ComponentReference referencedComponent="QUERY_WEATHER" referencedProperty="__CITY"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="weather.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="851" x="175" y="50">
+<attr name="text"><![CDATA[h3. Weather forcast - REST
+
+The graph calls a subgraph to fetch weather information for a given city. The subgraph returns data on three ports:
+* Port 0 of the subgraph returns the REST call status
+* Port 1 of the subgraph returns the weather data
+* Port 2 of the subgraph is optional and returns any errors encountered in calling the API or parsing the response.
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Call status" guiX="520" guiY="225" id="CALL_STATUS" type="TRASH"/>
+<Node guiName="Fail" guiX="520" guiY="550" id="FAIL" type="FAIL"/>
+<Node __API_KEY="${API_KEY}" __CITY="${QUERY_CITY}" guiName="QueryWeather" guiX="195" guiY="350" id="QUERY_WEATHER" jobURL="${GRAPH_DIR}/subgraph/QueryWeather.sgrf" type="SUBGRAPH"/>
+<Node excludeFields="dt;temp_min;temp_max;sea_level;weather_id;wind_angle;grnd_level;cloud_cover" fileURL="${DATAOUT_DIR}/WeatherForecast.txt" guiName="WeatherForecast.txt" guiX="520" guiY="375" id="WEATHER_FORECAST_TXT" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="QUERY_WEATHER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CALL_STATUS:0"/>
+<Edge fromNode="QUERY_WEATHER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="WEATHER_FORECAST_TXT:0"/>
+<Edge fromNode="QUERY_WEATHER:2" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="FAIL:0"/>
+</Phase>
+</Graph>

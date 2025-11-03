@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="json_object" type="json_objectType"/>
+  <xs:complexType name="itemsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="productCode"/>
+      <xs:element type="xs:string" name="productName"/>
+      <xs:element type="xs:string" name="unitPrice"/>
+      <xs:element type="xs:string" name="qty"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="arrayElem" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ordersType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="id"/>
+      <xs:element type="xs:string" name="customerId"/>
+      <xs:element type="xs:string" name="orderDatetime"/>
+      <xs:element type="itemsType" name="items" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="addressesType" name="addresses" maxOccurs="2" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="arrayElem" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="addressesType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="type"/>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="street"/>
+      <xs:element type="xs:string" name="city"/>
+      <xs:element type="xs:string" name="zip"/>
+      <xs:element type="xs:string" name="state"/>
+      <xs:element type="xs:string" name="country"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="arrayElem" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="json_objectType">
+    <xs:sequence>
+      <xs:element type="ordersType" name="orders" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

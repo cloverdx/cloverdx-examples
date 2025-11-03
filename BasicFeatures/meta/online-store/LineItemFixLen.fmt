@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="|" name="LineItemFixLen" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="fixed">
+<Field format="0000000000" name="orderId" size="10" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="orderDatetime" size="19" timeZone="UTC" type="date"/>
+<Field format="0000000000" name="productCode" size="10" type="long"/>
+<Field name="productName" size="60" type="string"/>
+<Field length="10" name="unitPrice" scale="2" size="10" type="decimal"/>
+<Field length="10" name="units" scale="2" size="10" type="decimal"/>
+<Field length="10" name="totalPrice" scale="2" size="10" type="decimal"/>
+</Record>

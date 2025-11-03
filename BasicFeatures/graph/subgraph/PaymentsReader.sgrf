@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" category="readers" created="Fri Jun 02 14:34:28 CEST 2017" guiVersion="7.1.0.8" id="1496415627596" largeIconPath="${GRAPH_DIR}/subgraph/PaymentsReader64.png" licenseCode="CLP1DJAVLI10291612BY" mediumIconPath="${GRAPH_DIR}/subgraph/PaymentsReader32.png" name="PaymentsReader" nature="subgraph" showComponentDetails="true" smallIconPath="${GRAPH_DIR}/subgraph/PaymentsReader16.png">
+<Global>
+<outputPorts>
+<singlePort connected="true" name="0"/>
+<singlePort connected="true" keepEdge="true" name="1" required="false"/>
+</outputPorts>
+<Metadata fileURL="${META_DIR}/online-store/OrderPayment.fmt" id="Metadata1"/>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" name="PaymentsInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="paymentId" type="string"/>
+<Field name="orderId" type="string"/>
+<Field name="customerId" type="string"/>
+<Field name="paymentType" type="string"/>
+<Field name="paidAmount" type="string"/>
+<Field name="paymentDate" type="string"/>
+<Field auto_filling="source_name" name="inputFileURL" type="string"/>
+<Field auto_filling="source_row_count" name="inutFileRowNo" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter=";" name="PaymentsInputError" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="recordNo" type="long"/>
+<Field name="fieldName" type="string"/>
+<Field name="originalData" type="string"/>
+<Field name="errorMessage" type="string"/>
+<Field name="fileURL" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Input File URL" name="INPUT_FILE_URL" public="true" required="true" value="${DATAIN_DIR}/Payments-2017-01.csv">
+<ComponentReference referencedComponent="PAYMENTS" referencedProperty="fileURL"/>
+</GraphParameter>
+<GraphParameter category="advanced" label="Max number of records per source" name="NUM_SOURCE_RECORDS" public="true" required="false">
+<ComponentReference referencedComponent="PAYMENTS" referencedProperty="numSourceRecords"/>
+</GraphParameter>
+<GraphParameter category="advanced" label="Number of skipped records per source" name="SKIP_SOURCE_ROWS" public="true" required="false">
+<ComponentReference referencedComponent="PAYMENTS" referencedProperty="skipSourceRows"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="401" id="Note0" textColor="444444" width="901" x="150" y="25">
+<attr name="text"><![CDATA[h3. Payments reader subgraph
+
+
+This CloverDX subgraph reads data from a payments data file.
+
+The subgraph reads data as strings and then converts fields to required data types (e.g. date, string, numeric). Valid records are returned on output port 0. Invalid records are returns on output port 1. Specifically:
+
+* A FlatFileReader component reads data from a paymenrs file specified by the input pararamter ${INPUT_FILE_URL}. The data is read as strings according to metadata called called *PaymentsInput*, which is locally defined within the subgraph. Records that valid are emitted on port 0. Unparsable records are emitted on port 1 along with additional metadata describing the record nuber and field number where an error was detected. Note,  *PaymentsInput* contains two extra field definitions that are not explicitly present in the input data. These fields are auto-filled by CloverDX and provide the name of the source file and the row numberfor each record. 
+
+* A Map component labeled "Parse and convert payments" recieves successfully parsed records. It uses CTL code to transform incomining fields (all strings) into a new format described by an externally defined metadata file (meta/online-store/OrderPayment.fmt), converting certain strings to the appropriate data type (i.e. long or date).   Successfully transformed records are emitted on port 0.  Records that cannot be transformed are emitted on port 1 with additional metadata defining the field and record that caused the error. The logic for performing the transformations is witten in CTL. Some CTL is stored is a separate file (${TRANS_DIR}/OrderCleanerExt.ctl). 
+
+* A second Map component labelled "fieldNo to fieldName" recieves input  records that  the FlatFileReader failed to parse. This map component contans a CTL statement which translates the field nummber that caused the error into a field name.
+
+* A simple gather component collects errors detected by the FlatFileReader and by the "Parse and convert payments" map component and emits them on port 1. Note Port 1 is an optional ourput port - any data job that calls this subgraph can decise whether to connect and consume records from this optional output port.
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node debugOutput="true" guiName="Errors" guiX="1320" guiY="650" id="ERRORS" type="TRASH"/>
+<Node guiName="fieldNo to fieldName" guiX="445" guiY="650" id="FIELD_NO_TO_FIELD_NAME" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+PaymentsInput temp; // Needed just to query field names.
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.fieldName = getFieldName(temp, $in.0.fieldNo - 1);
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Parse and convert payments" guiX="395" guiY="500" id="PARSE_AND_CONVERT_PAYMENTS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import "${TRANS_DIR}/OrderCleanerExt.ctl";
+
+function integer transform() {
+	$out.0.customerId = str2long($in.0.customerId);
+	$out.0.paymentId = str2long($in.0.paymentId);
+	$out.0.paymentType = upperCase($in.0.paymentType);
+	$out.0.paidAmount = str2decimal($in.0.paidAmount);
+	$out.0.orderId = cleanOrderId($in.0.orderId);
+	$out.0.paymentDate = parsePaymentDate($in.0.paymentDate);
+
+	return 0;
+}
+
+// Automatic error handler that will copy input record to error port and add an error message.
+function integer transformOnError(string errorMessage, string stackTrace) {
+	$out.1.* = $in.0.*;
+	$out.1.errorMessage = getErrorTextFromMessage(errorMessage);
+	$out.1.fieldName = getErrorFieldNameFromMessage(errorMessage);
+	$out.1.recordNo = $in.0.inutFileRowNo;
+	$out.1.fileURL = $in.0.inputFileURL;
+	
+	if ($out.1.fieldName != null) {
+		// If we do not have any field name, the error was not reported via reportError and we cannot get original value.
+		$out.1.originalData = getErrorFieldOriginalValue();
+	}
+
+	return 1;
+}
+]]></attr>
+</Node>
+<Node dataPolicy="controlled" fileURL="${INPUT_FILE_URL}" guiName="Payments" guiX="145" guiY="500" id="PAYMENTS" numSourceRecords="${NUM_SOURCE_RECORDS}" skipSourceRows="${SKIP_SOURCE_ROWS}" type="FLAT_FILE_READER"/>
+<Node guiName="SimpleGather" guiX="820" guiY="650" id="SIMPLE_GATHER" type="SIMPLE_GATHER"/>
+<Node guiName="SubgraphInput" guiX="70" guiY="22" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="153" name="0"/>
+</Node>
+<Node guiName="SubgraphOutput" guiX="1222" guiY="22" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="517" name="0"/>
+<Port guiY="667" name="1"/>
+<Port guiY="767" name="2"/>
+</Node>
+<Node debugOutput="true" guiName="Valid records" guiX="1320" guiY="500" id="VALID_RECORDS" type="TRASH"/>
+<Edge fromNode="FIELD_NO_TO_FIELD_NAME:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:1"/>
+<Edge fromNode="PARSE_AND_CONVERT_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
+<Edge fromNode="PARSE_AND_CONVERT_PAYMENTS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="SIMPLE_GATHER:0"/>
+<Edge fromNode="PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="PARSE_AND_CONVERT_PAYMENTS:0"/>
+<Edge fromNode="PAYMENTS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 1 (logs)" toNode="FIELD_NO_TO_FIELD_NAME:0"/>
+<Edge fromNode="SIMPLE_GATHER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:1"/>
+<Edge debugMode="true" fromNode="SUBGRAPH_OUTPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="VALID_RECORDS:0"/>
+<Edge debugMode="true" fromNode="SUBGRAPH_OUTPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="ERRORS:0"/>
+</Phase>
+</Graph>

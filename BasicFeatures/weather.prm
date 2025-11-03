@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GraphParameters>
+<GraphParameter label="API key" name="API_KEY" public="false" required="false" secure="false" value="0601c7e75e54d860d7b9d2ba2819eaf5"/>
+</GraphParameters>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Jan Slechta" created="Tue Mar 19 14:36:29 CET 2024" guiVersion="7.2.0.8" id="1711621762142" licenseCode="CLCDSCLOVE85208925SP" name="14 - Cluster partitioning" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata3" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="EnrichedErrorPayments" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="id" size="19" trim="true" type="long"/>
+<Field name="order_id" size="19" trim="true" type="long"/>
+<Field name="customer_id" size="19" trim="true" type="long"/>
+<Field name="payment_type" size="4" type="string"/>
+<Field length="12" name="paid_amount" scale="2" size="13" trim="true" type="decimal"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="payment_date" size="19" trim="true" type="date"/>
+<Field name="shipping_address_id" size="19" trim="true" type="long"/>
+<Field name="billing_address_id" size="19" trim="true" type="long"/>
+<Field name="order_customer_id" size="19" trim="true" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="order_datetime" size="19" trim="true" type="date"/>
+<Field name="ruleName" type="string"/>
+<Field name="validationMessage" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="EnrichedPayments" recordDelimiter="\n" type="delimited">
+<Field name="id" size="19" trim="true" type="long"/>
+<Field name="order_id" size="19" trim="true" type="long"/>
+<Field name="customer_id" size="19" trim="true" type="long"/>
+<Field name="payment_type" size="4" type="string"/>
+<Field length="12" name="paid_amount" scale="2" size="13" trim="true" type="decimal"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="payment_date" size="19" trim="true" type="date"/>
+<Field name="shipping_address_id" size="19" trim="true" type="long"/>
+<Field name="billing_address_id" size="19" trim="true" type="long"/>
+<Field name="order_customer_id" size="19" trim="true" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="order_datetime" size="19" trim="true" type="date"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" name="Orders" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="id" size="19" type="long"/>
+<Field name="customer_id" size="19" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="order_datetime" size="19" type="date"/>
+<Field name="shipping_address_id" size="19" type="long"/>
+<Field name="billing_address_id" size="19" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter=";" name="Payments" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="id" size="19" type="long"/>
+<Field name="order_id" size="19" type="long"/>
+<Field name="customer_id" size="19" type="long"/>
+<Field name="payment_type" size="4" type="string"/>
+<Field length="12" name="paid_amount" scale="2" size="13" type="decimal"/>
+<Field format="yyyy-MM-dd HH:mm:ss.SSS" name="payment_date" size="19" type="date"/>
+</Record>
+</Metadata>
+<Connection dbConfig="${CONN_DIR}/TrainingDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="226" id="Note0" textColor="444444" width="1500" x="75" y="25">
+<attr name="text"><![CDATA[h3. Cluster partitioning - advanced
+
+This example demonstrates CloverDX's to process data in parallel. Here the degree of parellelism here is harcoded to 2. The pink components are responsible for managing the parallelization. Data jobs with parallel components must be executed on a CloverDX Server.
+Note the difference in partioning approach from the previous example - the payments are not partitioned evenly but based on their type (cash vs. other).
+
+* The [ParallelPartition|element://PARALLEL_PARTITION] parallelizes the data accoring to business logic. 
+* The components between the Partition component and the ParallelMerge and ParallelSimpleGather components run in parallel.
+* The [ParallelMerge|element://PARALLEL_MERGE] component requires incoming data streams be pre-sorted by the specified merge key.
+* The ParallelSimpleGather components collect unsorted data into a single stream.
+
+This logical partioning mechanism allows cash transactions to  data to be routed to a specific node.
+- the node may even have additional big data resourecs that would be problematic to synchronize (local sandbox data can be conveniently used)
+- the node can be located in a subnet with direct access to the resource (cash transaction system) that would not be available by other nodes]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node allocation="number:2" guiName="Enrich Payment Record" guiX="470" guiY="300" id="ENRICH_PAYMENT_RECORD" joinKey="$order_id=$id" type="EXT_HASH_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.id = $in.0.id;
+	$out.0.order_id = $in.0.order_id;
+	$out.0.customer_id = $in.0.customer_id;
+	$out.0.payment_type = $in.0.payment_type;
+	$out.0.paid_amount = $in.0.paid_amount;
+	$out.0.payment_date = $in.0.payment_date;
+	$out.0.shipping_address_id = $in.1.shipping_address_id;
+	$out.0.billing_address_id = $in.1.billing_address_id;
+	$out.0.customer_id = $in.1.customer_id;
+	$out.0.order_customer_id = $in.1.customer_id;
+	$out.0.order_datetime = $in.1.order_datetime;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node guiName="ExtSort" guiX="895" guiY="300" id="EXT_SORT" sortKey="payment_date(a)" type="EXT_SORT"/>
+<Node createEmptyFiles="false" fileURL="${DATAOUT_DIR}/InvalidPayments.csv" guiName="InvalidPayments.csv" guiX="1495" guiY="650" id="INVALID_PAYMENTS_CSV" type="FLAT_FILE_WRITER"/>
+<Node guiName="Overdue Payment?" guiX="1295" guiY="475" id="OVERDUE_PAYMENT" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.ruleName == "CheckOverduePayment"]]></attr>
+</Node>
+<Node createEmptyFiles="false" fileURL="${DATAOUT_DIR}/OverduePayments.csv" guiName="OverduePayments.csv" guiX="1495" guiY="475" id="OVERDUE_PAYMENTS_CSV" type="FLAT_FILE_WRITER"/>
+<Node guiName="ParallelMerge" guiX="1095" guiY="300" id="PARALLEL_MERGE" mergeKey="payment_date" type="CLUSTER_MERGE"/>
+<Node guiName="ParallelPartition" guiX="270" guiY="300" id="PARALLEL_PARTITION" type="CLUSTER_PARTITION">
+<attr name="partitionSource"><![CDATA[//#CTL2
+
+function integer getOutputPort() {
+	switch (upperCase($in.0.payment_type)) {
+		case "CASH" :
+			return 0;
+		default:
+			return 1;
+	}	
+}
+]]></attr>
+</Node>
+<Node guiName="ParallelSimpleGather" guiX="1095" guiY="825" id="PARALLEL_SIMPLE_GATHER" type="CLUSTER_SIMPLE_GATHER"/>
+<Node guiName="ParallelSimpleGather" guiX="1095" guiY="475" id="PARALLEL_SIMPLE_GATHER1" type="CLUSTER_SIMPLE_GATHER"/>
+<Node createEmptyFiles="false" fileURL="${DATAOUT_DIR}/PaymentsWithoutOrders.csv" guiName="PaymentsWithoutOrders.csv" guiX="1495" guiY="825" id="PAYMENTS_WITHOUT_ORDERS_CSV" type="FLAT_FILE_WRITER"/>
+<Node dbConnection="JDBC0" guiName="Read Orders" guiX="270" guiY="450" id="READ_ORDERS1" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[select * from orders]]></attr>
+</Node>
+<Node dbConnection="JDBC0" guiName="Read Payments" guiX="70" guiY="300" id="READ_PAYMENTS" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[select * from payments]]></attr>
+</Node>
+<Node guiName="Validate Payment" guiX="695" guiY="300" id="VALIDATE_PAYMENT" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
+        <custom customRejectMessage="" description="" enabled="true" inputField="" name="EqualCustomerIds" outputField="" ref="EqualCustomerIds">
+            <mapping>paymentCustomerId:=customer_id;orderCustomerId:=order_customer_id</mapping>
+        </custom>
+        <custom customRejectMessage="" description="" enabled="true" inputField="" name="CheckOverduePayment" outputField="" ref="CheckOverduePayment">
+            <mapping>orderDate:=order_datetime;paymentDate:=payment_date</mapping>
+        </custom>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <customRules>
+        <customRule name="EqualCustomerIds"><![CDATA[//#CTL2
+
+// Custom validation rule EqualCustomerIds
+// Do not rename this function
+function boolean EqualCustomerIds(long paymentCustomerId, long orderCustomerId) {
+
+	if (orderCustomerId == paymentCustomerId) {
+		return true;
+	}
+
+	$out.0.validationMessage = "Customer ID in payment record (" + paymentCustomerId + ") does not match customer ID in order record (" + orderCustomerId + ")!";
+	return false; // return true for valid records
+}
+]]]]><![CDATA[></customRule>
+        <customRule name="CheckOverduePayment"><![CDATA[//#CTL2
+
+// Custom validation rule CheckOverduePayment
+// Do not rename this function
+function boolean CheckOverduePayment(date orderDate, date paymentDate) {
+	
+	long diff = dateDiff(paymentDate, orderDate, day);
+	if (diff < 30) {
+		return true;
+	}
+
+	$out.0.validationMessage = "Order has not been paid in time (" +  diff + " days).";
+	return false; // return true for valid records
+}
+]]]]><![CDATA[></customRule>
+    </customRules>
+    <imports/>
+</group>
+]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.1.* = $in.0.*;
+	$out.1.validationMessage = $in.1.validationMessage;
+	$out.1.ruleName = $in.1.ruleName;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node excludeFields="order_customer_id" fileURL="${DATAOUT_DIR}/ValidPayments.csv" guiName="ValidPayments.csv" guiX="1295" guiY="300" id="VALID_PAYMENTS_CSV" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="ENRICH_PAYMENT_RECORD:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="VALIDATE_PAYMENT:0"/>
+<Edge fromNode="ENRICH_PAYMENT_RECORD:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="PARALLEL_SIMPLE_GATHER:0"/>
+<Edge fromNode="EXT_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge19" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="PARALLEL_MERGE:0"/>
+<Edge fromNode="OVERDUE_PAYMENT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge15" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="OVERDUE_PAYMENTS_CSV:0"/>
+<Edge fromNode="OVERDUE_PAYMENT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge16" inPort="Port 0 (in)" outPort="Port 1 (rejected)" toNode="INVALID_PAYMENTS_CSV:0"/>
+<Edge fromNode="PARALLEL_MERGE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge18" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="VALID_PAYMENTS_CSV:0"/>
+<Edge fromNode="PARALLEL_PARTITION:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (driver)" outPort="Port 0 (output)" toNode="ENRICH_PAYMENT_RECORD:0"/>
+<Edge fromNode="PARALLEL_SIMPLE_GATHER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="PAYMENTS_WITHOUT_ORDERS_CSV:0"/>
+<Edge fromNode="PARALLEL_SIMPLE_GATHER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="OVERDUE_PAYMENT:0"/>
+<Edge fromNode="READ_ORDERS1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (slave)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ENRICH_PAYMENT_RECORD:1"/>
+<Edge fromNode="READ_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (input)" metadata="Metadata1" outPort="Port 0 (out)" toNode="PARALLEL_PARTITION:0"/>
+<Edge fromNode="VALIDATE_PAYMENT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (valid)" toNode="EXT_SORT:0"/>
+<Edge fromNode="VALIDATE_PAYMENT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 1 (invalid)" toNode="PARALLEL_SIMPLE_GATHER1:0"/>
+</Phase>
+</Graph>

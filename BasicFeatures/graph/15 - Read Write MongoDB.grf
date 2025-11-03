@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Jun 01 10:58:32 CEST 2020" guiVersion="7.2.0.8" id="1591001982233" licenseCode="CLP1DCLOVE94730539BY" name="15 - Read Write MongoDB" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="\t" name="CustomerMongo" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="long"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field name="accountCreated" timeZone="UTC" type="string"/>
+<Field name="isActive" type="boolean"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="DateRange" recordDelimiter="\r\n" type="delimited">
+<Field format="yyyy-MM-dd HH:mm:ss" name="rangeMin" type="date"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="rangeMax" type="date"/>
+</Record>
+</Metadata>
+<Connection config="${CONN_DIR}/MongoDBDemo.cfg" id="MONGODB0" type="MONGODB"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note0" textColor="444444" width="751" x="125" y="25">
+<attr name="text"><![CDATA[h3. Read Write MongoDB
+
+This example demonstrates the use of mongoDBReader and MongoDBWriter components.
+
+* The components in phase 0 drop any existing Mongo collections. Note this uses a subgraph, which in turn uses the ExecuteScript component to call the native Mongo command line interface to execute the drop() statement. The mongo command line program must be installe separately
+* In phase 1, customer data records are read from a flat file, a datre format is converted and then a mongo insertOne command is issued to the customers collection.
+* In phase 2, a mongo find command is executed against the customers collection.
+* Also in phase2, a more complex mongo find query is executed using a json query string.
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node __CONNECTION_CFG_URL="${CONN_DIR}/MongoDBDemo.cfg" __MONGO="D:/Apps/MongoDB/bin/mongo.exe" __QUIET_MODE="true" guiName="Drop collections" guiX="120" guiY="250" id="DROP_COLLECTIONS" jobURL="${SUBGRAPH_DIR}/MongoDBExecute.sgrf" type="SUBGRAPH">
+<attr name="__SCRIPT"><![CDATA[db.customers.drop();
+]]></attr>
+</Node>
+<Node guiName="Fail" guiX="320" guiY="400" id="FAIL" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = nvl($in.0.errMessage, $in.0.errOut);
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Trash" guiX="320" guiY="250" id="TRASH3" type="TRASH"/>
+<Edge fromNode="DROP_COLLECTIONS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="TRASH3:0"/>
+<Edge fromNode="DROP_COLLECTIONS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="FAIL:0"/>
+</Phase>
+<Phase number="1">
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="120" guiY="550" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node guiName="Map date" guiX="345" guiY="550" id="MAP_DATE" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.accountCreated = date2str($in.0.accountCreated, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node batchSize="1000" collection="customers" connectionId="MONGODB0" guiName="Write customers" guiX="570" guiY="550" id="WRITE_CUSTOMERS" operation="insertOne" type="MONGODB_WRITER">
+<attr name="newValue"><![CDATA[{
+	customerId: @{id},
+	fullName: "@{fullName}",
+	streetAddress: "@{streetAddress}",
+	city: "@{city}",
+	postalCode: "@{postalCode}",
+	state: "@{state}",
+	country: "@{country}",
+	email: "@{email}",
+	phone: "@{phone}",
+	accountCreated: ISODate("@{accountCreated}"),
+	isActive: @{isActive}
+}]]></attr>
+</Node>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="MAP_DATE:0"/>
+<Edge fromNode="MAP_DATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="WRITE_CUSTOMERS:0"/>
+</Phase>
+<Phase number="2">
+<Node guiName="Date range" guiX="120" guiY="900" id="DATE_RANGE" type="GET_JOB_INPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.rangeMin = 2016-01-01;
+	$out.0.rangeMax = 2017-01-01;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node collection="customers" connectionId="MONGODB0" guiName="Query customers by date" guiX="320" guiY="900" id="QUERY_CUSTOMERS_BY_DATE" type="MONGODB_READER">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	variant queryJson = {
+		"accountCreated" -> {
+			"$gte" -> { "$date" -> date2long($in.0.rangeMin) },
+			"$lt" -> { "$date" -> date2long($in.0.rangeMax) }
+		}
+	};
+
+	$out.0.query = writeJson(queryJson);
+
+	return ALL;
+}
+]]></attr>
+<attr name="orderBy"><![CDATA[{
+	accountCreated: 1
+}]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.id = str2long($in.1.jsonObject["customerId"]);
+	$out.0.fullName = $in.1.jsonObject["fullName"];
+	$out.0.streetAddress = $in.1.jsonObject["streetAddress"];
+	$out.0.city = $in.1.jsonObject["city"];
+	$out.0.postalCode = $in.1.jsonObject["postalCode"];
+	$out.0.state = $in.1.jsonObject["state"];
+	$out.0.country = $in.1.jsonObject["country"];
+	$out.0.email = $in.1.jsonObject["email"];
+	$out.0.phone = $in.1.jsonObject["phone"];
+	$out.0.accountCreated = long2date(str2long(replace($in.1.jsonObject["accountCreated"], "[^0-9]", "")));
+	$out.0.isActive = $in.1.jsonObject["isActive"] == "true";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node collection="customers" connectionId="MONGODB0" guiName="Query customers by name" guiX="120" guiY="725" id="QUERY_CUSTOMERS_BY_NAME" type="MONGODB_READER">
+<attr name="query"><![CDATA[{
+	"fullName": { $gte: "A", $lte: "C" }
+}]]></attr>
+<attr name="orderBy"><![CDATA[{
+	fullName : 1
+}]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.id = str2long($in.1.jsonObject["customerId"]);
+	$out.0.fullName = $in.1.jsonObject["fullName"];
+	$out.0.streetAddress = $in.1.jsonObject["streetAddress"];
+	$out.0.city = $in.1.jsonObject["city"];
+	$out.0.postalCode = $in.1.jsonObject["postalCode"];
+	$out.0.state = $in.1.jsonObject["state"];
+	$out.0.country = $in.1.jsonObject["country"];
+	$out.0.email = $in.1.jsonObject["email"];
+	$out.0.phone = $in.1.jsonObject["phone"];
+	$out.0.accountCreated = long2date(str2long(replace($in.1.jsonObject["accountCreated"], "[^0-9]", "")));
+	$out.0.isActive = $in.1.jsonObject["isActive"] == "true";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Trash" guiX="570" guiY="725" id="TRASH" type="TRASH"/>
+<Node guiName="Trash" guiX="570" guiY="900" id="TRASH1" type="TRASH"/>
+<Edge fromNode="DATE_RANGE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="QUERY_CUSTOMERS_BY_DATE:0"/>
+<Edge fromNode="QUERY_CUSTOMERS_BY_DATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="TRASH1:0"/>
+<Edge fromNode="QUERY_CUSTOMERS_BY_NAME:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="TRASH:0"/>
+</Phase>
+</Graph>

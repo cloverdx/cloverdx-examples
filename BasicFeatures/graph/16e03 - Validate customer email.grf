@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="droben" created="Fri Jan 31 10:28:19 GMT 2020" guiVersion="7.2.0.8" id="1580477938641" licenseCode="CLP1DCLOVE64060597BY" name="16e01 - Validate customers" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="\t" name="Customers" previewAttachment="${DATAIN_DIR}/Customers.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="integer"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field format="yyyy-MM-dd" name="accountCreated" type="date"/>
+<Field eofAsDelimiter="true" name="isActive" type="boolean"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="\t" name="ExtendedCustomers" previewAttachment="${DATAIN_DIR}/Customers.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="statusField" type="integer"/>
+<Field name="errorField" type="string"/>
+<Field name="id" type="integer"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field format="yyyy-MM-dd" name="accountCreated" type="date"/>
+<Field eofAsDelimiter="true" name="isActive" type="boolean"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="926" x="100" y="50">
+<attr name="text"><![CDATA[h3. Validate customer email
+
+The example demonstrates use of the Email filter component to assess quality of incoming email address data.
+
+An [Email Filter|element://EMAIL_FILTER] component analyzes values in a specified subset of fields that contain email addresses. This example limits the analysis to checking for correct syntax. Other options check for valid domains or even attempt to send test emails. Records with valid email addresses are emitted on port 0.  Invalid record information is emitted on port 1.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node acceptCondition="STRICT" acceptEmpty="false" errorField="errorField" field="email" guiName="EmailFilter" guiX="295" guiY="250" id="EMAIL_FILTER" level="syntax" statusField="statusField" type="EMAIL_FILTER"/>
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Read customers" guiX="95" guiY="250" id="READ_CUSTOMERS1" type="FLAT_FILE_READER"/>
+<Node guiName="Success" guiX="495" guiY="250" id="SUCCESS" type="SUCCESS"/>
+<Node guiName="Validation errors" guiX="495" guiY="400" id="VALIDATION_ERRORS" type="TRASH"/>
+<Edge fromNode="EMAIL_FILTER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (accepted records)" toNode="SUCCESS:0"/>
+<Edge fromNode="EMAIL_FILTER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 1 (rejected records)" toNode="VALIDATION_ERRORS:0"/>
+<Edge fromNode="READ_CUSTOMERS1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (input records)" metadata="Metadata1" outPort="Port 0 (output)" toNode="EMAIL_FILTER:0"/>
+</Phase>
+</Graph>

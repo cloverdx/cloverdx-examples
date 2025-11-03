@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Dec 12 16:42:11 CET 2016" guiVersion="7.2.0.8" id="1481558591883" licenseCode="CLP1DJAVLI67717532BY" name="GenerateOrders" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
+<Metadata fileURL="${META_DIR}/online-store/LineItem.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/online-store/LineItemFixLen.fmt" id="Metadata4"/>
+<Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata1"/>
+<Metadata fileURL="${META_DIR}/online-store/Product.fmt" id="Metadata3"/>
+<Metadata id="Address" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="AddressWithId" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="id" type="long"/>
+<Field name="type" type="string"/>
+<Field name="name" type="string"/>
+<Field name="street" type="string"/>
+<Field name="zip" type="string"/>
+<Field name="city" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata5">
+<Record fieldDelimiter="\t" name="LineItemFlat" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="id" type="long"/>
+<Field format="0000000000" name="orderId" size="10" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="orderDatetime" size="19" type="date"/>
+<Field format="0000000000" name="productCode" size="10" type="long"/>
+<Field length="10" name="unitPrice" scale="2" size="10" type="decimal"/>
+<Field length="10" name="units" scale="2" size="10" type="decimal"/>
+<Field length="10" name="totalPrice" scale="2" size="10" type="decimal"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Customers with orders (percent)" name="CUSTOMERS_WITH_ORDERS_PERCENT" public="true" required="true" value="15">
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameter label="Minimum number of orders per customer" name="MIN_ORDERS_PER_CUSTOMER" public="true" required="true" value="1">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Maximum number of orders per customer" name="MAX_ORDERS_PER_CUSTOMER" public="true" required="true" value="8">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Minimum number of items per order" name="MIN_ITEMS_PER_ORDER" public="true" required="true" value="1">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Maximum number of items per order" name="MAX_ITEMS_PER_ORDER" public="true" required="true" value="5">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Minimum order date" name="ORDER_MIN_DATE" public="true" value="2017-01-01">
+<SingleType format="yyyy-MM-dd" name="datetime"/>
+</GraphParameter>
+<GraphParameter label="Maximum order date" name="ORDER_MAX_DATE" public="true" value="2017-03-31">
+<SingleType format="yyyy-MM-dd" name="datetime"/>
+</GraphParameter>
+<GraphParameter name="SAMPLE_SIZE">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	// Convert percentage to fractions and then convert to string. No error checking is done to keep it simple.
+	return num2str(${CUSTOMERS_WITH_ORDERS_PERCENT} / 100.0);
+}
+]]></attr>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<LookupTable charset="UTF-8" id="LookupTable1" initialSize="512" key="id" metadata="Address" name="AddressByIdLkp" type="simpleLookup"/>
+<LookupTable id="LookupTable0" initialSize="512" key="productCode" metadata="Metadata3" name="ProductByProductCodeLkp" type="simpleLookup"/>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="301" id="Note0" textColor="444444" width="276" x="1125" y="575">
+<attr name="text"><![CDATA[h3. OrdersFlat
+
+This output is not used in training, but is used during  various demos. That is why this component is disabled by default - no need to produce a file that is not used.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note1" textColor="444444" width="976" x="125" y="25">
+<attr name="text"><![CDATA[h3. Generate Orders
+
+This graph synthesizes order data that is used as sample input by other graphs in this project. Sample data is produced in a variety of formats (csv, fixed length, json and XML). Product, Customer name and Address data are written to lookup tables in early phases, then joind with order data in later phases. CTL random() functrions are used to introduce variability.]]></attr>
+</RichTextNote>
+<Dictionary>
+<Entry dictval.value="999999999" input="false" name="productCodeMin" output="false" type="long"/>
+<Entry dictval.value="0" input="false" name="productCodeMax" output="false" type="long"/>
+<Entry dictval.value="0" input="false" name="orderCount" output="false" type="long"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="145" guiY="725" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node guiName="DataSampler" guiX="345" guiY="725" id="DATA_SAMPLER" sampleSize="${SAMPLE_SIZE}" samplingMethod="Simple" type="DATA_SAMPLER"/>
+<Node guiName="Get code min/max" guiX="545" guiY="475" id="GET_CODE_MIN_MAX" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.productName = trim($in.0.productName);
+
+	// This is simpler than doing Aggregate and then using SetJobOutput to write the values to dictionary.
+	if (dictionary.productCodeMax < $in.0.productCode) {
+		dictionary.productCodeMax = $in.0.productCode;
+	}
+	
+	if (dictionary.productCodeMin > $in.0.productCode) {
+		dictionary.productCodeMin = $in.0.productCode;
+	}
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAIN_DIR}/data-generators/OnlineShopCatalogue.xlsx" guiName="Products" guiX="145" guiY="375" id="PRODUCTS" sheet="Products" type="SPREADSHEET_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping>
+    <globalAttributes>
+        <orientation>VERTICAL</orientation>
+        <step>1</step>
+        <writeHeader>true</writeHeader>
+    </globalAttributes>
+    <defaultSkip>1</defaultSkip>
+    <headerGroups>
+        <headerGroup skip="1">
+            <cloverField>productName</cloverField>
+            <headerRanges>
+                <headerRange begin="A1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>productCode</cloverField>
+            <headerRanges>
+                <headerRange begin="B1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>unitPrice</cloverField>
+            <headerRanges>
+                <headerRange begin="C1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>supplierName</cloverField>
+            <headerRanges>
+                <headerRange begin="D1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>profitMargin</cloverField>
+            <headerRanges>
+                <headerRange begin="E1"/>
+            </headerRanges>
+        </headerGroup>
+    </headerGroups>
+</mapping>
+]]></attr>
+</Node>
+<Node charset="UTF-8" fileURL="${DATAIN_DIR}/Products.csv" guiName="Products.csv" guiX="545" guiY="300" id="PRODUCTS_CSV1" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="ProductByProductCodeLkp" guiX="745" guiY="475" id="PRODUCT_BY_PRODUCT_CODE_LKP" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node guiName="SimpleCopy" guiX="345" guiY="375" id="SIMPLE_COPY2" type="SIMPLE_COPY"/>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="DATA_SAMPLER:0"/>
+<Edge fromNode="DATA_SAMPLER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="GENERATE_ORDERS:0"/>
+<Edge fromNode="GET_CODE_MIN_MAX:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="PRODUCT_BY_PRODUCT_CODE_LKP:0"/>
+<Edge fromNode="PRODUCTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (output)" toNode="SIMPLE_COPY2:0"/>
+<Edge fromNode="SIMPLE_COPY2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="PRODUCTS_CSV1:0"/>
+<Edge fromNode="SIMPLE_COPY2:1" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="GET_CODE_MIN_MAX:0"/>
+</Phase>
+<Phase number="1">
+<Node guiName="Generate orders" guiX="545" guiY="725" id="GENERATE_ORDERS" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+import "${TRANS_DIR}/Common.ctl";
+
+long orderId = 0;
+
+function integer count() {
+	return getRandomIntGaussian(${MIN_ORDERS_PER_CUSTOMER}, ${MAX_ORDERS_PER_CUSTOMER});
+}
+
+function integer transform(integer i) {
+	$out.0.id = orderId++;
+	$out.0.customerId = $in.0.id;
+	//$out.0.orderDatetime = randomDate($in.0.accountCreated, today());
+	$out.0.orderDatetime = randomDate(${ORDER_MIN_DATE}, ${ORDER_MAX_DATE});
+	dictionary.orderCount += 1;
+
+	return OK;
+}
+]]></attr>
+</Node>
+<Node guiName="SimpleCopy" guiX="745" guiY="725" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="SimpleCopy" guiX="945" guiY="725" id="SIMPLE_COPY4" type="SIMPLE_COPY"/>
+<Edge fromNode="GENERATE_ORDERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SIMPLE_COPY4:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge18" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="ORDERS_JSON:0"/>
+<Edge fromNode="SIMPLE_COPY:2" guiBendpoints="" guiRouter="Manhattan" id="Edge16" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="GENERATE_ADDRESSES1:0"/>
+<Edge fromNode="SIMPLE_COPY:3" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 3 (out)" toNode="GENERATE_LINE_ITEMS:0"/>
+<Edge fromNode="SIMPLE_COPY4:0" guiBendpoints="" guiRouter="Manhattan" id="Edge24" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="ORDERS_FLAT1:0"/>
+<Edge fromNode="SIMPLE_COPY4:1" guiBendpoints="" guiRouter="Manhattan" id="Edge23" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="ORDERS_XML:0"/>
+</Phase>
+<Phase number="2">
+<Node guiName="AddressByIdLkp" guiX="545" guiY="1275" id="ADDRESS_BY_ID_LKP" lookupTable="LookupTable1" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node guiName="Build order address" guiX="345" guiY="1275" id="BUILD_ORDER_ADDRESS" type="COMBINE">
+<attr name="transform"><![CDATA[//#CTL2
+long i = 0;
+
+function integer transform() {
+	$out.0.id = i++;
+	$out.0.street = $in.0.streetAddress;
+	$out.0.zip = $in.0.postalCode;
+	$out.0.city = $in.0.city;
+	$out.0.state = $in.0.state;
+	$out.0.country = $in.0.country;
+	$out.0.name = $in.1.fullName;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node __CUSTOMER_COUNT="1" guiName="Contact names" guiX="145" guiY="1425" id="CONTACT_NAMES" jobURL="${GRAPH_DIR}/generators/GenerateCustomerNames.sgrf" type="SUBGRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.CUSTOMER_COUNT = num2str(dictionary.orderCount * 2);
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node __ADDRESS_COUNT="1" guiName="Order addresses" guiX="145" guiY="1275" id="ORDER_ADDRESSES" jobURL="${GRAPH_DIR}/generators/GenerateAddresses.sgrf" type="SUBGRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.ADDRESS_COUNT = num2str(dictionary.orderCount * 2);
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="BUILD_ORDER_ADDRESS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge15" inPort="Port 0 (in)" metadata="Address" outPort="Port 0 (out)" toNode="ADDRESS_BY_ID_LKP:0"/>
+<Edge fromNode="CONTACT_NAMES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="BUILD_ORDER_ADDRESS:1"/>
+<Edge fromNode="ORDER_ADDRESSES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="BUILD_ORDER_ADDRESS:0"/>
+</Phase>
+<Phase number="3">
+<Node guiName="Generate addresses" guiX="945" guiY="925" id="GENERATE_ADDRESSES1" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+string[] ADDRESS_TYPES = ["shipping", "billing"];
+
+function integer count() {
+	// Decide how many addresses we want to have for the order. There are two options:
+	//  1: shipping address only -> billing is the same as customer's address
+	//  2: billing and shipping -> both billing and shipping addresses will appear in the file
+	
+	number x = random();
+	if (x < 0.3) {
+		// 30% of orders will only have shipping address.
+		return 1;
+	}
+
+	// Remaining orders will have two distinct addresses - billing and shipping.
+	return 2;
+}
+
+function integer transform(integer i) {
+	// Get random address from our pool of addresses. Address id is always [0, 2 * orderCount).
+	long addressId = randomLong(0, 2 * dictionary.orderCount - 1);
+	AddressWithId address = lookup(AddressByIdLkp).get(addressId);
+	$out.0.* = address.*;
+
+	$out.0.type = ADDRESS_TYPES[i];
+	$out.0.id = $in.0.id; // Order id.
+
+	return OK;
+}
+]]></attr>
+</Node>
+<Node guiName="Generate line items" guiX="945" guiY="1100" id="GENERATE_LINE_ITEMS" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+import "${TRANS_DIR}/Common.ctl";
+
+function integer count() {
+	return getRandomIntGaussian(${MIN_ITEMS_PER_ORDER}, ${MAX_ITEMS_PER_ORDER});
+}
+
+function integer transform(integer i) {
+	Product prod = getRandomProduct();
+
+	$out.0.orderId = $in.0.id;
+	$out.0.orderDatetime = $in.0.orderDatetime;
+	$out.0.productCode = prod.productCode;
+	$out.0.productName = prod.productName;
+	$out.0.unitPrice = prod.unitPrice;
+	$out.0.units = randomInteger(1, 10); // Do not bother with fractions here - some products do not make sense with fractional quantities.
+	$out.0.totalPrice = $out.0.units * $out.0.unitPrice;
+
+	return OK;
+}
+
+function Product getRandomProduct() {
+	Product product = null;
+	
+	while (product == null) {
+		// There are "holes" in the product list. The basic assumption is that there's only few of them, so doing a loop here is not going
+		// to loop for long. If the product catalog is changed and more holes are introduced into product codes, this will need to be changed.
+		long prodCode = randomLong(dictionary.productCodeMin, dictionary.productCodeMax);
+		product = lookup(ProductByProductCodeLkp).get(prodCode);
+	}
+	
+	return product;
+}]]></attr>
+</Node>
+<Node charset="US-ASCII" fileURL="zip:(${DATAIN_DIR}/LineItems.zip)#LineItems.dat" guiName="LineItems" guiX="1620" guiY="1250" id="LINE_ITEMS" makeDirs="true" type="FLAT_FILE_WRITER"/>
+<Node charset="UTF-8" fileURL="${DATATMP_DIR}/LineItems.csv" guiName="LineItems flat" guiX="1620" guiY="1425" id="LINE_ITEMS_FLAT" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node charset="UTF-8" fileURL="${DATATMP_DIR}/Orders.csv" guiName="Orders flat" guiX="1145" guiY="725" id="ORDERS_FLAT1" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node charset="UTF-8" fileURL="zip:(${DATAIN_DIR}/OrdersJSON.zip)#Orders.json" guiName="Orders.json" guiX="1420" guiY="875" id="ORDERS_JSON" makeDirs="true" type="JSON_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:clover="http://www.cloveretl.com/ns/xmlmapping">
+  <clover:collection clover:name="orders">
+    <order clover:inPort="0">
+      <id>$0.id</id>
+      <customerId>$0.customerId</customerId>
+      <orderDatetime>$0.orderDatetime</orderDatetime>
+      <clover:collection clover:name="items">
+        <item clover:inPort="1" clover:key="orderId" clover:parentKey="id">
+          <productCode>$1.productCode</productCode>
+          <productName>$1.productName</productName>
+          <unitPrice>$1.unitPrice</unitPrice>
+          <qty>$1.units</qty>
+        </item>
+      </clover:collection>
+      <clover:collection clover:name="addresses">
+        <address clover:inPort="2" clover:key="id" clover:parentKey="id">
+          <type>$2.type</type>
+          <name>$2.name</name>
+          <street>$2.street</street>
+          <city>$2.city</city>
+          <zip>$2.zip</zip>
+          <state>$2.state</state>
+          <country>$2.country</country>
+        </address>
+      </clover:collection>
+    </order>
+  </clover:collection>
+</root>]]></attr>
+</Node>
+<Node charset="UTF-8" fileURL="zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml" guiName="Orders.xml" guiX="1420" guiY="1050" id="ORDERS_XML" type="EXT_XML_WRITER" xmlSchemaURL="${META_DIR}/online-store/Orders.xsd">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<orders xmlns:clover="http://www.cloveretl.com/ns/xmlmapping">
+  <order id="$0.id" customerId="$0.customerId" date="$0.orderDatetime" clover:inPort="0">
+    <item productCode="$1.productCode" unitPrice="$1.unitPrice" qty="$1.units" clover:inPort="1" clover:key="orderId" clover:parentKey="id">$1.productName</item>
+    <address type="$2.type" clover:inPort="2" clover:key="id" clover:parentKey="id">
+      <name>$2.name</name>
+      <street>$2.street</street>
+      <city>$2.city</city>
+      <zip>$2.zip</zip>
+      <state>$2.state</state>
+      <country>$2.country</country>
+    </address>
+  </order>
+</orders>]]></attr>
+</Node>
+<Node guiName="SimpleCopy" guiX="1145" guiY="1100" id="SIMPLE_COPY1" type="SIMPLE_COPY"/>
+<Node guiName="SimpleCopy" guiX="1145" guiY="925" id="SIMPLE_COPY3" type="SIMPLE_COPY"/>
+<Node guiName="To fixlen" guiX="1420" guiY="1250" id="TO_FIXLEN" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+long id = 0;
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.productName = removeNonAscii(removeDiacritic($in.0.productName));
+	$out.1.* = $in.0.*;
+	$out.1.id = id++;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="GENERATE_ADDRESSES1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge17" inPort="Port 0 (in)" metadata="Address" outPort="Port 0 (out)" toNode="SIMPLE_COPY3:0"/>
+<Edge fromNode="GENERATE_LINE_ITEMS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="SIMPLE_COPY1:0"/>
+<Edge fromNode="SIMPLE_COPY1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="ORDERS_XML:1"/>
+<Edge fromNode="SIMPLE_COPY1:1" guiBendpoints="" guiRouter="Manhattan" id="Edge21" inPort="Port 1 (in)" outPort="Port 1 (out)" toNode="ORDERS_JSON:1"/>
+<Edge fromNode="SIMPLE_COPY1:2" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="TO_FIXLEN:0"/>
+<Edge fromNode="SIMPLE_COPY3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge19" inPort="Port 2 (in)" outPort="Port 0 (out)" toNode="ORDERS_XML:2"/>
+<Edge fromNode="SIMPLE_COPY3:1" guiBendpoints="" guiRouter="Manhattan" id="Edge20" inPort="Port 2 (in)" outPort="Port 1 (out)" toNode="ORDERS_JSON:2"/>
+<Edge debugMode="false" fromNode="TO_FIXLEN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="LINE_ITEMS:0"/>
+<Edge fromNode="TO_FIXLEN:1" guiBendpoints="" guiRouter="Manhattan" id="Edge25" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 1 (out)" toNode="LINE_ITEMS_FLAT:0"/>
+</Phase>
+</Graph>

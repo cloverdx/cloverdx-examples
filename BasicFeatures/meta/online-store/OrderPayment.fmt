@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter=";" name="OrderPayment" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="paymentId" type="long"/>
+<Field name="orderId" type="long"/>
+<Field name="customerId" type="long"/>
+<Field name="paymentType" type="string"/>
+<Field name="paidAmount" type="decimal"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="paymentDate" timeZone="UTC" type="date"/>
+</Record>

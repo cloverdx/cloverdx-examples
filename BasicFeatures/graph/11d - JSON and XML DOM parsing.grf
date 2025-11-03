@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Sep 26 08:37:53 CEST 2017" guiVersion="7.2.0.8" id="1506415932909" licenseCode="CLP1DJAVLI50596644BY" name="11e05 - Read orders with DOM" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Address.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata1"/>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="OrderWithItemCount" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="id" type="long"/>
+<Field name="customerId" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="orderDatetime" timeZone="UTC" type="date"/>
+<Field name="itemsCount" type="integer"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="101" id="Note0" textColor="444444" width="951" x="75" y="25">
+<attr name="text"><![CDATA[h3. JSON and XML DOM parsing
+
+Thbis exampe domonstrates the [JSONReader|element://JSONREADER] and [XMLReader|element://XMLREADER] components. Unlike JSONExtract and XMLExtract components, these reader components use a DOM model. The entire doument is loaded into memory as an object model and then XPATH commands are used to extract specific data elements.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Addresses" guiX="320" guiY="475" id="ADDRESSES" type="TRASH"/>
+<Node guiName="Addresses" guiX="895" guiY="475" id="ADDRESSES1" type="TRASH"/>
+<Node charset="UTF-8" fileURL="zip:(${DATAIN_DIR}/OrdersJSON.zip)#Orders.json" guiName="JSONReader" guiX="70" guiY="300" id="JSONREADER" implicitMapping="true" type="JSON_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context xpath="/root/object">
+	<Context xpath="orders" outPort="0">
+		<Mapping cloverField="itemsCount" xpath="count(items)"/>
+		
+		<Context xpath="items" outPort="1">
+			<Mapping cloverField="orderId" xpath="../id"/>
+		</Context>
+		
+		<Context xpath="addresses" outPort="2">
+			<Mapping cloverField="orderId" xpath="../id"/>
+		</Context>
+	</Context>
+</Context>
+]]></attr>
+</Node>
+<Node guiName="Line items" guiX="320" guiY="325" id="LINE_ITEMS" type="TRASH"/>
+<Node guiName="Line items" guiX="895" guiY="325" id="LINE_ITEMS1" type="TRASH"/>
+<Node guiName="Orders" guiX="320" guiY="175" id="ORDERS" type="TRASH"/>
+<Node guiName="Orders" guiX="895" guiY="175" id="ORDERS1" type="TRASH"/>
+<Node charset="UTF-8" fileURL="zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml" guiName="XMLReader" guiX="645" guiY="300" id="XMLREADER" implicitMapping="true" type="XML_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context xpath="/orders">
+	<Context xpath="order" outPort="0">
+		<Mapping cloverField="itemsCount" xpath="count(item)"/>
+		<Mapping cloverField="id" xpath="@id"/>
+		<Mapping cloverField="customerId" xpath="@customerId"/>
+		<Mapping cloverField="orderDatetime" xpath="@date"/>
+		
+		<Context xpath="item" outPort="1">
+			<Mapping cloverField="orderId" xpath="../@id"/>
+			<Mapping cloverField="productCode" xpath="@productCode"/>
+			<Mapping cloverField="unitPrice" xpath="@unitPrice"/>
+			<Mapping cloverField="qty" xpath="@qty"/>
+			<Mapping cloverField="productName" xpath="text()"/>
+		</Context>
+		
+		<Context xpath="address" outPort="2">
+			<Mapping cloverField="orderId" xpath="../@id"/>
+			<Mapping cloverField="type" xpath="@type"/>
+		</Context>
+	</Context>
+</Context>
+]]></attr>
+</Node>
+<Edge fromNode="JSONREADER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ORDERS:0"/>
+<Edge fromNode="JSONREADER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 1 (out)" toNode="LINE_ITEMS:0"/>
+<Edge fromNode="JSONREADER:2" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="ADDRESSES:0"/>
+<Edge fromNode="XMLREADER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ORDERS1:0"/>
+<Edge fromNode="XMLREADER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 1 (out)" toNode="LINE_ITEMS1:0"/>
+<Edge fromNode="XMLREADER:2" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="ADDRESSES1:0"/>
+</Phase>
+</Graph>

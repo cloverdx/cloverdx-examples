@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Jun 20 10:55:50 CEST 2017" guiVersion="7.2.0.8" id="1497950086391" licenseCode="CLP1DJAVLI10291612BY" name="09e02 - Load line items" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Product.fmt" id="Metadata0"/>
+<Connection dbConfig="${CONN_DIR}/TrainingDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameter label="Input File URL" name="INPUT_FILE_URL" public="true" required="true" value="${DATAIN_DIR}/Products.csv">
+<ComponentReference referencedComponent="PRODUCTS_INPUT" referencedProperty="fileURL"/>
+</GraphParameter>
+<GraphParameter label="Truncate target table" name="TRUNCATE_TABLE" public="true" value="true">
+<SingleType name="bool"/>
+</GraphParameter>
+<GraphParameter name="__TRUNCATE_TABLE_ENABLED">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return ${TRUNCATE_TABLE} == true ? "enabled" : "disabled";
+}
+]]></attr>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="database.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="3465A4" folded="false" fontSize="medium" height="175" id="Note1" textColor="FFFFFF" width="800" x="25" y="-25">
+<attr name="text"><![CDATA[h3. Load producs
+
+Load product data into {{products}} table.
+
+Use _Truncate target table_ parameter to control whether all data in the table should be deleted before it is loaded. Note that the tables use cascading constraints, so this might also delete records from other tables. This optional truncation ocurrs in phase 0 of the graph while the table loading process occurs in phase 1. 
+
+This example depends on the existence of Postgres database tables that can be created by the graph in init/02 - Recreate database tables.grf ]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" enabled="${__TRUNCATE_TABLE_ENABLED}" guiName="Truncate table" guiX="320" guiY="175" id="TRUNCATE_TABLE" type="DB_EXECUTE">
+<attr name="sqlQuery"><![CDATA[delete from products;]]></attr>
+</Node>
+</Phase>
+<Phase number="1">
+<Node guiName="Errors" guiX="320" guiY="475" id="ERRORS" type="TRASH"/>
+<Node batchMode="true" batchSize="${BATCH_SIZE}" commit="${COMMIT_SIZE}" dbConnection="JDBC0" dbTable="products" guiName="products" guiX="320" guiY="325" id="PRODUCTS1" maxErrors="-1" type="DB_OUTPUT_TABLE"/>
+<Node charset="UTF-8" dataPolicy="Controlled" fileURL="${INPUT_FILE_URL}" guiName="Products input" guiX="45" guiY="325" id="PRODUCTS_INPUT" type="FLAT_FILE_READER"/>
+<Node guiName="Trash" guiX="595" guiY="325" id="TRASH" type="TRASH"/>
+<Edge fromNode="PRODUCTS1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (rejected)" toNode="TRASH:0"/>
+<Edge fromNode="PRODUCTS_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="PRODUCTS1:0"/>
+<Edge fromNode="PRODUCTS_INPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 1 (logs)" toNode="ERRORS:0"/>
+</Phase>
+</Graph>

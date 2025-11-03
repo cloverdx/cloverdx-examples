@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Jan Slechta" created="Tue Apr 16 14:43:26 CEST 2024" guiVersion="7.2.0.8" id="1713345881627" licenseCode="CLCDSCLOVE85208925SP" name="18 - HL7 processing" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="Patient" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="patientId" type="string"/>
+<Field name="firstName" type="string"/>
+<Field name="lastName" type="string"/>
+<Field name="addrCity" type="string"/>
+<Field name="addrState" type="string"/>
+<Field name="addrZip" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note0" textColor="444444" width="800" x="50" y="25">
+<attr name="text"><![CDATA[h3. HL7 Processing
+
+This example demonstrates the use of the HL7Reader component.
+
+
+* an [HL7Reader|element://HL7READER] parses HL7 documents from a source folder and extracts patient details. The HL7Reader emits records represented by the clover data type *variant*
+* a [Map |element://EXTRACT_PATIENT_DETAILS] component further parses tha variant fields into patient record fields.
+* a [Sort |element://EXT_SORT] component sorts the parsed patient records by patientId and last name. 
+* a [Deduplicate|element://DEDUP] component deduplicates entries before they are written into data-out.
+* Invalid segments are written into an XLSX report.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dedupKey="patientId(a);lastName(a)" guiName="Dedup" guiX="870" guiY="250" id="DEDUP" type="DEDUP"/>
+<Node guiName="Extract Patient Details" guiX="445" guiY="250" id="EXTRACT_PATIENT_DETAILS" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.patientId = cast($in.0.hl7Message["HL7"]["BATCH"][0]["ORU_R01"][0]["RESPONSE"][0]["PATIENT"]["PID"]["PID.2"]["PID.2.1"], string);
+	$out.0.lastName = cast($in.0.hl7Message["HL7"]["BATCH"][0]["ORU_R01"][0]["RESPONSE"][0]["PATIENT"]["PID"]["PID.5"]["PID.5.1"], string);
+	$out.0.firstName = cast($in.0.hl7Message["HL7"]["BATCH"][0]["ORU_R01"][0]["RESPONSE"][0]["PATIENT"]["PID"]["PID.5"]["PID.5.2"], string);
+	$out.0.addrCity = cast($in.0.hl7Message["HL7"]["BATCH"][0]["ORU_R01"][0]["RESPONSE"][0]["PATIENT"]["PID"]["PID.11"][0]["PID.11.3"], string) : "n/a";
+	$out.0.addrState = cast($in.0.hl7Message["HL7"]["BATCH"][0]["ORU_R01"][0]["RESPONSE"][0]["PATIENT"]["PID"]["PID.11"][0]["PID.11.4"], string) : "n/a";
+	$out.0.addrZip = cast($in.0.hl7Message["HL7"]["BATCH"][0]["ORU_R01"][0]["RESPONSE"][0]["PATIENT"]["PID"]["PID.11"][0]["PID.11.5"], string) : "n/a";
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node guiName="ExtSort" guiX="670" guiY="250" id="EXT_SORT" sortKey="patientId(a);lastName(a)" type="EXT_SORT"/>
+<Node guiName="HL7Reader" guiX="245" guiY="250" id="HL7READER" sourceUri="port:$0.URL:source" strictValidation="false" type="HL7_READER"/>
+<Node existingSheetsActions="REMOVE_SHEETS" fileURL="${DATAOUT_DIR}/InvaildHL7Segments.xlsx" guiName="InvaildHL7Segments.xlsx" guiX="1070" guiY="425" id="INVAILD_HL7SEGMENTS_XLSX" sheet="Invalid Segments" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_STREAM">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping>
+    <globalAttributes>
+        <step>1</step>
+        <orientation>VERTICAL</orientation>
+        <writeHeader>true</writeHeader>
+    </globalAttributes>
+    <defaultSkip>1</defaultSkip>
+    <headerGroups>
+        <headerGroup skip="1">
+            <cloverField>errorMessage</cloverField>
+            <headerRanges>
+                <headerRange begin="A1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>errorSegment</cloverField>
+            <headerRanges>
+                <headerRange begin="B1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>errorLineNumber</cloverField>
+            <headerRanges>
+                <headerRange begin="C1"/>
+            </headerRanges>
+        </headerGroup>
+    </headerGroups>
+</mapping>
+]]></attr>
+</Node>
+<Node fileURL="${DATAIN_DIR}/hl7/oru" guiName="ListFiles" guiX="45" guiY="250" id="LIST_FILES" type="LIST_FILES"/>
+<Node fileURL="${DATAOUT_DIR}/PatientList.txt" guiName="PatientList.txt" guiX="1070" guiY="250" id="PATIENT_LIST_TXT" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="DEDUP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (unique)" toNode="PATIENT_LIST_TXT:0"/>
+<Edge fromNode="EXTRACT_PATIENT_DETAILS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_SORT:0"/>
+<Edge fromNode="EXT_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="DEDUP:0"/>
+<Edge fromNode="HL7READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (output)" toNode="EXTRACT_PATIENT_DETAILS:0"/>
+<Edge fromNode="HL7READER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (input)" outPort="Port 1 (error)" toNode="INVAILD_HL7SEGMENTS_XLSX:0"/>
+<Edge fromNode="LIST_FILES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (input)" outPort="Port 0 (out)" toNode="HL7READER:0"/>
+</Phase>
+</Graph>

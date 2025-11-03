@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="|" name="Product" previewAttachmentCharset="UTF-8" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field label="Product name" name="productName" type="string"/>
+<Field label="Product code" name="productCode" type="long"/>
+<Field label="Unit price" name="unitPrice" type="decimal"/>
+<Field label="Supplier" name="supplierName" type="string"/>
+<Field label="Profit margin" name="profitMargin" type="decimal"/>
+</Record>

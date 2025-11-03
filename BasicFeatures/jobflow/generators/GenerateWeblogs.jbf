@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Feb 12 10:44:47 CET 2018" guiVersion="7.2.0.8" id="1518521392258" licenseCode="CLP1DJAVLI71979440BY" name="GenerateWeblogs" nature="jobflow" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record eofAsDelimiter="true" fieldDelimiter="|" name="Site" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="siteName" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter name="VISITS_MIN" value="200000"/>
+<GraphParameter name="VISITS_MAX" value="400000"/>
+<GraphParameter name="VISITORS_MIN" value="20000"/>
+<GraphParameter name="VISITORS_MAX" value="40000"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="101" id="Note0" textColor="444444" width="526" x="125" y="25">
+<attr name="text"><![CDATA[h3. GenerateWeblogs
+
+This job orchestrates execution of a graph which generate sample weblog data used by various other examples in this project
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node executorsNumber="3" guiName="GenerateWeblogs" guiX="320" guiY="150" id="GENERATE_WEBLOGS" jobURL="${GRAPH_DIR}/generators/GenerateWeblogs.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.SITE_BASE_URL = $in.0.siteName;
+	$out.1.OUTPUT_FILE_NAME = "zip:(${DATAOUT_DIR}/" + $in.0.siteName + ".zip)#log.txt";
+	$out.1.UNIQUE_CLIENTS = num2str(randomLong(${VISITORS_MIN}, ${VISITORS_MAX}));
+	$out.1.VISITS_TO_GENERATE = num2str(randomLong(${VISITS_MIN}, ${VISITS_MAX}));
+	$out.0.executionLabel = "Generate weblog - " + $in.0.siteName;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAIN_DIR}/data-generators/Sites.txt" guiName="Get site list" guiX="120" guiY="150" id="GET_SITE_LIST" type="FLAT_FILE_READER"/>
+<Edge fromNode="GET_SITE_LIST:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="GENERATE_WEBLOGS:0"/>
+</Phase>
+</Graph>

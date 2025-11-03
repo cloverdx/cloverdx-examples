@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu Aug 24 06:07:41 CEST 2017" guiVersion="7.2.0.8" id="1503547701055" licenseCode="CLP1DJAVLI50596644BY" name="10e02 - Data denormalization" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="PreferredPayment" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="customerId" type="long"/>
+<Field name="preferredPaymentType" type="string"/>
+<Field name="totalPaymentCount" type="long"/>
+<Field name="cashCount" type="long"/>
+<Field length="12" name="cashAmount" scale="2" type="decimal"/>
+<Field name="cardCount" type="long"/>
+<Field length="12" name="cardAmount" scale="2" type="decimal"/>
+<Field name="wireCount" type="long"/>
+<Field length="12" name="wireAmount" scale="2" type="decimal"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="751" x="100" y="25">
+<attr name="text"><![CDATA[h3. Data Denormalization
+
+The example demonstrates the use of the [Denormalizer|element://DENORMALIZER] component. A subgraph is used to read payment data. Each input record contains details of a purchase including a customer ID and a method of payment (Cash, Card or Wire). The denormalizer aggregates payments by customer ID and calculates the number and sum of payments by each payment method. Information about records that do not pass validation during read is logged in a separate file.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Denormalizer" guiX="370" guiY="200" id="DENORMALIZER" key="customerId(a)" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+string[] PAYMENT_TYPES = ["CASH", "CARD", "WIRE"];
+
+long currentCustomerId;
+map[string, integer] paymentCounts;
+map[string, decimal] paymentAmounts;
+clean();
+
+// In append function we process each record for given customer in turn and update global variables holding amounts
+// and counts for each payment method.
+// Note that we calculate the preferred type at the end in the transform function. In append function we only count
+// different payment types.
+function integer append() {
+	currentCustomerId = $in.0.customerId;
+	paymentCounts[$in.0.paymentType] = paymentCounts[$in.0.paymentType] + 1;
+	paymentAmounts[$in.0.paymentType] = paymentAmounts[$in.0.paymentType] + $in.0.paidAmount;
+	
+	return OK;
+}
+
+// In transform function we copy the cached result to the output and then figure out the preferred payment method.
+function integer transform() {
+	$out.0.customerId = currentCustomerId;
+	
+	$out.0.cashCount = paymentCounts["CASH"];
+	$out.0.cardCount = paymentCounts["CARD"];
+	$out.0.wireCount = paymentCounts["WIRE"];
+	
+	$out.0.cashAmount = paymentAmounts["CASH"];
+	$out.0.cardAmount = paymentAmounts["CARD"];
+	$out.0.wireAmount = paymentAmounts["WIRE"];
+		
+	integer currentBestMethodPayments = -1;
+	foreach (string paymentType: PAYMENT_TYPES) {
+		$out.0.totalPaymentCount += paymentCounts[paymentType];
+		if (paymentCounts[paymentType] > currentBestMethodPayments) {
+			currentBestMethodPayments = paymentCounts[paymentType];
+			$out.0.preferredPaymentType = paymentType;
+		}
+	}
+
+	return OK;
+}
+
+// Clean function is called after each transform and we need it to make sure that our global temporary variables are reset
+// to zero so that we do not have to have complex conditions dealing with nulls in the append function.
+function void clean() {
+	currentCustomerId = -1;
+	paymentCounts["CASH"] = 0;
+	paymentCounts["CARD"] = 0;
+	paymentCounts["WIRE"] = 0;
+	paymentAmounts["CASH"] = 0.0d;
+	paymentAmounts["CARD"] = 0.0d;
+	paymentAmounts["WIRE"] = 0.0d;
+}
+]]></attr>
+</Node>
+<Node charset="UTF-8" fileURL="${DATAOUT_DIR}/PreferredPayment.csv" guiName="PreferredPayment.csv" guiX="570" guiY="200" id="PREFERRED_PAYMENT_CSV" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/RejectedPayments.csv" guiName="RejectedPayments.csv" guiX="370" guiY="350" id="REJECTED_PAYMENTS_CSV" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node __INPUT_FILE_URL="${DATAIN_DIR}/Payments-*.csv" __SORT_KEY="customerId(a)" guiName="Sorted payments" guiX="170" guiY="200" id="SORTED_PAYMENTS" jobURL="${SUBGRAPH_DIR}/PaymentsSortedReader.sgrf" type="SUBGRAPH"/>
+<Edge fromNode="DENORMALIZER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="PREFERRED_PAYMENT_CSV:0"/>
+<Edge fromNode="SORTED_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="DENORMALIZER:0"/>
+<Edge fromNode="SORTED_PAYMENTS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="REJECTED_PAYMENTS_CSV:0"/>
+</Phase>
+</Graph>

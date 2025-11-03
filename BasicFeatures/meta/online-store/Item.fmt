@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="|" name="Item" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="orderId" type="long"/>
+<Field name="productCode" type="long"/>
+<Field name="productName" type="string"/>
+<Field length="10" name="unitPrice" scale="2" type="decimal"/>
+<Field length="10" name="qty" scale="2" type="decimal"/>
+</Record>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="orderId" type="long"/>
+<Field name="type" type="string"/>
+<Field name="name" type="string"/>
+<Field name="street" type="string"/>
+<Field name="city" type="string"/>
+<Field name="zip" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+</Record>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Jan 27 11:23:19 CET 2020" guiVersion="7.0.0.15" id="1580205970698" licenseCode="CLP1DCLOVE64060597BY" name="EchoParameters" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/EchoParameters</UrlPath>
+<EndpointName>EchoParameters</EndpointName>
+<RequestMethod name="GET"/>
+<RequestParameter hint="Write something here" id="RestJobParameter0" label="String value" location="query" name="StringParam" type="string"/>
+<RequestParameter hint="Pick a date" id="RestJobParameter1" label="Date value" location="query" name="DateParam" type="date"/>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata id="Metadata0">
+<Record name="String" recordDelimiter="\r\n" type="delimited">
+<Field name="value" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Normalizer" guiX="270" guiY="25" id="NORMALIZER" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+string[] result;
+clean();
+
+function integer count() {
+	for (integer i = 0; i < length($in.0); ++i) {
+		string name = getFieldName($in.0, i);
+		string type = getFieldType($in.0, i);
+		string value = getValueAsString($in.0, i);
+		
+		push(result, "Parameter: " + type + " " + name + "\nSTART {\n" + value + "\n} END\n");
+	}
+	
+	return length(result);
+}
+
+function integer transform(integer i) {
+	$out.0.value = result[i];
+	
+	return OK;
+}
+
+function void clean() {
+	clear(result);
+}
+]]></attr>
+</Node>
+<Node guiName="Input" guiX="70" guiY="25" id="RESTJOB_INPUT0" requestFormat="BINARY" restJobInput="true" type="RESTJOB_INPUT"/>
+<Node attachment="false" guiName="Output" guiX="520" guiY="25" id="RESTJOB_OUTPUT0" metadataName="true" responseFormat="CSV" restJobOutput="true" topLevelArray="true" type="RESTJOB_OUTPUT"/>
+<Edge fromNode="NORMALIZER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="RESTJOB_OUTPUT0:0"/>
+<Edge fromNode="RESTJOB_INPUT0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (Parameters)" toNode="NORMALIZER:0"/>
+</Phase>
+</Graph>

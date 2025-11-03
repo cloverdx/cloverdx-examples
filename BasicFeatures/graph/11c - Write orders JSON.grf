@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Sep 19 11:12:22 CEST 2017" guiVersion="7.2.0.8" id="1505822916492" licenseCode="CLP1DJAVLI50596644BY" name="11e04 - Write orders JSON" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Address.fmt" id="Metadata1"/>
+<Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata0"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="851" x="100" y="50">
+<attr name="text"><![CDATA[h3. Write orders JSON
+
+This graph use convers an XML document into a JSON document using XML Extract and JSON Writer components. The [XML Extract|element://ORDERS_XML] component reads a zip file containing a set of XML documents that describe purchases. The XML documents have nested elements. XML Extract uses a SAX parser and can process very large files while consuming minimal memory. The parser emits  top level order information on Port 0, Line Item information on Port 1 and Address information on Port 2. The parerent Order ID is included on each port to simplify subsequent re-association of data. The [JSON Writer|element://ORDERS_JSON] component accepts data on three ports and re-creates the nested document structure.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node charset="UTF-8" fileURL="${DATAOUT_DIR}/Orders.json" guiName="Orders.json" guiX="545" guiY="225" id="ORDERS_JSON" makeDirs="true" type="JSON_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:clover="http://www.cloveretl.com/ns/xmlmapping">
+  <clover:collection clover:name="orders">
+    <order clover:inPort="0">
+      <id>$0.id</id>
+      <customerId>$0.customerId</customerId>
+      <orderDatetime>$0.orderDatetime</orderDatetime>
+      <clover:collection clover:name="items">
+        <item clover:inPort="1" clover:key="orderId" clover:parentKey="id">
+          <productCode>$1.productCode</productCode>
+          <productName>$1.productName</productName>
+          <unitPrice>$1.unitPrice</unitPrice>
+          <qty>$1.qty</qty>
+        </item>
+      </clover:collection>
+      <clover:collection clover:name="addresses">
+        <address clover:inPort="2" clover:key="orderId" clover:parentKey="id">
+          <type>$2.type</type>
+          <name>$2.name</name>
+          <street>$2.street</street>
+          <city>$2.city</city>
+          <zip>$2.zip</zip>
+          <state>$2.state</state>
+          <country>$2.country</country>
+        </address>
+      </clover:collection>
+    </order>
+  </clover:collection>
+</root>]]></attr>
+</Node>
+<Node guiName="Orders.xml" guiX="220" guiY="225" id="ORDERS_XML" schema="${META_DIR}/online-store/Orders.xsd" sourceUri="zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml" type="XML_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="orders">
+		<Mapping element="order" outPort="0"
+				xmlFields="{}date"
+				cloverFields="orderDatetime">
+			<Mapping element="item" outPort="1"
+					xmlFields=".;../{}id"
+					cloverFields="productName;orderId">
+			</Mapping>
+			<Mapping element="address" outPort="2"
+					xmlFields="../{}id;{}city;{}country;{}name;{}state;{}street;{}type;{}zip"
+					cloverFields="orderId;city;country;name;state;street;type;zip">
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Edge fromNode="ORDERS_XML:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ORDERS_JSON:0"/>
+<Edge fromNode="ORDERS_XML:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="ORDERS_JSON:1"/>
+<Edge fromNode="ORDERS_XML:2" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 2 (in)" metadata="Metadata1" outPort="Port 2 (out)" toNode="ORDERS_JSON:2"/>
+</Phase>
+</Graph>

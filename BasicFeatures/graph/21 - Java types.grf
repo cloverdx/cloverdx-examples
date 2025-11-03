@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Wed Jun 26 13:15:17 CEST 2024" guiVersion="7.2.0.8" id="1719400865854" licenseCode="CloverDX-Internal-License" name="21 - Java types" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="AllTypes" recordDelimiter="\r\n" type="delimited">
+<Field name="booleanField" type="boolean"/>
+<Field name="byteField" type="byte"/>
+<Field name="cbyteField" type="cbyte"/>
+<Field name="dateField" type="date"/>
+<Field length="10" name="smallDecimalField" scale="3" type="decimal"/>
+<Field length="32" name="largeDecimalField" scale="10" type="decimal"/>
+<Field name="integerField" type="integer"/>
+<Field name="longField" type="long"/>
+<Field name="numberField" type="number"/>
+<Field name="stringField" type="string"/>
+<Field name="variantField" type="variant"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="TypeInfo" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="fieldName" type="string"/>
+<Field name="fieldType" type="string"/>
+<Field name="fieldTypeJava" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note0" textColor="444444" width="726" x="75" y="100">
+<attr name="text"><![CDATA[h3. Java types
+
+
+Show class names or data types used for data in different CloverDX fields. This example is useful especially if you are working in Java and need to know what class to use for specific CloverDX field types.
+
+* A DataGenerator component produces a single record containing fields for every CloverDX data type
+* A denormalizer component creates one record for each field in the input record and determines the java data type equivalent for the associated CloverDX data type. 
+* The denormalizer references custom java code located in trans/com/cloverdx/examples/GetJavaTypes.java]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="DataGenerator" guiX="70" guiY="325" id="DATA_GENERATOR" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+function integer generate() {
+	$out.0.booleanField = true;
+	$out.0.byteField = sha256("aa");
+	$out.0.cbyteField = sha256("bb");
+	$out.0.dateField = today();
+	$out.0.smallDecimalField = 1.24d;
+	$out.0.largeDecimalField = 1234567890123456789012.123456789d;
+	$out.0.integerField = 5;
+	$out.0.longField = 10;
+	$out.0.numberField = 3.14159265358;
+	$out.0.stringField = "hello";
+	$out.0.variantField = { "x" -> "y" };
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="GetTypes" guiX="270" guiY="325" id="GET_TYPES" normalizeClass="com.cloverdx.examples.GetJavaTypes" type="NORMALIZER"/>
+<Node guiName="Trash" guiX="470" guiY="325" id="TRASH" type="TRASH"/>
+<Edge fromNode="DATA_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="GET_TYPES:0"/>
+<Edge fromNode="GET_TYPES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="TRASH:0"/>
+</Phase>
+</Graph>

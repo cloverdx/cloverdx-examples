@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Mon Jul 03 22:59:45 CEST 2017" guiVersion="7.2.0.8" id="1499116639238" licenseCode="CLP1DJAVLI10291612BY" name="09e02 - Load and collect stats" nature="jobflow" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="FileStats" recordDelimiter="\r\n" type="delimited">
+<Field name="fileUrl" type="string"/>
+<Field name="fileType" type="string"/>
+<Field name="validCount" trim="true" type="long"/>
+<Field name="invalidCount" trim="true" type="long"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="loadedTimestamp" trim="true" type="date"/>
+<Field name="duration" trim="true" type="long"/>
+<Field name="statusMessage" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Truncate target tables?" name="TRUNCATE_TABLES" public="true" required="false" value="true">
+<SingleType name="bool"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="951" x="-25" y="25">
+<attr name="text"><![CDATA[h3. Load Online Store
+
+This example loads data into a sample database that is used by other examples in this project. 
+
+Prerequisites:
+# confirm postgres database connectivity with  graph/init/01 - Database connections.grf
+# create database schema with  graph/init/02 - Recreate database tables.grf
+# synthesize sample data files to be loaded into database with  jobflow/generators/GenerateAll.jbf
+
+Behavior:
+* In phase 0, four flatfile reader components read product, customer, order and payments data. This occurs in parallel.
+* In phase 0-3 lower level graphs are called to load the flat file data into the postgres database, one table at a time. Each lower level graph returns statistics on the load process.
+* A [Concatenate|element://CONCATENATE] compoent collects the statistics from each loader graph
+* The load statistics are written to a flat file.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/Customers*.csv" guiName="Find customers" guiX="-30" guiY="475" id="FIND_CUSTOMERS" type="LIST_FILES"/>
+<Node fileURL="${DATAIN_DIR}/Orders*.zip" guiName="Find orders" guiX="-30" guiY="650" id="FIND_ORDERS" type="LIST_FILES">
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.1.*;
+	$out.0.URL = "zip:(" + $in.1.URL + ")#*.xml";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAIN_DIR}/Payments*.csv" guiName="Find payments" guiX="-30" guiY="825" id="FIND_PAYMENTS" type="LIST_FILES"/>
+<Node fileURL="${DATAIN_DIR}/Products*.csv" guiName="Find products" guiX="-30" guiY="300" id="FIND_PRODUCTS" type="LIST_FILES"/>
+<Node guiName="Load products" guiX="170" guiY="300" id="LOAD_PRODUCTS" jobURL="${GRAPH_DIR}/05 - Load products.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+boolean firstFile = true;
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = $in.0.URL;
+	$out.1.TRUNCATE_TABLE = firstFile ? "${TRUNCATE_TABLES}" : "false"; // Only truncate the table the first time the job runs.
+	$out.0.executionLabel = $in.0.name + ($out.1.TRUNCATE_TABLE == "true" ? " TRUNCATE" : "");
+	firstFile = false;
+
+	return ALL;
+}
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.fileUrl = $in.0.URL;
+	$out.0.fileType = "products";
+	$out.0.loadedTimestamp = $in.1.endTime;
+	$out.0.duration = $in.1.duration;
+	$out.0.statusMessage = $in.1.errMessage;
+	$out.0.validCount = $in.3.outputPort_0_PRODUCTS_INPUT_totalRecords;
+	$out.0.invalidCount = $in.3.inputPort_0_ERRORS_totalRecords;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="FIND_CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="LOAD_CUSTOMERS:0"/>
+<Edge fromNode="FIND_ORDERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="LOAD_ORDERS_LINE_ITEMS_AND_ADDRESSES1:0"/>
+<Edge fromNode="FIND_PAYMENTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="LOAD_PAYMENTS:0"/>
+<Edge fromNode="FIND_PRODUCTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="LOAD_PRODUCTS:0"/>
+<Edge fromNode="LOAD_PRODUCTS:0" guiBendpoints="398:200|398:475" guiLocks="398|null|null" guiRouter="Manual" id="Edge2" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CONCATENATE:0"/>
+</Phase>
+<Phase number="1">
+<Node guiName="Load customers" guiX="170" guiY="475" id="LOAD_CUSTOMERS" jobURL="${GRAPH_DIR}/04 - Load customers.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+boolean firstFile = true;
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = $in.0.URL;
+	$out.1.TRUNCATE_TABLE = firstFile ? "${TRUNCATE_TABLES}" : "false"; // Only truncate the table the first time the job runs.
+	$out.0.executionLabel = $in.0.name + ($out.1.TRUNCATE_TABLE == "true" ? " TRUNCATE" : "");
+	firstFile = false;
+
+	return ALL;
+}
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.fileUrl = $in.0.URL;
+	$out.0.fileType = "customers";
+	$out.0.loadedTimestamp = $in.1.endTime;
+	$out.0.duration = $in.1.duration;
+	$out.0.statusMessage = $in.1.errMessage;
+	$out.0.validCount = $in.3.outputPort_0_CUSTOMERS_INPUT_totalRecords;
+	$out.0.invalidCount = $in.3.outputPort_1_CUSTOMERS_INPUT_totalRecords;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="LOAD_CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 1 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CONCATENATE:1"/>
+</Phase>
+<Phase number="2">
+<Node guiName="Load orders, line items &#13;&#10;and addresses" guiX="170" guiY="650" id="LOAD_ORDERS_LINE_ITEMS_AND_ADDRESSES1" jobURL="${GRAPH_DIR}/06 - Load orders.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+boolean firstFile = true;
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = $in.0.URL;
+	$out.1.TRUNCATE_TABLE = firstFile ? "${TRUNCATE_TABLES}" : "false"; // Only truncate the table the first time the job runs.
+	$out.0.executionLabel = $in.0.name + ($out.1.TRUNCATE_TABLE == "true" ? " TRUNCATE" : "");
+	firstFile = false;
+
+	return ALL;
+}
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.fileUrl = $in.0.URL;
+	$out.0.fileType = "line items";
+	$out.0.loadedTimestamp = $in.1.endTime;
+	$out.0.duration = $in.1.duration;
+	$out.0.statusMessage = $in.1.errMessage;
+	$out.0.validCount = $in.3.outputPort_0_ORDERS_INPUT_totalRecords;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="LOAD_ORDERS_LINE_ITEMS_AND_ADDRESSES1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 2 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CONCATENATE:2"/>
+</Phase>
+<Phase number="3">
+<Node guiName="Concatenate" guiX="445" guiY="575" id="CONCATENATE" type="CONCATENATE"/>
+<Node guiName="Load payments" guiX="170" guiY="825" id="LOAD_PAYMENTS" jobURL="${GRAPH_DIR}/07 - Load payments.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+boolean firstFile = true;
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = $in.0.URL;
+	$out.1.TRUNCATE_TABLE = firstFile ? "${TRUNCATE_TABLES}" : "false"; // Only truncate the table the first time the job runs.
+	$out.0.executionLabel = $in.0.name + ($out.1.TRUNCATE_TABLE == "true" ? " TRUNCATE" : "");
+	firstFile = false;
+
+	return ALL;
+}
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.fileUrl = $in.0.URL;
+	$out.0.fileType = "payments";
+	$out.0.loadedTimestamp = $in.1.endTime;
+	$out.0.duration = $in.1.duration;
+	$out.0.statusMessage = $in.1.errMessage;
+	$out.0.validCount = $in.3.outputPort_0_PAYMENTS_INPUT_totalRecords;
+	$out.0.invalidCount = $in.3.outputPort_1_PAYMENTS_INPUT_totalRecords;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/StoreLoad.txt" guiName="StoreLoad.txt" guiX="620" guiY="575" id="STORE_LOAD_TXT" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="CONCATENATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="STORE_LOAD_TXT:0"/>
+<Edge fromNode="LOAD_PAYMENTS:0" guiBendpoints="401:725|401:550" guiLocks="401|null|null" guiRouter="Manual" id="Edge4" inPort="Port 3 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CONCATENATE:3"/>
+</Phase>
+</Graph>

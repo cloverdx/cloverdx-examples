@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="\t" name="StateCode" previewAttachment="${LOOKUP_DIR}/USAStateCodes.txt" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="name" type="string"/>
+<Field name="code" type="string"/>
+<Field eofAsDelimiter="true" name="type" type="string"/>
+</Record>

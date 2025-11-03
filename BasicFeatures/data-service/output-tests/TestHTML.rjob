@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu May 02 13:33:47 CEST 2024" guiVersion="7.0.0.15" id="1714649756527" licenseCode="CLCDSCLOVE85208925SP" name="TestSVG" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/TestHTML</UrlPath>
+<Description>Simple test of HTML output of a Data App.</Description>
+<Category>Data App Tests</Category>
+<RequestMethod name="GET"/>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata id="Metadata1">
+<Record eofAsDelimiter="true" name="File" type="delimited">
+<Field name="content" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="GetJobInput" guiX="270" guiY="50" id="GET_JOB_INPUT" type="GET_JOB_INPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+
+	$out.0.content =
+	"""
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Effort report for the past month</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="CloverDX html Data App example">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				font-family: calibri;
+				font-size: 12pt;
+			}
+			.container {
+				width: 800px;
+				padding-bottom: 20px;
+			}
+			.center {
+				margin: auto;
+			}
+			table, th, td {
+				border-collapse: collapse;
+				border: 1px solid black;
+				padding: 5px 10px 5px 10px;
+			}
+			th {
+				font-weight: bold;
+				background-color: #436CA4;
+				color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container center">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2220 1050" width="100%" height="100%">
+	<style>
+		.axis {
+			stroke: #333;
+			stroke-width: 2;
+		}
+
+		.gridline {
+			stroke: #ddd;
+			stroke-width: 1;
+		}
+
+		.label {
+			text-anchor: middle;
+			font-size: 14px;
+			fill: #444
+		}
+
+		.bar {
+			fill: #35B863;
+			opacity: 0.75;
+		}
+		
+		.bar-hover:hover .bar {
+			fill: #F97458;
+			opacity: 1;
+		}
+
+		.frame {
+			fill: none;
+			stroke: black;
+			stroke-width: 2;
+		}
+
+		.vert-axis-text {
+			text-anchor: end;
+			dominant-baseline: middle;
+			font-family: calibri;
+		}
+		
+		.horiz-axis-text {
+			text-anchor: end;
+			dominant-baseline: middle;
+			font-family: calibri;
+			font-size: 15pt;
+			rotate: -45deg;
+			--transform-origin: center;
+		}
+		
+		.title {
+			font-family: calibri;
+			font-weight: bold;
+			font-size: 35pt;
+			text-anchor: middle;
+			dominant-baseline: top;
+		}
+	</style>
+
+	<!-- <rect class="frame" x="0" y="0" width="100%" height="100%"/> -->
+
+	<text class="title" x="50%" y="50">Effort report</text>
+
+	<line class="gridline" x1="92" y1="100.0" x2="2120" y2="100.0"></line><text class="vert-axis-text" x="84" y="100.0">1692</text>
+	<line class="gridline" x1="92" y1="180.0" x2="2120" y2="180.0"></line><text class="vert-axis-text" x="84" y="180.0">1522</text>
+	<line class="gridline" x1="92" y1="260.0" x2="2120" y2="260.0"></line><text class="vert-axis-text" x="84" y="260.0">1353</text>
+	<line class="gridline" x1="92" y1="340.0" x2="2120" y2="340.0"></line><text class="vert-axis-text" x="84" y="340.0">1184</text>
+	<line class="gridline" x1="92" y1="420.0" x2="2120" y2="420.0"></line><text class="vert-axis-text" x="84" y="420.0">1015</text>
+	<line class="gridline" x1="92" y1="500.0" x2="2120" y2="500.0"></line><text class="vert-axis-text" x="84" y="500.0">846</text>
+	<line class="gridline" x1="92" y1="580.0" x2="2120" y2="580.0"></line><text class="vert-axis-text" x="84" y="580.0">677</text>
+	<line class="gridline" x1="92" y1="660.0" x2="2120" y2="660.0"></line><text class="vert-axis-text" x="84" y="660.0">507</text>
+	<line class="gridline" x1="92" y1="740.0" x2="2120" y2="740.0"></line><text class="vert-axis-text" x="84" y="740.0">338</text>
+	<line class="gridline" x1="92" y1="820.0" x2="2120" y2="820.0"></line><text class="vert-axis-text" x="84" y="820.0">169</text>
+	<line class="gridline" x1="92" y1="900.0" x2="2120" y2="900.0"></line><text class="vert-axis-text" x="84" y="900.0">0</text>
+
+	<g class="bar-hover">
+	<text class="horiz-axis-text" x="170" y="920" transform-origin="170 920">Business Travel</text>
+	<rect class="bar" x="120" y="867" width="100" height="33"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="290" y="920" transform-origin="290 920">Consulting Fixed Price</text>
+	<rect class="bar" x="240" y="100" width="100" height="800"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="410" y="920" transform-origin="410 920">Consulting Time And Material</text>
+	<rect class="bar" x="360" y="563" width="100" height="337"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="530" y="920" transform-origin="530 920">Documentation</text>
+	<rect class="bar" x="480" y="653" width="100" height="247"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="650" y="920" transform-origin="650 920">Internal Admin</text>
+	<rect class="bar" x="600" y="812" width="100" height="88"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="770" y="920" transform-origin="770 920">Marketing</text>
+	<rect class="bar" x="720" y="499" width="100" height="401"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="890" y="920" transform-origin="890 920">Paid Time-off</text>
+	<rect class="bar" x="840" y="869" width="100" height="31"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1010" y="920" transform-origin="1010 920">Pre Sales</text>
+	<rect class="bar" x="960" y="763" width="100" height="137"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1130" y="920" transform-origin="1130 920">Programming</text>
+	<rect class="bar" x="1080" y="534" width="100" height="366"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1250" y="920" transform-origin="1250 920">Project Analysis</text>
+	<rect class="bar" x="1200" y="109" width="100" height="791"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1370" y="920" transform-origin="1370 920">Project Management</text>
+	<rect class="bar" x="1320" y="337" width="100" height="563"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1490" y="920" transform-origin="1490 920">Sickday</text>
+	<rect class="bar" x="1440" y="840" width="100" height="60"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1610" y="920" transform-origin="1610 920">Technical Support</text>
+	<rect class="bar" x="1560" y="375" width="100" height="525"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1730" y="920" transform-origin="1730 920">Testing</text>
+	<rect class="bar" x="1680" y="679" width="100" height="221"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1850" y="920" transform-origin="1850 920">Training</text>
+	<rect class="bar" x="1800" y="854" width="100" height="46"/>
+</g>
+<g class="bar-hover">
+	<text class="horiz-axis-text" x="1970" y="920" transform-origin="1970 920">Unpaid Time-off</text>
+	<rect class="bar" x="1920" y="730" width="100" height="170"/>
+</g>
+
+
+	<line class="axis" x1="100" y1="900" x2="2120" y2="900"></line>
+	<line class="axis" x1="100" y1="92" x2="100" y2="900"></line>
+</svg>
+
+		</div>
+		<div class="container">
+			<!-- nothing -->
+		</div>
+		<div class="container center">
+			<table class="center">
+				<tr>
+					<th>Effort category</th>
+					<th>Effort (MD)</th>
+				</tr>
+							<tr>
+				<td>Business Travel</td>
+				<td>69.88</td>
+			</tr>
+			<tr>
+				<td>Consulting Fixed Price</td>
+				<td>1691.51</td>
+			</tr>
+			<tr>
+				<td>Consulting Time And Material</td>
+				<td>711.85</td>
+			</tr>
+			<tr>
+				<td>Documentation</td>
+				<td>522.25</td>
+			</tr>
+			<tr>
+				<td>Internal Admin</td>
+				<td>186.31</td>
+			</tr>
+			<tr>
+				<td>Marketing</td>
+				<td>847.13</td>
+			</tr>
+			<tr>
+				<td>Paid Time-off</td>
+				<td>66.50</td>
+			</tr>
+			<tr>
+				<td>Pre Sales</td>
+				<td>290.05</td>
+			</tr>
+			<tr>
+				<td>Programming</td>
+				<td>773.24</td>
+			</tr>
+			<tr>
+				<td>Project Analysis</td>
+				<td>1672.46</td>
+			</tr>
+			<tr>
+				<td>Project Management</td>
+				<td>1190.00</td>
+			</tr>
+			<tr>
+				<td>Sickday</td>
+				<td>127.27</td>
+			</tr>
+			<tr>
+				<td>Technical Support</td>
+				<td>1111.02</td>
+			</tr>
+			<tr>
+				<td>Testing</td>
+				<td>467.40</td>
+			</tr>
+			<tr>
+				<td>Training</td>
+				<td>96.42</td>
+			</tr>
+			<tr>
+				<td>Unpaid Time-off</td>
+				<td>359.00</td>
+			</tr>
+
+			</table>
+		</div>
+	</body>
+</html>""";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Input" guiX="70" guiY="50" id="RESTJOB_INPUT0" requestFormat="JSON" restJobInput="true" type="RESTJOB_INPUT"/>
+<Node attachment="false" contentType="text/html" encoding="UTF-8" fileURL="${DATATMP_DIR}/TestHTML.html" guiName="Output" guiX="770" guiY="50" id="RESTJOB_OUTPUT0" metadataName="true" responseFormat="FILE" restJobOutput="true" topLevelArray="true" type="RESTJOB_OUTPUT"/>
+<Node fileURL="${DATATMP_DIR}/TestHTML.html" guiName="Write HTML" guiX="520" guiY="50" id="WRITE_HTML" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="GET_JOB_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="WRITE_HTML:0"/>
+</Phase>
+</Graph>

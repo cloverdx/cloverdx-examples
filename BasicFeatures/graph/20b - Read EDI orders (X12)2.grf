@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Jan Slechta" created="Thu Apr 11 14:23:51 CEST 2024" guiVersion="7.2.0.8" id="1713180967151" licenseCode="CLCDSCLOVE85208925SP" name="19 - Write EDI orders" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="NAD0301_Name_and_address_line" type="string"/>
+<Field name="NAD06_City_name" type="string"/>
+<Field name="NAD07_Country_sub" type="string"/>
+<Field name="NAD08_Postcode_identification" type="string"/>
+<Field name="NAD09_Country_coded" type="string"/>
+<Field name="ediMessage" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="MergedOrderInfo" recordDelimiter="\r\n" type="delimited">
+<Field name="messageReferenceNumber" type="string"/>
+<Field name="lineItemCode" type="string"/>
+<Field name="qty" type="decimal"/>
+<Field name="addressLine" type="string"/>
+<Field name="city" type="string"/>
+<Field name="region" type="string"/>
+<Field name="zipCode" type="string"/>
+<Field name="countryCode" type="string"/>
+<Field name="senderCode" type="string"/>
+<Field name="recipientCode" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="Order" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="ediMessage" type="long"/>
+<Field name="BEG03_Purchase_order_number" type="string"/>
+<Field name="BEG05_Date" type="string"/>
+<Field name="PO101_Assigned_identification" type="string"/>
+<Field name="PO102_Quantity" type="string"/>
+<Field name="PO103_Unit_or_basis_for_measurement_code" type="string"/>
+<Field name="PO104_Unit_price" type="string"/>
+<Field name="PO105_Basis_of_unit_price_code" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="__dynamic_metadata_X12READER_X12Reader">
+<Record fieldDelimiter="|" name="X12ReaderOutput" recordDelimiter="\r\n" type="delimited">
+<Field name="ediMessage" type="variant"/>
+<Field name="BEG03_Purchase_order_number" type="string"/>
+<Field name="BEG05_Date" type="string"/>
+</Record>
+</Metadata>
+<Connection config="${CONN_DIR}/MongoDBDemo.cfg" id="MONGODB0" type="MONGODB"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Sequence cached="1000" id="Sequence0" name="EdiMessageId" start="1" step="1" type="PRIMITIVE_SEQUENCE"/>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note0" textColor="444444" width="926" x="75" y="50">
+<attr name="text"><![CDATA[h3. Read EDI orders (X12)
+
+The example demonstrates the use of the X12reader component.
+
+
+* a [ListFiles|element://LIST_EDI_MESSAGES] lists the X12 edi files from a directory
+* an [X12Reader|element://X12READER] parses the EDIFACT files. Port 0 is populated with the messages in CloverDX  *variant* format. Port1 is populated with parsed order information.
+* the messages on port 0 are are written into a mongo database. 
+* the order information is written to text files. The output text file names are derived from each order's messageReferenceNumber value]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node collection="orders" connectionId="MONGODB0" guiName="Backup Messages" guiX="470" guiY="275" id="BACKUP_MESSAGES1" operation="insertOne" type="MONGODB_WRITER">
+<attr name="newValue"><![CDATA[{
+	"type" : "EDIFACT",
+	"po" : @{ediMessage}
+}]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/edi-orders-x12-parsed/#.txt" guiName="edi-orders-x12-parsed/#.data" guiX="670" guiY="425" id="EDI_ORDERS_X12_PARSED_DATA" makeDirs="true" outputFieldNames="true" partitionFileTag="keyNameFileTag" partitionKey="BEG03_Purchase_order_number" sortedInput="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="ExtSort" guiX="470" guiY="425" id="EXT_SORT" sortKey="BEG03_Purchase_order_number(a)" type="EXT_SORT"/>
+<Node fileURL="${DATAOUT_DIR}/edi-orders-x12" guiName="List EDI messages" guiX="70" guiY="275" id="LIST_EDI_MESSAGES" type="LIST_FILES"/>
+<Node ediMessage="850" ediVersion="007040" guiName="X12Reader" guiX="270" guiY="275" id="X12READER" sourceUri="port:$0.URL:source" type="X12_READER">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="X12"
+			xmlFields="-"
+			cloverFields="ediMessage">
+		<Mapping element="INTERCHANGE">
+			<Mapping element="GROUP">
+				<Mapping element="TS_850" outPort="0"
+						xmlFields="-"
+						cloverFields="ediMessage">
+					<Mapping element="BEG" useParentRecord="true"
+							xmlFields="BEG03;BEG05"
+							cloverFields="BEG03_Purchase_order_number;BEG05_Date">
+					</Mapping>
+					<Mapping element="GROUP_12">
+						<Mapping element="PO1" outPort="1" parentKey="BEG03_Purchase_order_number;BEG05_Date;ediMessage" generatedKey="BEG03_Purchase_order_number;BEG05_Date;ediMessage"
+								xmlFields="PO101;PO102;PO103;PO104;PO105"
+								cloverFields="PO101_Assigned_identification;PO102_Quantity;PO103_Unit_or_basis_for_measurement_code;PO104_Unit_price;PO105_Basis_of_unit_price_code">
+						</Mapping>
+					</Mapping>
+				</Mapping>
+			</Mapping>
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Edge fromNode="EXT_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge18" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="EDI_ORDERS_X12_PARSED_DATA:0"/>
+<Edge fromNode="LIST_EDI_MESSAGES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (input)" outPort="Port 0 (out)" toNode="X12READER:0"/>
+<Edge fromNode="X12READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="__dynamic_metadata_X12READER_X12Reader" outPort="Port 0 (out)" toNode="BACKUP_MESSAGES1:0"/>
+<Edge fromNode="X12READER:1" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 1 (out)" toNode="EXT_SORT:0"/>
+</Phase>
+</Graph>

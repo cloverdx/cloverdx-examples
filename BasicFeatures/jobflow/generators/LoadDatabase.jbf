@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu Feb 08 10:42:00 CET 2018" guiVersion="7.2.0.8" id="1518087217038" licenseCode="CLP1DJAVLI71979440BY" name="LoadDatabase" nature="jobflow" showComponentDetails="true">
+<Global>
+<Connection dbConfig="${CONN_DIR}/TrainingDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="database.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note0" textColor="444444" width="676" x="125" y="25">
+<attr name="text"><![CDATA[h3. LoadDatabase
+
+This job orestratesd the execution of a series of graphs with create and populate a database with sample data used by various other examples in this project. Phase numbers ensure proper sequencing of execution (i.e. create the tables, then populate the tables in a specific order) ]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Recreate database tables" guiX="120" guiY="175" id="RECREATE_DATABASE_TABLES" jobURL="${GRAPH_DIR}/init/02 - Recreate database tables.grf" type="EXECUTE_GRAPH"/>
+</Phase>
+<Phase number="3">
+<Node guiName="Load customers" guiX="120" guiY="350" id="LOAD_CUSTOMERS" jobURL="${GRAPH_DIR}/04 - Load customers.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = "${DATAIN_DIR}/Customers.csv";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Load products" guiX="320" guiY="350" id="LOAD_PRODUCTS" jobURL="${GRAPH_DIR}/05 - Load products.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = "${DATAIN_DIR}/Products.csv";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+</Phase>
+<Phase number="6">
+<Node guiName="Load orders" guiX="120" guiY="525" id="LOAD_ORDERS" jobURL="${GRAPH_DIR}/06 - Load orders.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = "zip:(${DATAIN_DIR}/Orders.zip)#Orders.xml";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+</Phase>
+<Phase number="9">
+<Node guiName="Load payments" guiX="120" guiY="700" id="LOAD_PAYMENTS" jobURL="${GRAPH_DIR}/07 - Load payments.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = "${DATAIN_DIR}/Payments*.csv";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+</Phase>
+</Graph>

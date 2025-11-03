@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Jun 20 10:55:50 CEST 2017" guiVersion="7.0.0.15" id="1497949972442" licenseCode="CLP1DJAVLI10291612BY" name="08e02 - Recreate database tables" showComponentDetails="true">
+<Global>
+<Connection dbConfig="${CONN_DIR}/TrainingDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameter name="__STATEMENT_DELIMITER">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return "${DATABASE}" == "oracle" ? "/" : "";
+}
+]]></attr>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="database.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="3465A4" folded="false" fontSize="medium" height="125" id="Note0" textColor="FFFFFF" width="800" x="75" y="275">
+<attr name="text"><![CDATA[h3. Rebuild database tables
+
+Drop and create all database tables used by various examples in the demo project. Tables are dropped/created with scripts that can be found in trans/sql directory.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" guiName="Create schema" guiX="120" guiY="450" id="CREATE_SCHEMA" printStatements="true" sqlStatementDelimiter="${__STATEMENT_DELIMITER}" type="DB_EXECUTE" url="${TRANS_DIR}/sql/${DATABASE}/create-schema.sql"/>
+</Phase>
+<Phase number="1">
+<Node dbConnection="JDBC0" guiName="Drop tables" guiX="395" guiY="450" id="DROP_TABLES" printStatements="true" sqlStatementDelimiter="${__STATEMENT_DELIMITER}" type="DB_EXECUTE" url="${TRANS_DIR}/sql/${DATABASE}/all_online_store-drop.sql"/>
+</Phase>
+<Phase number="2">
+<Node dbConnection="JDBC0" guiName="Create tables" guiX="645" guiY="450" id="CREATE_TABLES" printStatements="true" sqlStatementDelimiter="${__STATEMENT_DELIMITER}" type="DB_EXECUTE" url="${TRANS_DIR}/sql/${DATABASE}/all_online_store-create.sql"/>
+</Phase>
+</Graph>

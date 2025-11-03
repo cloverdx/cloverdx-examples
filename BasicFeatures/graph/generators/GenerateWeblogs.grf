@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Jul 04 07:45:40 CEST 2017" guiVersion="7.2.0.8" id="1375470532020" licenseCode="CLP1DJAVLI10291612BY" licenseType="Commercial" modified="Fri Mar 28 16:06:59 EDT 2014" modifiedBy="brano" name="5 - GenerateWeblogs" revision="1.58" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/LogLine.fmt" id="Metadata2"/>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="UserAgent" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="ipAddress" type="string"/>
+<Field eofAsDelimiter="true" name="agent" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="Output file name" name="OUTPUT_FILE_NAME" public="true" required="true" value="zip:(${DATAOUT_DIR}/cloverdx.com.zip)!log.txt"/>
+<GraphParameter label="Site URL" name="SITE_BASE_URL" public="true" required="true" value="http://www.cloverdx.com"/>
+<GraphParameter label="Unique client ip addresses" name="UNIQUE_CLIENTS" public="true" value="50000">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Number of visits to generate" name="VISITS_TO_GENERATE" public="true" value="400000">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter label="Start date (yyyy-MM-dd)" name="START_DATE" public="true" value="2025-01-01">
+<SingleType format="yyyy-MM-dd" name="datetime"/>
+</GraphParameter>
+<GraphParameter label="End date (yyyy-MM-dd)" name="END_DATE" public="true">
+<SingleType format="yyyy-MM-dd" name="datetime"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="526" x="125" y="25">
+<attr name="text"><![CDATA[h3. Generate Weblogs
+
+Graph that generates sample input for use by other examples. Random weblogs entries are created, sorted by date and written to an output file. The output filename and number of records generated is specified by input parameters. Note the default value for the output file name specifies the zip protocol, instructing the Flatfile Writer to zip compress the output file.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="FastSort" guiX="320" guiY="200" id="FAST_SORT" sortKey="timestamp(a)" type="FAST_SORT"/>
+<Node enabled="enabled" guiName="Generate logs" guiX="120" guiY="200" id="GENERATE_LOGS" recordsNumber="-1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+string[] USER_AGENT_NAMES = [
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4",
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0",
+	"Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0",
+	"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0",
+	"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+	"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36",
+	"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0",
+	"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36",
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0"
+];
+
+// Randomly generated combinations of agent and ip address. These are the clients.
+UserAgent[] users;
+date startDate = getParamValue("START_DATE") == "" ? dateAdd(today(), -1, year) : str2date("${START_DATE}", "yyyy-MM-dd");
+date endDate = getParamValue("END_DATE") == "" ? today() : str2date("${END_DATE}", "yyyy-MM-dd");
+
+integer userIndex = 0;
+long recCount = 0;
+
+// We loop through users and generate one record for each until we reach the total number of records we need to generate.
+// This is done in order to guarantee that if VISITS_TO_GENERATE > UNIQUE_CLIENTS we have at least one visit per client.
+
+function integer generate() {
+	if (recCount >= ${VISITS_TO_GENERATE}) {
+		return STOP;
+	}
+	
+	if (userIndex >= length(users)) {
+		// Wrap around
+		userIndex = 0;
+	}
+	
+	$out.0.clientIp = users[userIndex].ipAddress;
+	$out.0.userAgent = users[userIndex].agent;
+	$out.0.timestamp = randomDate(startDate, endDate);
+	$out.0.url = getRandomUrl("${SITE_BASE_URL}");
+	$out.0.httpResponse = getRandomHttpResponse();
+
+	userIndex++;
+	recCount++;
+
+	return ALL;
+}
+
+function void preExecute() {
+	generateRandomClients();
+}
+
+// Generate random clients. Note that we generate UNIQUE_CLIENTS unique ip addresses, but actually generate more users
+// since in some cases we can generate more record per user (for people who use more than one browser).
+function void generateRandomClients() {
+	printLog(info, "Generating random users...");
+	
+	integer userAgentCount = length(USER_AGENT_NAMES);
+	map[string, integer] uniqueIPs; // To be able to generate unique ip addresses.
+	string userIP;
+	
+	for (long i = 0; i < ${UNIQUE_CLIENTS}l; ++i) {
+		do {
+			userIP = randomInteger(0, 255) + "." + randomInteger(0, 255) + "." + randomInteger(0, 255) + "." + randomInteger(0, 255);
+		} while (uniqueIPs[userIP] != null);
+		uniqueIPs[userIP] = 1;
+		
+		// Small number of users use more than one browser
+		integer browserCount = random() < 0.9 ? 1 : randomInteger(2, 4);
+		for (integer j = 0; j < browserCount; ++j) {
+			UserAgent ua;
+			ua.agent = USER_AGENT_NAMES[randomInteger(0, userAgentCount - 1)];
+			ua.ipAddress = userIP;
+			push(users, ua);
+		}
+	}
+	
+	printLog(info, "Unique ip address count: " + length(uniqueIPs));
+	printLog(info, "Done, " + length(users) + " users generated.");
+}
+
+function string getRandomUrl(string site) {
+	string result = "";
+	for (integer i = 0; i < randomInteger(1, 4); ++i) {
+		result = result + "/" + randomString(3, 10);
+	}
+	return result;
+}
+
+integer[] HTTP_ERROR_CODES = [400, 401, 403, 404, 407, 500, 503];
+function integer getRandomHttpResponse() {
+	if (random() >= 0.05) {
+		// Most of the time we return success.
+		return 200;
+	} else {
+		// Sometimes return one of the other common error codes.
+		return HTTP_ERROR_CODES[randomInteger(0, length(HTTP_ERROR_CODES) - 1)];
+	}
+}
+]]></attr>
+</Node>
+<Node fileURL="${OUTPUT_FILE_NAME}" guiName="Write log" guiX="520" guiY="200" id="WRITE_LOG" makeDirs="true" type="FLAT_FILE_WRITER"/>
+<Edge debugMode="false" fromNode="FAST_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="WRITE_LOG:0"/>
+<Edge debugMode="false" fromNode="GENERATE_LOGS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="FAST_SORT:0"/>
+</Phase>
+</Graph>

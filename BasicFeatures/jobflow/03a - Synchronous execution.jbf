@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Wed Jul 26 10:48:21 CEST 2017" guiVersion="7.2.0.8" id="1501072886193" licenseCode="Expired" name="09e04 - Synchronous execution" nature="jobflow" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameter label="Number of jobs to run" name="NUMBER_OF_JOBS" public="true" required="false" value="5">
+<ComponentReference referencedComponent="DATA_GENERATOR" referencedProperty="recordsNumber"/>
+</GraphParameter>
+<GraphParameter category="advanced" defaultHint="4" label="Number of executors" name="NUM_OF_EXECUTORS" public="true" required="false" value="2">
+<ComponentReference referencedComponent="EXECUTE_GRAPH" referencedProperty="executorsNumber"/>
+</GraphParameter>
+<GraphParameter label="Should some jobs fail?" name="RUN_FAILING_JOBS" public="true" required="false" value="false">
+<SingleType name="bool"/>
+</GraphParameter>
+<GraphParameter label="Job delay (milliseconds)" name="JOB_DELAY" public="true" required="false" value="5000">
+<SingleType name="int"/>
+</GraphParameter>
+<GraphParameter category="basic" label="Stop processing on fail" name="STOP_ON_FAIL" public="true" required="false" value="true">
+<ComponentReference referencedComponent="EXECUTE_GRAPH" referencedProperty="stopOnFail"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="326" id="Note0" textColor="444444" width="426" x="175" y="425">
+<attr name="text"><![CDATA[h3. How to use this job?
+
+Play with various parameters of the graph to see how they affect the execution of the jobs.
+
+* *Number of executors*: control how many jobs to run in parallel. Try playing with the parameter and job count to see how the jobs are running. Examine execution history (especially job start time) to see when each job was started.
+* *Should some jobs fail?*: change this parameter to see how job execution changes if one of the jobs in the middle fails. Examine the execution history to see which jobs were running, which failed and which were killed by the Server.
+* *Stop processing on fail*: configure this setting to see how the execution changes when jobs fail.
+* *Number of jobs to run*: configure how many jobs to execute.
+* *Job delay*: configure how long each job should take in milliseconds.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="126" id="Note1" textColor="444444" width="425" x="725" y="425">
+<attr name="text"><![CDATA[h3. Fail
+
+Fail component in Phase 5 to allow all jobs a chance to run. Try changing its phase to 0 to see how it would interract with failing jobs if Stop on fail is set to false and some jobs failed.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="101" id="Note2" textColor="444444" width="701" x="175" y="25">
+<attr name="text"><![CDATA[h3. Synchronous execution
+
+This example allows you to explore the behavior of jobs that orchestrate the execution of other data jobs *synchronously*.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="DataGenerator" guiX="170" guiY="225" id="DATA_GENERATOR" recordsNumber="${NUMBER_OF_JOBS}" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[//#CTL2
+
+function integer generate() {
+	// No code needed here
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node executorsNumber="${NUM_OF_EXECUTORS}" guiName="ExecuteGraph" guiX="370" guiY="225" id="EXECUTE_GRAPH" jobURL="${GRAPH_DIR}/misc/DummyJob.grf" stopOnFail="${STOP_ON_FAIL}" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+integer i = 0;
+
+function integer transform() {
+	$out.0.executionLabel = "#" + (i++) + " @ " + date2str(today(), "HH:mm:ss");
+	$out.1.EXECUTION_STATUS = ${RUN_FAILING_JOBS} == true ? "RANDOM" : "SUCCEED";
+	$out.1.DELAY = "${JOB_DELAY}";
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Success" guiX="720" guiY="150" id="SUCCESS" type="SUCCESS"/>
+<Edge fromNode="DATA_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="EXECUTE_GRAPH:0"/>
+<Edge fromNode="EXECUTE_GRAPH:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUCCESS:0"/>
+<Edge fromNode="EXECUTE_GRAPH:1" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 1 (error)" toNode="FAIL:0"/>
+</Phase>
+<Phase number="5">
+<Node guiName="Fail" guiX="720" guiY="300" id="FAIL" type="FAIL"/>
+</Phase>
+</Graph>
