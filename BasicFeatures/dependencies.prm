@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GraphParameters>
+<GraphParameter name="TICKIT" value="sandbox://Tickit_0.1"/>
+<GraphParameter name="NORTHWIND_DEMO_DB" value="sandbox://NorthwindDemoDB_1.0"/>
+</GraphParameters>
