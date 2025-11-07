@@ -20,7 +20,7 @@
 </GraphParameter>
 <GraphParameter name="AZURE_CONTAINER" value="customers"/>
 <GraphParameter name="AZURE_ACCOUNT_NAME" value="basicfeatures"/>
-<GraphParameter name="AZURE_KEY" public="false" secure="true" value="enc#SjxG2cSdWBKXjdTMjIsMtzJOXaVD99PkJ5CzmPeWIK2Y/1SWav5IDVoq1dvma+HrMTVvo1UdmdO1bM/gcWbYtrPTrhX1WrYeoBsR0g2UsxCoKpEB/dtl9YecI9rnhIwl+HfDNYimSZRTS5lyAoxff0njU1xhshO2kiCDcHhg0To="/>
+<GraphParameter name="AZURE_KEY" public="false" secure="true" value="enc#Is4ytpnrvJiw6NhDA9Gmtb78znP6wAZzWU898/t/ZcecRZsb6+UQEJPFBF2EOl8i"/>
 <GraphParameter name="AZURE_KEY_ESCAPED" public="false">
 <attr name="dynamicValue"><![CDATA[//#CTL2
 
