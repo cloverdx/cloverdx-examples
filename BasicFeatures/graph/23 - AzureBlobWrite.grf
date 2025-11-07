@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Jun 22 10:14:53 CEST 2021" guiVersion="7.2.0.8" id="1624362836872" licenseCode="Unlicensed" name="PrepCustomerData" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="Order" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="customerId" type="long"/>
+<Field name="order" type="variant"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="Stats" recordDelimiter="\r\n" type="delimited">
+<Field name="customerId" type="long"/>
+<Field name="orders" type="long"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter category="advanced" defaultHint="10" label="Number of customer files to create" name="NUMBER_OF_FILES_TO_CREATE" public="true" required="true" value="20">
+<ComponentReference referencedComponent="CUSTOMERS" referencedProperty="numRecords"/>
+</GraphParameter>
+<GraphParameter name="AZURE_CONTAINER" value="customers"/>
+<GraphParameter name="AZURE_ACCOUNT_NAME" value="basicfeatures"/>
+<GraphParameter name="AZURE_KEY" public="false" secure="true" value="enc#SjxG2cSdWBKXjdTMjIsMtzJOXaVD99PkJ5CzmPeWIK2Y/1SWav5IDVoq1dvma+HrMTVvo1UdmdO1bM/gcWbYtrPTrhX1WrYeoBsR0g2UsxCoKpEB/dtl9YecI9rnhIwl+HfDNYimSZRTS5lyAoxff0njU1xhshO2kiCDcHhg0To="/>
+<GraphParameter name="AZURE_KEY_ESCAPED" public="false">
+<attr name="dynamicValue"><![CDATA[//#CTL2
+
+function string getValue() {
+	return escapeUrlFragment("${AZURE_KEY}");
+}
+]]></attr>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="276" id="Note0" textColor="444444" width="801" x="75" y="-50">
+<attr name="text"><![CDATA[h3. AzureBlobWrite
+
+This example demonsrates writing data files to Azure Blob Storage. Data from a Customers.csv file and an Orders.json file is snet to a JSON Writer component where it is compined into  JSON documents and stored in Azure Blob storage. Note the following:
+
+* There is no specific Azure component, rather the JSONWriter and ListFiles URL properties specify an Azure URI in the form of {{az-blob://<storage-account-name>/<container-name>/<blob-path>}}. This capability is present in all CloverDX file writer I/O components.
+* The AZURE URI is built using the parameters {{AZURE_ACCOUNT_NAME}}, {{AZURE_CONTAINER}}, {{AZURE_KEY}} and {{AZURE_KEY_ESCAPED}}. {{AZURE_KEY}} is encrypted. {{AZURE_KEY_ESCAPED}} encodes the key so it can be passed in a URL.
+* The JSONWriter component uses the Customer ID field as a partition key. Separate output files are created for each ID value and the filenames also constructed using this ID field value.
+* The orders.json file is read as a single field with the CloverDX data type *variant*. A [Map|element://RESTRUCTURE] component restructures the json and emits it again as a *variant* type. 
+* The Azure write operations occur in phase 0 of the graph. When phase 0 processing is complete, phase 1 processing begins and the newly uploaded blobs are listed using a [List Files|element://LIST_FILES] component. ]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="170" guiY="250" id="CUSTOMERS" numRecords="${NUMBER_OF_FILES_TO_CREATE}" type="FLAT_FILE_READER"/>
+<Node fileURL="az-blob://${AZURE_ACCOUNT_NAME}:${AZURE_KEY_ESCAPED}@${AZURE_ACCOUNT_NAME}.blob.core.windows.net/${AZURE_CONTAINER}/customer_$.json" guiName="CustomerComplete" guiX="570" guiY="250" id="CUSTOMER_COMPLETE1" makeDirs="true" partitionFileTag="keyNameFileTag" partitionKey="id" partitionKeySorted="true" recordsPerFile="1" type="JSON_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<customer xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <clover:elements clover:include="$0.*"/>
+  <clover:collection clover:name="orders" clover:inPort="1" clover:key="customerId" clover:parentKey="id">
+    <item>$1.order</item>
+  </clover:collection>
+</customer>]]></attr>
+</Node>
+<Node guiName="ExtSort" guiX="370" guiY="250" id="EXT_SORT" sortKey="id(a)" type="EXT_SORT"/>
+<Node guiName="Orders.json" guiX="170" guiY="425" id="ORDERS_JSON" schema="${META_DIR}/OrdersJSON.xsd" sourceUri="zip:(${DATAIN_DIR}/OrdersJSON.zip)#Orders.json" type="JSON_EXTRACT">
+<attr name="mapping"><![CDATA[<Mappings>
+	<Mapping element="json_object">
+		<Mapping element="orders" outPort="0"
+				xmlFields="+;{}customerId"
+				cloverFields="order;customerId">
+		</Mapping>
+	</Mapping>
+</Mappings>
+]]></attr>
+</Node>
+<Node guiName="Restructure" guiX="370" guiY="425" id="RESTRUCTURE" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.customerId = $in.0.customerId;
+
+	$out.0.order = {
+		"orderId" -> $in.0.order["orders"]["id"],
+		"items" -> $in.0.order["orders"]["items"],
+		"addresses" -> $in.0.order["orders"]["addresses"]
+	};
+//	$out.0.order["order"] = remove($in.0.order, "orders");
+//	remove($out.0.order["order"], "customerId");
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="EXT_SORT:0"/>
+<Edge fromNode="EXT_SORT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="CUSTOMER_COMPLETE1:0"/>
+<Edge fromNode="ORDERS_JSON:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="RESTRUCTURE:0"/>
+<Edge fromNode="RESTRUCTURE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="CUSTOMER_COMPLETE1:1"/>
+</Phase>
+<Phase number="1">
+<Node fileURL="az-blob://${AZURE_ACCOUNT_NAME}:${AZURE_KEY_ESCAPED}@${AZURE_ACCOUNT_NAME}.blob.core.windows.net/${AZURE_CONTAINER}/*" guiName="ListFiles" guiX="170" guiY="625" id="LIST_FILES" type="LIST_FILES"/>
+<Node guiName="Success" guiX="370" guiY="625" id="SUCCESS" type="SUCCESS"/>
+<Edge fromNode="LIST_FILES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUCCESS:0"/>
+</Phase>
+</Graph>
