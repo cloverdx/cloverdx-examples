@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="JanSlechta" category="dataQuality" created="Thu Sep 18 10:48:48 CEST 2025" guiVersion="7.2.1.7" id="1758618268056" largeIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-64.png" licenseCode="CLCDSCLOVE85208925SP" mediumIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-32.png" name="CustomValidator" nature="subgraph" showComponentDetails="true" smallIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-16.png">
+<Graph author="JanSlechta" category="dataQuality" created="Thu Sep 18 10:48:48 CEST 2025" description="Implements custom validation rules for customer data. Produces one output file with simple data profile." guiVersion="7.2.1.7" id="1758618268056" largeIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-64.png" licenseCode="CLCDSCLOVE85208925SP" mediumIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-32.png" name="CustomValidator" nature="subgraph" showComponentDetails="true" smallIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-16.png">
 <Global>
 <inputPorts>
 <singlePort connected="true" name="0"/>
@@ -44,6 +44,9 @@
 <GraphParameter label="Country field" name="COUNTRY_FIELD" public="true" required="true" value="country">
 <SingleType edge="Edge8" fieldType="string" name="field"/>
 </GraphParameter>
+<GraphParameter label="Profile Output File URL" name="PROFILE_OUTPUT_FILE_URL" public="true" required="false" value="${DATAOUT_DIR}/CustomProfilingResults.csv">
+<ComponentReference referencedComponent="CUSTOM_PROFILING_RESULTS" referencedProperty="fileURL"/>
+</GraphParameter>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
 <RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="226" x="575" y="175">
@@ -84,7 +87,7 @@ function integer transform() {
 }
 ]]></attr>
 </Node>
-<Node fileURL="${DATAOUT_DIR}/CustomProfilingResults.csv" guiName="Custom Profiling Results" guiX="1124" guiY="275" id="CUSTOM_PROFILING_RESULTS" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${PROFILE_OUTPUT_FILE_URL}" guiName="Custom Profiling Results" guiX="1124" guiY="275" id="CUSTOM_PROFILING_RESULTS" type="FLAT_FILE_WRITER"/>
 <Node debugInput="true" guiName="DebugInput" guiX="50" guiY="100" id="DEBUG_INPUT" recordsNumber="0" type="DATA_GENERATOR">
 <attr name="generate"><![CDATA[//#CTL2
 

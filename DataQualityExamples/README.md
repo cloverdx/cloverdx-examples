@@ -1,22 +1,54 @@
 # DataQualityExamples
 
-The aim of the project is to explain basic approaches to data quality in CloverDX. Under graph folder, there are four directories with example graphs demonstrating basic data quality techniques in CloverDX.
+The aim of the project is to explain basic approaches to data quality in
+CloverDX. The graphs are split into four folders each focusing on slightly
+different aspect of data quality work with CloverDX.
 
-### 01-basic-validations folder
+### Folder `1-basic-validations`
 
-Introduction to [Validator component](https://doc.cloverdx.com/latest/developer/validator.html) and how it can be used to validate the data quality with different settings. The examples show how to cofigure the Validator to use lazy evaluation, group rule, and more.
+Introduction to
+[Validator component](https://doc.cloverdx.com/latest/developer/validator.html)
+and how it can be used to validate the data quality with different settings.
+The examples show how to configure the Validator to use lazy evaluation, group
+rules, and more.
 
-### 02-alternative-data-format-handling folder
+### Folder `2-data-format-validation`
 
-Overview of how you can use Data policy settings in CloverDX [Reader components](https://doc.cloverdx.com/latest/developer/readers.html) to handle errors in source files such as extra fields or different data layouts.
+Overview of how you can use _Data policy_ settings in CloverDX
+[Reader components](https://doc.cloverdx.com/latest/developer/readers.html) to
+handle errors in source files such as extra fields or different data layouts.
 
-### 03-sequential-dq-check folder
+### Folder `3-profiling-and-validation`
 
-Shows how you can use ProfilerProbe component to measure basic properties of your data and effectively use it to augment your data validation logic.
-* Sequential data quality processing - Profiling data first using ProfilerProbe component and record validation in the next step.
-* Uses phases to ensure data is not validated/processed before entire dataset is profiled.
+Shows how you can use
+[ProfilerProbe](https://doc.cloverdx.com/latest/developer/profilerprobe.html)
+component to measure basic properties of your data and effectively use it to
+augment your data validation logic.
 
-### 04-custom-dq-check folder
+### Folder `4-custom-dq-check`
 
-Custom data quality using coding approach. The examples show that data quality is not always done solely by Data Quality components from CloverDX, but often by other components (Aggregate, Dedup, etc.). These components can be used to build custom validation rules - like subset validation, foreign key checks, etc. Data quality is al
-* Another example in this folder demonstrates how-custom logic can be wrapped into reusable custom components (subgraphs)
+Examples in this folder show how you can implement custom validation rules in
+two different ways:
+
+- Using other components besides Data Quality components. The examples also show
+how you can then wrap the implementation into a subgraph to make it easier to
+use and.
+- Using custom validation rules in Validator component.
+
+## Usage and licensing
+
+Feel free to reuse or fork this project in your own CloverDX solutions.
+
+Note that the code in this repository is provided on an **"as is" basis, without
+warranties or conditions of any kind, either express or implied, including,
+without limitation, any warranties or conditions of title, non-infringement,
+merchantability, or fitness for a particular purpose.**  
+
+Unless otherwise specified, the code in this repository is licensed under
+[Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
+
+## Contributing
+
+We welcome your feedback and contributions. You can:
+- Submit comments or pull requests here on GitHub.
+- Reach out to us through [cloverdx.com](https://www.cloverdx.com).
