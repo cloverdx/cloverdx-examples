@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.1.2.4" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="DQExample1" showComponentDetails="true">
+<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.2.1.7" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="1 - Custom Data Quality Check" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1">
 <Record fieldDelimiter="," name="CountryAggregations" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
@@ -36,19 +36,16 @@
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="444444" folded="false" fontSize="medium" height="127" id="Note0" textColor="FFFFFF" width="1751" x="100" y="25">
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="226" id="Note0" textColor="000000" width="426" x="100" y="25">
 <attr name="text"><![CDATA[h3. Custom data quality using coding approach
-In some use cases, you may prefer creating custom data quality logic; such logic can be built either using multiple of prebuilt components or in some components you can even create your own custom code (CTL or Java etc.).]]></attr>
-</RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="527" id="Note1" textColor="444444" width="1751" x="100" y="150">
-<attr name="text"><![CDATA[h3. Combination of available components and custom coding
-- components used are just subset of the components available in the pallet, but of course any other components can be used as well in order to reach reuqired data quality goal
-- in case you miss some component in the pallet, it can be custom built]]></attr>
+In some use cases, you may prefer creating custom data quality logic; such logic can be built either using multiple of built-in components or in some components you can even create your own custom code (CTL or Java etc.).
+
+This graph shows how you can use components such as Map and Aggregate to implement your own data validation logic.]]></attr>
 </RichTextNote>
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node guiName="Count percentage of NOT NULL records" guiX="920" guiY="500" id="COUNT_PERCENTAGE_OF_NOT_NULL_RECORDS" type="REFORMAT">
+<Node guiName="Count percentage of NOT NULL records" guiX="970" guiY="450" id="COUNT_PERCENTAGE_OF_NOT_NULL_RECORDS" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 
 // Transforms input record into output record.
@@ -78,12 +75,12 @@ function integer transform() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node dataPolicy="controlled" fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="170" guiY="325" id="CUSTOMERS" type="FLAT_FILE_READER"/>
-<Node fileURL="${DATAOUT_DIR}/CustomersWithInvalidPhoneNumbers.csv" guiName="Customer with invalid phone" guiX="1595" guiY="500" id="CUSTOMER_WITH_INVALID_PHONE" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
-<Node fileURL="${DATAOUT_DIR}/CustomersWithValidPhoneNumbers.csv" guiName="Customer with valid phone" guiX="1620" guiY="325" id="CUSTOMER_WITH_VALID_PHONE" makeDirs="true" type="FLAT_FILE_WRITER"/>
-<Node fileURL="${DATAOUT_DIR}/CustomProfilingResults.csv" guiName="Custom Profiling Results" guiX="1245" guiY="500" id="CUSTOM_PROFILING_RESULTS" type="FLAT_FILE_WRITER"/>
-<Node fileURL="${DATAOUT_DIR}/log/InvalidCustomers.log" guiName="Log invalid customers" guiX="395" guiY="500" id="LOG_INVALID_CUSTOMERS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
-<Node guiName="Phone number validation" guiX="1245" guiY="325" id="PHONE_NUMBER_VALIDATION" type="REFORMAT">
+<Node dataPolicy="controlled" fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="95" guiY="275" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node fileURL="${DATAOUT_DIR}/CustomersWithInvalidPhoneNumbers.csv" guiName="Customer with invalid phone" guiX="1645" guiY="450" id="CUSTOMER_WITH_INVALID_PHONE" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/CustomersWithValidPhoneNumbers.csv" guiName="Customer with valid phone" guiX="1645" guiY="275" id="CUSTOMER_WITH_VALID_PHONE" makeDirs="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/CustomProfilingResults.csv" guiName="Custom Profiling Results" guiX="1345" guiY="450" id="CUSTOM_PROFILING_RESULTS" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/log/InvalidCustomers.log" guiName="Log invalid customers" guiX="345" guiY="450" id="LOG_INVALID_CUSTOMERS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Phone number validation" guiX="1345" guiY="275" id="PHONE_NUMBER_VALIDATION" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 
 // This is rather uncommon approach, but gives you additional flexiblity 
@@ -108,8 +105,8 @@ function integer transform() {
 ]]></attr>
 <attr name="guiDescription"><![CDATA[Custom validation check - phone number must be a whole number and start with numbers 5 - 9]]></attr>
 </Node>
-<Node aggregateKey="country" guiName="Profiling Aggregation per Country" guiX="620" guiY="500" id="PROFILING_AGGREGATION_PER_COUNTRY" mapping="$country:=$country;$notNullCount:=countnonnull($creditcard);$recordCount:=count();" sorted="false" type="AGGREGATE"/>
-<Node guiName="SimpleCopy" guiX="395" guiY="325" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node aggregateKey="country" guiName="Profiling Aggregation per Country" guiX="620" guiY="450" id="PROFILING_AGGREGATION_PER_COUNTRY" mapping="$country:=$country;$notNullCount:=countnonnull($creditcard);$recordCount:=count();" sorted="false" type="AGGREGATE"/>
+<Node guiName="SimpleCopy" guiX="345" guiY="275" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
 <Edge fromNode="COUNT_PERCENTAGE_OF_NOT_NULL_RECORDS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="CUSTOM_PROFILING_RESULTS:0"/>
 <Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="SIMPLE_COPY:0"/>
 <Edge fromNode="CUSTOMERS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 1 (logs)" toNode="LOG_INVALID_CUSTOMERS:0"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="JanSlechta" category="dataQuality" created="Thu Sep 18 10:48:48 CEST 2025" guiVersion="7.0.0.15" id="1758618268056" largeIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-64.png" licenseCode="CLCDSCLOVE85208925SP" mediumIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-32.png" name="CustomValidator" nature="subgraph" showComponentDetails="true" smallIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-16.png">
+<Graph author="JanSlechta" category="dataQuality" created="Thu Sep 18 10:48:48 CEST 2025" guiVersion="7.2.1.7" id="1758618268056" largeIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-64.png" licenseCode="CLCDSCLOVE85208925SP" mediumIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-32.png" name="CustomValidator" nature="subgraph" showComponentDetails="true" smallIconPath="${PROJECT}/icon/Check-Badge--Streamline-Ultimate-16.png">
 <Global>
 <inputPorts>
 <singlePort connected="true" name="0"/>
@@ -46,20 +46,21 @@
 </GraphParameter>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="226" x="575" y="125">
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="226" x="575" y="175">
 <attr name="text"><![CDATA[h6. Generic country field exposed as subgraph attribute]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="125" id="Note1" textColor="444444" width="975" x="350" y="425">
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="125" id="Note1" textColor="444444" width="975" x="350" y="475">
 <attr name="text"><![CDATA[h3. Creating custom components - subgraph design
-* Input attributes that allows users to create generic components can be created by creating a *public* subgraph parameter
-* Properties of the subgraph (Protoperties tab in the Desginer) allows to edit visuals of the comopnent
-* Subgraphs can be published in libraries that are easily deployable into additional CloverDX Server instances]]></attr>
+* Input attributes that allows users to create generic components can be created by creating a *public* subgraph parameter.
+* Properties of the subgraph (Properties tab in the Designer) allows to edit visuals of the component.
+* Subgraphs can be published in libraries that are easily deployable into additional CloverDX Server instances.
+]]></attr>
 </RichTextNote>
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node aggregateKey="${COUNTRY_FIELD}" guiName="Aggregate" guiX="624" guiY="225" id="AGGREGATE" mapping="$country:=$${COUNTRY_FIELD};$notNullCount:=countnonnull($creditcard);$recordCount:=count();" sorted="false" type="AGGREGATE"/>
-<Node guiName="Custom coding validation" guiX="1124" guiY="50" id="CUSTOM_CODING_VALIDATION" type="REFORMAT">
+<Node aggregateKey="${COUNTRY_FIELD}" guiName="Aggregate" guiX="624" guiY="275" id="AGGREGATE" mapping="$country:=$${COUNTRY_FIELD};$notNullCount:=countnonnull($creditcard);$recordCount:=count();" sorted="false" type="AGGREGATE"/>
+<Node guiName="Custom coding validation" guiX="1124" guiY="100" id="CUSTOM_CODING_VALIDATION" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 
 // This is rather uncommon approach, but gives you additional flexiblity 
@@ -83,8 +84,8 @@ function integer transform() {
 }
 ]]></attr>
 </Node>
-<Node fileURL="${DATAOUT_DIR}/CustomProfilingResults.csv" guiName="Custom Profiling Results" guiX="1124" guiY="225" id="CUSTOM_PROFILING_RESULTS" type="FLAT_FILE_WRITER"/>
-<Node debugInput="true" guiName="DebugInput" guiX="50" guiY="50" id="DEBUG_INPUT" recordsNumber="0" type="DATA_GENERATOR">
+<Node fileURL="${DATAOUT_DIR}/CustomProfilingResults.csv" guiName="Custom Profiling Results" guiX="1124" guiY="275" id="CUSTOM_PROFILING_RESULTS" type="FLAT_FILE_WRITER"/>
+<Node debugInput="true" guiName="DebugInput" guiX="50" guiY="100" id="DEBUG_INPUT" recordsNumber="0" type="DATA_GENERATOR">
 <attr name="generate"><![CDATA[//#CTL2
 
 // Generates output record.
@@ -113,9 +114,9 @@ function integer generate() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node debugOutput="true" guiName="DebugOutput" guiX="1523" guiY="50" id="DEBUG_OUTPUT" type="TRASH"/>
-<Node debugOutput="true" guiName="DebugOutput" guiX="1523" guiY="125" id="DEBUG_OUTPUT1" type="TRASH"/>
-<Node guiName="Map" guiX="895" guiY="225" id="MAP" type="REFORMAT">
+<Node debugOutput="true" guiName="DebugOutput" guiX="1523" guiY="100" id="DEBUG_OUTPUT" type="TRASH"/>
+<Node debugOutput="true" guiName="DebugOutput" guiX="1520" guiY="275" id="DEBUG_OUTPUT1" type="TRASH"/>
+<Node guiName="Map" guiX="895" guiY="275" id="MAP" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 
 // Transforms input record into output record.
@@ -145,15 +146,15 @@ function integer transform() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node guiName="SimpleCopy" guiX="320" guiY="50" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
-<Node guiName="SubgraphInput" guiX="235" guiY="-45" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
-<Port guiY="67" name="0"/>
-<Port guiY="142" name="1"/>
+<Node guiName="SimpleCopy" guiX="320" guiY="100" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="SubgraphInput" guiX="235" guiY="5" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
+<Port guiY="117" name="0"/>
+<Port guiY="192" name="1"/>
 </Node>
-<Node guiName="SubgraphOutput" guiX="1409" guiY="-45" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
-<Port guiY="67" name="0"/>
-<Port guiY="142" name="1"/>
-<Port guiY="217" name="2"/>
+<Node guiName="SubgraphOutput" guiX="1409" guiY="5" id="SUBGRAPH_OUTPUT" type="SUBGRAPH_OUTPUT">
+<Port guiY="117" name="0"/>
+<Port guiY="292" name="1"/>
+<Port guiY="492" name="2"/>
 </Node>
 <Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="MAP:0"/>
 <Edge fromNode="CUSTOM_CODING_VALIDATION:0" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>

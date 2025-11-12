@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.2.1.7" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="4 - More Complex Group Validation" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/DonationsInput.fmt" id="Metadata4"/>
+<Metadata fileURL="${META_DIR}/DonationsTyped.fmt" id="Metadata0"/>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="ValidationResult" recordDelimiter="\n" type="delimited">
+<Field label="Year" name="Year" type="string"/>
+<Field label="Electoral Event" name="Electoral_Event" type="string"/>
+<Field label="Source" name="Source" type="string"/>
+<Field label="Contributor Type" name="Contributor_Type" type="string"/>
+<Field label="Contributor" name="Contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="Contributor_City_Province_Postal" type="string"/>
+<Field label="Recipient" name="Recipient" type="string"/>
+<Field label="Political Party" name="Political_Party" type="string"/>
+<Field label="Political Entity" name="Political_Entity" type="string"/>
+<Field label="Total Amount" name="Total_Amount" type="string"/>
+<Field name="recordNo" trim="true" type="long"/>
+<Field name="validationMessage" type="string"/>
+<Field name="ruleStatusCode" trim="true" type="integer"/>
+<Field name="ruleName" type="string"/>
+<Field name="ruleType" type="string"/>
+<Field containerType="list" name="rulePath" type="string"/>
+<Field containerType="list" name="validatedFieldNames" type="string"/>
+<Field containerType="map" name="validatedValues" type="string"/>
+<Field containerType="map" name="ruleParameters" type="string"/>
+<Field name="validationDate" trim="true" type="date"/>
+<Field name="componentID" type="string"/>
+<Field name="componentName" type="string"/>
+<Field name="graphURL" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="225" id="Note0" textColor="444444" width="401" x="75" y="75">
+<attr name="text"><![CDATA[h3. Donations validations
+
+This example contains combination of multiple validation groups where each group may have different types of evaluation of the rules (lazy vs. eager). Combining multiple groups allows you to build more complex validation rules.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/*.xlsx" guiName="Donations" guiX="70" guiY="325" id="DONATIONS2" type="SPREADSHEET_READER"/>
+<Node excludeFields="rulePath;validatedFieldNames;validatedValues;ruleParameters" fileURL="${DATAOUT_DIR}/InvalidDonations.data" guiName="Invalid donations" guiX="570" guiY="525" id="INVALID_DONATIONS2" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Validator" guiX="320" guiY="325" id="VALIDATOR2" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
+        <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Total_Amount" name="Is Total_Amount number?" numberType="DECIMAL" outputField="Total_Amount" trimInput="false">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </isNumber>
+        <group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="Valid years only" statusCode="">
+            <children>
+                <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Year" name="Is Year number?" numberType="INTEGER" outputField="Year" trimInput="true">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                </isNumber>
+                <interval acceptEmpty="false" boundaries="CLOSED_CLOSED" customRejectMessage="Year value not in the required range" description="" enabled="true" from="1993" inputField="Year" name="Is Year value in range between 1994 and 1999?" outputField="" to="2030" useType="LONG">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                </interval>
+            </children>
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+            <imports/>
+        </group>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <imports/>
+</group>
+]]></attr>
+<attr name="guiDescription"><![CDATA[Group validations]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.* = $in.1.*;
+	$out.1.* = $in.0.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/ValidDonations.data" guiName="Valid donations" guiX="570" guiY="325" id="VALID_DONATIONS2" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge debugMode="all" fromNode="DONATIONS2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="VALIDATOR2:0"/>
+<Edge fromNode="VALIDATOR2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (valid)" toNode="VALID_DONATIONS2:0"/>
+<Edge fromNode="VALIDATOR2:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (invalid)" toNode="INVALID_DONATIONS2:0"/>
+</Phase>
+</Graph>

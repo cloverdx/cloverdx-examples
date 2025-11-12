@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="|" name="DonationsTyped" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Year" name="Year" type="integer"/>
+<Field label="Electoral Event" name="Electoral_Event" type="string"/>
+<Field label="Source" name="Source" type="string"/>
+<Field label="Contributor Type" name="Contributor_Type" type="string"/>
+<Field label="Contributor" name="Contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="Contributor_City_Province_Postal" type="string"/>
+<Field label="Recipient" name="Recipient" type="string"/>
+<Field label="Political Party" name="Political_Party" type="string"/>
+<Field label="Political Entity" name="Political_Entity" type="string"/>
+<Field label="Total Amount" name="Total_Amount" type="decimal"/>
+</Record>

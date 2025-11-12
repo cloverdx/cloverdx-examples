@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu Nov 06 17:05:41 CET 2025" guiVersion="7.2.1.7" id="1762532824792" licenseCode="CLCDSCLOVE24765514SP" name="3 - Custom validation rules" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/DonationsInput.fmt" id="Metadata0"/>
+<Metadata fileURL="${META_DIR}/DonationsTyped.fmt" id="Metadata1"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="200" id="Note0" textColor="444444" width="550" x="150" y="25">
+<attr name="text"><![CDATA[h1. Custom validation rules
+
+Validator allows you to write your own custom validation rules in CTL. In this graph, we show how this can used to enforce even years. See the validator configuration for the rule code and usage.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/*.xlsx" guiName="Donations" guiX="145" guiY="275" id="DONATIONS3" type="SPREADSHEET_READER"/>
+<Node excludeFields="rulePath;validatedFieldNames;validatedValues;ruleParameters" fileURL="${DATAOUT_DIR}/InvalidDonations.data" guiName="Invalid donations" guiX="645" guiY="475" id="INVALID_DONATIONS2" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Validator" guiX="395" guiY="275" id="VALIDATOR3" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
+        <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Total_Amount" name="Is Total_Amount number?" numberType="DECIMAL" outputField="Total_Amount" trimInput="false">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </isNumber>
+        <group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="Valid years only" statusCode="">
+            <children>
+                <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Year" name="Is Year number?" numberType="INTEGER" outputField="Year" trimInput="true">
+                    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+                </isNumber>
+                <custom customRejectMessage="" description="" enabled="true" inputField="" name="Is Year an even number?" outputField="" ref="isEvenYear">
+                    <mapping>yearVal:=Year</mapping>
+                </custom>
+            </children>
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+            <imports/>
+        </group>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <customRules>
+        <customRule name="isEvenYear"><![CDATA[//#CTL2
+
+// Custom validation rule isEvenYear
+// Do not rename this function
+function boolean isEvenYear(string yearVal) {
+
+	if (str2integer(yearVal) % 2 == 0) {
+		return true; // Valid records	
+	} else {
+		$out.0.validationMessage = "Year value must be divisible by 2 - must be even number.";
+		return false; // Invalid records
+	}
+
+}
+]]]]><![CDATA[></customRule>
+    </customRules>
+    <imports/>
+</group>
+]]></attr>
+<attr name="guiDescription"><![CDATA[Group validations - AND]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.* = $in.1.*;
+	$out.1.* = $in.0.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/ValidDonations.data" guiName="Valid donations" guiX="645" guiY="275" id="VALID_DONATIONS2" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge debugMode="all" fromNode="DONATIONS3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="VALIDATOR3:0"/>
+<Edge fromNode="VALIDATOR3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (valid)" toNode="VALID_DONATIONS2:0"/>
+<Edge fromNode="VALIDATOR3:1" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 1 (invalid)" toNode="INVALID_DONATIONS2:0"/>
+</Phase>
+</Graph>

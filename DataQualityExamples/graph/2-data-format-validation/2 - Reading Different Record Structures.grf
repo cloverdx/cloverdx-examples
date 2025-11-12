@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.2.1.7" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="2 - Reading Different Record Structures" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/customers.fmt" id="Metadata4"/>
+<Metadata id="Metadata5">
+<Record fieldDelimiter=";" name="CustomerAlternativeMetadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Field eofAsDelimiter="false" name="customerid" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="firstname" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="lastname" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="address1" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="address2" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="city" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="state" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="zip" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="country" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="region" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="email" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="phone" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="creditcardtype" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="creditcard" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="creditcardexpiration" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="username" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="password" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" format="dd-MMM-yyyy" name="dob" nullable="true" shift="0" size="0" type="date"/>
+<Field eofAsDelimiter="false" name="income" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="gender" nullable="true" shift="0" size="0" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter=";" name="CustomersStandardized" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Field eofAsDelimiter="false" name="customerid" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="firstname" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="lastname" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="address1" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="address2" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="city" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="state" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="zip" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="country" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="region" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="email" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="phone" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="creditcardtype" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="creditcard" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="creditcardexpiration" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="username" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="password" nullable="true" shift="0" size="0" type="string"/>
+<Field eofAsDelimiter="false" name="age" nullable="true" shift="0" size="0" type="integer"/>
+<Field format="dd-MMM-yyyy" name="dob" type="date"/>
+<Field eofAsDelimiter="false" name="income" nullable="true" shift="0" size="0" type="integer"/>
+<Field eofAsDelimiter="false" name="gender" nullable="true" shift="0" size="0" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note1" textColor="444444" width="751" x="75" y="25">
+<attr name="text"><![CDATA[h1. Invalid source data and original data processing with alternative route
+When reading customer data, we parse the errors with a different reader – it has a {{dob}} field instead of {{age}}. {{dob}} is parsed as a date and age is calculated from that. The data is then merged into a single stream before it is sorted and written to the output file.
+
+This approach of using the error output of a reader component and then parsing it with another reader can be quite powerful combination in cases such as this 
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="200" id="Note0" textColor="444444" width="325" x="200" y="550">
+<attr name="text"><![CDATA[h2. Parsing error messages
+
+Notice the URL settings of the reader - it is configured to read data from a field {{originalData}} coming from the error records produced by the first reader component.]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Calculate age" guiX="595" guiY="400" id="CALCULATE_AGE" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.age = long2integer(dateDiff(today(), $in.0.dob, year));
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node dataPolicy="controlled" fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="70" guiY="225" id="CUSTOMERS" type="FLAT_FILE_READER"/>
+<Node dataPolicy="controlled" fileURL="port:$0.originalData:discrete" guiName="Customers with dob" guiX="320" guiY="400" id="CUSTOMERS_WITH_DOB" type="FLAT_FILE_READER"/>
+<Node fileURL="${DATAOUT_DIR}/log/InvalidCustomerRecords.log" guiName="Log invalid customers" guiX="595" guiY="575" id="LOG_INVALID_CUSTOMERS" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Map" guiX="595" guiY="225" id="MAP" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SimpleGather" guiX="845" guiY="225" id="SIMPLE_GATHER" type="SIMPLE_GATHER"/>
+<Node guiName="Sort by Customer ID" guiX="1095" guiY="225" id="SORT_BY_CUSTOMER_ID" sortKey="customerid(a)" type="EXT_SORT"/>
+<Node fileURL="${DATAOUT_DIR}/StandardizedCustomers.csv" guiName="Standardized customers" guiX="1370" guiY="225" id="STANDARDIZED_CUSTOMERS" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="CALCULATE_AGE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 1 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:1"/>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="MAP:0"/>
+<Edge fromNode="CUSTOMERS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (input)" outPort="Port 1 (logs)" toNode="CUSTOMERS_WITH_DOB:0"/>
+<Edge fromNode="CUSTOMERS_WITH_DOB:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (output)" toNode="CALCULATE_AGE:0"/>
+<Edge fromNode="CUSTOMERS_WITH_DOB:1" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 1 (logs)" toNode="LOG_INVALID_CUSTOMERS:0"/>
+<Edge fromNode="MAP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:0"/>
+<Edge fromNode="SIMPLE_GATHER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SORT_BY_CUSTOMER_ID:0"/>
+<Edge fromNode="SORT_BY_CUSTOMER_ID:0" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="STANDARDIZED_CUSTOMERS:0"/>
+</Phase>
+</Graph>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.1.2.4" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="DQExample1" showComponentDetails="true">
+<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.2.1.7" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="DQExample1" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
 <Record fieldDelimiter="|" name="Donations" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
@@ -13,6 +13,7 @@
 <Field label="Political Party" name="Political_Party" type="string"/>
 <Field label="Political Entity" name="Political_Entity" type="string"/>
 <Field label="Total Amount" name="Total_Amount" type="string"/>
+<Field auto_filling="source_name" name="SourceFileURL" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
@@ -26,7 +27,7 @@
 <Field label="Recipient" name="Recipient" type="string"/>
 <Field label="Political Party" name="Political_Party" type="string"/>
 <Field label="Political Entity" name="Political_Entity" type="string"/>
-<Field label="Total Amount" name="Total_Amount" type="integer"/>
+<Field label="Total Amount" name="Total_Amount" type="decimal"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
@@ -41,6 +42,7 @@
 <Field label="Political Party" name="Political_Party" type="string"/>
 <Field label="Political Entity" name="Political_Entity" type="string"/>
 <Field label="Total Amount" name="Total_Amount" type="string"/>
+<Field name="SourceFileURL" type="string"/>
 <Field name="recordNo" trim="true" type="long"/>
 <Field name="validationMessage" type="string"/>
 <Field name="ruleStatusCode" trim="true" type="integer"/>
@@ -51,42 +53,45 @@
 <Field containerType="map" name="validatedValues" type="string"/>
 <Field containerType="map" name="ruleParameters" type="string"/>
 <Field name="validationDate" trim="true" type="date"/>
-<Field name="componentID" type="string"/>
-<Field name="componentName" type="string"/>
-<Field name="graphURL" type="string"/>
 </Record>
 </Metadata>
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="275" id="Note0" textColor="444444" width="1150" x="75" y="25">
-<attr name="text"><![CDATA[h3. Initial data validation
-- you can leverage reader's second output port for brief data validation
--- in this case any record that cannot be parsed using the format defined on the first output edge will be sent to the second output
--- advantage of this solution is that it will always process the file even if it has unexpectedly corrupted records
--- disadvantage is that in some components (like SpreadsheetDataReader), the raw source data will not be returned and therefore such records cannot be processed using an alternative component]]></attr>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="551" x="125" y="150">
+<attr name="text"><![CDATA[h1. Initial data validation
+
+Use the reader’s second output port for basic validation. The same can also be validated with Validator component and it is up to you to decide which approach is better. In this case, validating whether a year is a number can be easily done during parsing while more complex rules are implemented in Validator.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="250" id="Note1" textColor="444444" width="275" x="50" y="500">
+<attr name="text"><![CDATA[h3. Autofilling in metadata
+
+We use SourceFileURL field in metadata to get the URL of the input file so that we can then see it in the error detail record.
+
+Without this, the error messages would not provide any information about the file (since Validator does not know the data comes from a file).]]></attr>
 </RichTextNote>
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node debugPrint="true" guiName="Catch errors" guiX="570" guiY="650" id="CATCH_ERRORS" type="TRASH">
+<Node debugPrint="true" guiName="Catch errors" guiX="395" guiY="550" id="CATCH_ERRORS" type="TRASH">
 <attr name="guiDescription"><![CDATA[log invalid records]]></attr>
 </Node>
-<Node fileURL="${DATAIN_DIR}/DonationsAbbr1993to2003.xlsx" guiName="Donations Spreadsheet" guiX="120" guiY="350" id="DONATIONS_SPREADSHEET" type="SPREADSHEET_READER">
+<Node fileURL="${DATAIN_DIR}/*.xlsx" guiName="Donations Spreadsheet" guiX="120" guiY="350" id="DONATIONS_SPREADSHEET" type="SPREADSHEET_READER">
 <attr name="guiDescription"><![CDATA[Read donations data from the XLSX spreadsheet]]></attr>
 </Node>
-<Node excludeFields="rulePath;validatedFieldNames;ruleParameters;validatedValues" fileURL="${DATAOUT_DIR}/InvalidDonations.data" guiName="Invalid donations" guiX="1045" guiY="650" id="INVALID_DONATIONS" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
-<Node guiName="Validator" guiX="570" guiY="350" id="VALIDATOR" type="VALIDATOR">
+<Node excludeFields="rulePath;validatedFieldNames;ruleParameters;validatedValues" fileURL="${DATAOUT_DIR}/InvalidDonations.data" guiName="Invalid donations" guiX="645" guiY="550" id="INVALID_DONATIONS" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Validator" guiX="395" guiY="350" id="VALIDATOR" type="VALIDATOR">
 <attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
     <children>
         <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
-        <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Total_Amount" name="Is Total_Amount number?" numberType="INTEGER" outputField="Total_Amount" trimInput="false">
-            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
-        </isNumber>
-        <interval acceptEmpty="false" boundaries="CLOSED_CLOSED" customRejectMessage="Year value not in the required range!" description="" enabled="true" from="1990" inputField="Year" name="Is Year value in range between 1990 and 2030?" outputField="" to="2030" useType="DEFAULT">
+        <interval acceptEmpty="false" boundaries="CLOSED_CLOSED" customRejectMessage="Year value not in the required range" description="" enabled="true" from="1990" inputField="Year" name="Is Year value in range between 1990 and 2030?" outputField="Year" to="2030" useType="DEFAULT">
             <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
         </interval>
+        <isNumber acceptEmpty="false" customRejectMessage="Amount must be non-empty and a number" description="" enabled="true" inputField="Total_Amount" name="Is Number" numberType="DECIMAL" outputField="Total_Amount" trimInput="false">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </isNumber>
+        <nonEmptyField customRejectMessage="Recipient cannot be empty" description="" enabled="true" goal="NONEMPTY" inputField="Recipient" name="Empty/Nonempty field" outputField="" trimInput="false"/>
     </children>
     <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
     <imports/>
@@ -94,44 +99,16 @@
 ]]></attr>
 <attr name="errorMapping"><![CDATA[//#CTL2
 
-// Transforms input record into output record.
 function integer transform() {
 	$out.1.* = $in.1.*;
-	$out.1.Year = $in.0.Year;
-	$out.1.Electoral_Event = $in.0.Electoral_Event;
-	$out.1.Source = $in.0.Source;
-	$out.1.Contributor_Type = $in.0.Contributor_Type;
-	$out.1.Contributor = $in.0.Contributor;
-	$out.1.Contributor_City_Province_Postal = $in.0.Contributor_City_Province_Postal;
-	$out.1.Recipient = $in.0.Recipient;
-	$out.1.Political_Party = $in.0.Political_Party;
-	$out.1.Political_Entity = $in.0.Political_Entity;
-	$out.1.Total_Amount = $in.0.Total_Amount;
+	$out.1.* = $in.0.*;
 
 	return ALL;
 }
-
-// Called during component initialization.
-// function boolean init() {}
-
-// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
-// required by the transform. All resources allocated within this method should be released
-// by the postExecute() method.
-// function void preExecute() {}
-
-// Called only if transform() throws an exception.
-// function integer transformOnError(string errorMessage, string stackTrace) {}
-
-// Called during each graph run after the entire transform was executed. Should be used to free any resources
-// allocated within the preExecute() method.
-// function void postExecute() {}
-
-// Called to return a user-defined error message when an error occurs.
-// function string getMessage() {}
 ]]></attr>
 </Node>
-<Node fileURL="${DATAOUT_DIR}/ValidDonations.data" guiName="Valid donations" guiX="1045" guiY="350" id="VALID_DONATIONS" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
-<Edge fromNode="DONATIONS_SPREADSHEET:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="VALIDATOR:0"/>
+<Node fileURL="${DATAOUT_DIR}/ValidDonations.data" guiName="Valid donations" guiX="645" guiY="350" id="VALID_DONATIONS" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge debugMode="all" fromNode="DONATIONS_SPREADSHEET:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="VALIDATOR:0"/>
 <Edge fromNode="DONATIONS_SPREADSHEET:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 1 (logs)" toNode="CATCH_ERRORS:0"/>
 <Edge fromNode="VALIDATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (valid)" toNode="VALID_DONATIONS:0"/>
 <Edge fromNode="VALIDATOR:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (invalid)" toNode="INVALID_DONATIONS:0"/>

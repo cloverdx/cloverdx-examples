@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.2.1.7" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="Validation With Iinitial Profiling" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/DonationsInput.fmt" id="Metadata4"/>
+<Metadata fileURL="${META_DIR}/DonationsTyped.fmt" id="Metadata0"/>
+<Metadata id="Metadata3" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="ProfilingResults" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Total_Amount_error_rate" type="number"/>
+<Field length="12" name="inputRecordCount" scale="2" trim="true" type="decimal"/>
+<Field name="Total_Amount__null_cnt" trim="true" type="long"/>
+<Field name="Total_Amount__not_null_cnt" trim="true" type="long"/>
+<Field name="Total_Amount__convert_to_number" trim="true" type="long"/>
+<Field name="Year__null_cnt" trim="true" type="long"/>
+<Field name="Year__convert_to_number" trim="true" type="long"/>
+<Field name="Electoral_Event__null_cnt" trim="true" type="long"/>
+<Field name="Source__null_cnt" trim="true" type="long"/>
+<Field name="Contributor_Type__null_cnt" trim="true" type="long"/>
+<Field name="Contributor__null_cnt" trim="true" type="long"/>
+<Field name="Contributor_City_Province_Postal__null_cnt" trim="true" type="long"/>
+<Field name="Recipient__null_cnt" trim="true" type="long"/>
+<Field name="Political_Party__null_cnt" trim="true" type="long"/>
+<Field name="Political_Entity__null_cnt" trim="true" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field label="Year" name="Year" type="string"/>
+<Field label="Electoral Event" name="Electoral_Event" type="string"/>
+<Field label="Source" name="Source" type="string"/>
+<Field label="Contributor Type" name="Contributor_Type" type="string"/>
+<Field label="Contributor" name="Contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="Contributor_City_Province_Postal" type="string"/>
+<Field label="Recipient" name="Recipient" type="string"/>
+<Field label="Political Party" name="Political_Party" type="string"/>
+<Field label="Political Entity" name="Political_Entity" type="string"/>
+<Field label="Total Amount" name="Total_Amount" type="string"/>
+<Field name="recordNo" trim="true" type="long"/>
+<Field name="validationMessage" type="string"/>
+<Field name="ruleStatusCode" trim="true" type="integer"/>
+<Field name="ruleName" type="string"/>
+<Field name="ruleType" type="string"/>
+<Field containerType="list" name="rulePath" type="string"/>
+<Field containerType="list" name="validatedFieldNames" type="string"/>
+<Field containerType="map" name="validatedValues" type="string"/>
+<Field containerType="map" name="ruleParameters" type="string"/>
+<Field name="validationDate" trim="true" type="date"/>
+<Field name="componentID" type="string"/>
+<Field name="componentName" type="string"/>
+<Field name="graphURL" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="How many invalid amounts are allowed? (In percent)" name="INVALID_AMOUNT_THRESHOLD" public="true" required="true" value="1">
+<attr name="description"><![CDATA[Specify how many amounts can be invalid (empty or not a number) in percent of the total record count.]]></attr>
+<SingleType name="decimalStr"/>
+</GraphParameter>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="444444" folded="false" fontSize="medium" height="225" id="Note0" textColor="FFFFFF" width="551" x="75" y="-75">
+<attr name="text"><![CDATA[h1. Profiling before data quality check
+
+This graph shows how you can profile the entire input to validate some basic assumptions about your data and then how to raise an error message if the assumptions are not met.
+
+The graph shows how you can calculate your custom metric based on the data profile (error rate for the {{Total_Amount}} column) and then compare it with {{INVALID_AMOUNT_THRESHOLD}}.
+
+The graph uses a concept of graph phases to make sure the profiling runs before the full validation and any other processing. If the error rate is too high, the graph will fail and the validation and output processing will not run.
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note1" textColor="444444" width="951" x="75" y="175">
+<attr name="text"><![CDATA[h2. Profiling data at first
+
+To ensure that part of a graph runs first, you can use graph phases represented by the small numbers in the top left corner of each component. Components in phase 0 (the profiling part) will run first before the validation.
+
+Using this concept, we can ensure that data profiling runs first and if an error is found, the validation and further processing does not run at all. This is done by using the Fail component in the first phase (phase 0). If any records are sent to it, it will cause the graph to fail before any records are processed by components from the second phase (phase 1).]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="201" id="Note2" textColor="444444" width="426" x="1075" y="175">
+<attr name="text"><![CDATA[h2. Validation and data processing in the next phase
+
+Validation and output are in the second phase (phase 1). These components will only run if the first phase completed successfully (i.e., when no records have been sent to the Fail component).
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="200" id="Note3" textColor="444444" width="525" x="550" y="700">
+<attr name="text"><![CDATA[h3. Measuring error rate
+
+In the profiler's output mapping, we calculate error rate for the {{Total_Amount}} column by considering null values as well as values that are not numbers. We then compare with the threshold value set via {{INVALID_AMOUNT_THRESHOLD}} parameter and report an error when the error rate is too high.
+
+Try running the graph with different thresholds to observe the behavior. For example, try setting the error rate to 2.
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/DonationsAbbr1993to2003.xlsx" guiName="Donations" guiX="95" guiY="400" id="DONATIONS" type="SPREADSHEET_READER"/>
+<Node guiName="Fail" guiX="895" guiY="575" id="FAIL" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage =
+		"Too many errors in the Total_Amount column: error rate is " + num2str(100.0 * $in.0.Total_Amount_error_rate, "0.###") + "%. " +
+		"Error rate threshold is ${INVALID_AMOUNT_THRESHOLD}%.";
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Profile dataset" guiX="345" guiY="400" id="PROFILE_DATASET" type="PROFILER_PROBE">
+<attr name="metrics"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<listOfFunctions>
+    <metadataField name="Year" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+        <function name="convert_to_number" Locale="en.US" Format="####" AcceptEmpty="false" Trim="false"/>
+    </metadataField>
+    <metadataField name="Electoral_Event" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Source" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Contributor_Type" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Contributor" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Contributor_City_Province_Postal" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Recipient" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Political_Party" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Political_Entity" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+    </metadataField>
+    <metadataField name="Total_Amount" type="string">
+        <function name="null_cnt" BlanksAsNulls="false"/>
+        <function name="not_null_cnt" BlanksAsNulls="false"/>
+        <function name="convert_to_number" Locale="en.US" Format="#.#" AcceptEmpty="false" Trim="false"/>
+    </metadataField>
+</listOfFunctions>
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.inputRecordCount = $in.0.inputRecordCount;
+	$out.1.Total_Amount_error_rate = 
+		(
+			(1.0 * $in.1.Total_Amount__not_null_cnt -  $in.1.Total_Amount__convert_to_number) + // Count of non-null amounts that are not numbers.
+			(1.0 * $in.1.Total_Amount__null_cnt) // Count of null amounts
+		) / $in.0.inputRecordCount; // Divide by number of records.
+	$out.1.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Too many invalid amounts?" guiX="595" guiY="575" id="TOO_MANY_INVALID_AMOUNTS" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.Total_Amount_error_rate > ${INVALID_AMOUNT_THRESHOLD} / 100.0]]></attr>
+</Node>
+<Edge fromNode="DONATIONS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="PROFILE_DATASET:0"/>
+<Edge fromNode="PROFILE_DATASET:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 0 (copy of input)" toNode="VALIDATE_DONATIONS:0"/>
+<Edge fromNode="PROFILE_DATASET:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 1 (results)" toNode="TOO_MANY_INVALID_AMOUNTS:0"/>
+<Edge fromNode="TOO_MANY_INVALID_AMOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="FAIL:0"/>
+</Phase>
+<Phase number="1">
+<Node excludeFields="rulePath;validatedFieldNames;validatedValues;ruleParameters" fileURL="${DATAOUT_DIR}/InvalidData.data" guiName="Invalid Data" guiX="1345" guiY="575" id="INVALID_DATA" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node guiName="Validate donations" guiX="1095" guiY="400" id="VALIDATE_DONATIONS" type="VALIDATOR">
+<attr name="rules"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<group conjunction="AND" description="" enabled="true" errorMessage="" errorMessageProducer="RULES" lazyEvaluation="true" name="All rules" statusCode="">
+    <children>
+        <copyAllByName customRejectMessage="" description="" enabled="true" inputField="" name="Copy all fields by name" outputField=""/>
+        <isNumber acceptEmpty="true" customRejectMessage="" description="" enabled="true" inputField="Total_Amount" name="Is Total_Amount number?" numberType="DECIMAL" outputField="Total_Amount" trimInput="false">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </isNumber>
+        <interval acceptEmpty="false" boundaries="CLOSED_CLOSED" customRejectMessage="Year value not in the required range" description="" enabled="true" from="1990" inputField="Year" name="Is Year value in range between 1990 and 2030?" outputField="" to="2030" useType="DEFAULT">
+            <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+        </interval>
+    </children>
+    <languageSetting dateFormat="" locale="" numberFormat="" timezone=""/>
+    <imports/>
+</group>
+]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.* = $in.1.*;
+	$out.1.* = $in.0.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATAOUT_DIR}/ValidData.data" guiName="Valid data" guiX="1345" guiY="400" id="VALID_DATA" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="VALIDATE_DONATIONS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (valid)" toNode="VALID_DATA:0"/>
+<Edge fromNode="VALIDATE_DONATIONS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (invalid)" toNode="INVALID_DATA:0"/>
+</Phase>
+</Graph>

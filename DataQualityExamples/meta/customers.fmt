@@ -11,7 +11,7 @@
 <Field eofAsDelimiter="false" name="country" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="region" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="email" nullable="true" shift="0" size="0" type="string"/>
-<Field eofAsDelimiter="false" name="phone" nullable="true" shift="0" size="0" type="long"/>
+<Field eofAsDelimiter="false" name="phone" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="creditcardtype" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="creditcard" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="creditcardexpiration" nullable="true" shift="0" size="0" type="string"/>
