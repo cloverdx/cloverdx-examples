@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu May 13 23:32:08 CEST 2021" guiVersion="7.2.0.8" id="1620942738725" licenseCode="CLP1DCLOVE94730539BY" name="2 - Data App With Autofilled Dropdown Via JS" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/DataAppWithAutofilledDropdownViaJS</UrlPath>
+<Description>Shows how to use custom JavaScript to populate drop down with values during Data App form load. The values themselves are queried from a Data Service (which in turn queries REST API).</Description>
+<EndpointName>Data App with autofilled dropdown via JS</EndpointName>
+<Category>JavaScript backed services</Category>
+<DataApp injectedJSFile="trans/js/DataAppWithAutofilledDropdown.js"/>
+<RequestMethod name="GET"/>
+<RequestParameter description="Select a recent job for which to query the status information. You can also type any other run id instead of selecting a job from the list to query older job." id="RestJobParameter0" label="Job to query" location="query" name="jobId" required="true" type="enumeration">
+<Options allowCustomValues="true"/>
+<ValidationRules>
+<ValidationRule type="numeric"/>
+<ValidationRule type="minLength" value="1"/>
+<ValidationRule type="maxLength" value="18"/>
+</ValidationRules>
+</RequestParameter>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata id="HTTPConnector_Response">
+<Record fieldDelimiter="|" name="HTTPConnector_Response" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="content" type="string"/>
+<Field name="statusCode" trim="true" type="integer"/>
+<Field containerType="map" name="header" type="string"/>
+<Field name="errorMessage" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="JobDetail" recordDelimiter="\r\n" type="delimited">
+<Field name="json" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="clover-server.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FFBF59" folded="false" fontSize="medium" height="151" id="Note1" textColor="444444" width="725" x="225" y="625">
+<attr name="text"><![CDATA[h3. Prerequisities
+* parameters in clover-server.prm (located in the root of the project) must be configured to match your CloverDX Server environemnt
+* Data Service GetDropDownItems must be enabled and working properlly
+**  must be published and available under the following endpoint: /clover/data-service/GetDropDownItems
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="275" id="Note3" textColor="444444" width="725" x="225" y="350">
+<attr name="text"><![CDATA[h3. Example: Loading items into dropdown menu in Data Apps using JavaScript
+
+This Data App shows how to use custom javascript to populate drop down with values during Data App form load. The JavaScript is configured in job properties (to see it, click on empty space in the job, then on _Properties_ view, then look for _Path to injected JS file_ property).
+
+The parameter that is populated by the JavaScript is called *jobId* (in JS code, it is referenced as jobId_input_values, which is concatenation of parameter name and _input_values suffix - more on this is explained here: [https://doc.cloverdx.com/latest/developer/data-service.html#id_data_apps_customization]). It is configured to be a dropdown without any values. To make the app more flexible, users are allowed to enter their own value - a run id of any other job.
+
+Rest of the service talks to CloverDX REST API to query information about the job selected in the dropdown. The result is returned as is - simple json to keep the code short.
+
+*Using JavaScript* to populate dropwdowns is recommended for edge cases where more straightforward solution via direct connection to Data Service is not sufficient - this typically include data feeds from another system (outside CloverDX).]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node addInputFieldsAsParameters="false" guiName="executions API" guiX="270" guiY="50" id="EXECUTIONS_API" password="${PASSWORD}" requestMethod="GET" type="HTTP_CONNECTOR" url="${SERVER_URL}/${API_ROOT}/executions/*{jobId}" username="${USER_NAME}">
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+<attr name="headerProperties"><![CDATA[X-Requested-By=clover-${RUN_ID}
+]]></attr>
+<attr name="requestParameters"><![CDATA[pageSize=
+]]></attr>
+</Node>
+<Node guiName="Fail" guiX="770" guiY="200" id="FAIL" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = "HTTP " + $in.0.statusCode + ": " + nvl($in.0.errorMessage, "(no message)");
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Fail" guiX="520" guiY="200" id="FAIL1" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = "Connection failed: " + $in.0.errorMessage;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Is error?" guiX="520" guiY="50" id="IS_ERROR" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.statusCode == 200]]></attr>
+</Node>
+<Node guiName="Input" guiX="70" guiY="25" id="RESTJOB_INPUT0" requestFormat="BINARY" restJobInput="true" type="RESTJOB_INPUT"/>
+<Node attachment="false" guiName="Output" guiX="1020" guiY="25" id="RESTJOB_OUTPUT0" metadataName="false" responseFormat="JSON" restJobOutput="true" topLevelArray="false" type="RESTJOB_OUTPUT"/>
+<Node guiName="GetJobInput" guiX="270" guiY="25" id="RequestParametersValidator" restJobInput="true" type="GET_JOB_INPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+// Transforms input record into output record.
+function integer transform() {
+	if (isEmpty(getRequestParameter("jobId"))) { 
+		raiseError("Missing required request parameter: 'jobId'");
+	}
+	return ALL;
+}]]></attr>
+</Node>
+<Node guiName="Set Response Body" guiX="770" guiY="50" id="SET_RESPONSE_BODY" type="SET_JOB_OUTPUT">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	setResponseBody($in.0.content);
+	
+	return ALL;
+}
+]]></attr>
+<attr name="guiDescription"><![CDATA[via CTL]]></attr>
+</Node>
+<Edge fromNode="EXECUTIONS_API:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="HTTPConnector_Response" outPort="Port 0 (out)" toNode="IS_ERROR:0"/>
+<Edge fromNode="EXECUTIONS_API:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="FAIL1:0"/>
+<Edge fromNode="IS_ERROR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="SET_RESPONSE_BODY:0"/>
+<Edge fromNode="IS_ERROR:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 1 (rejected)" toNode="FAIL:0"/>
+<Edge fromNode="RESTJOB_INPUT0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (Parameters)" toNode="EXECUTIONS_API:0"/>
+</Phase>
+</Graph>

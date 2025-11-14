@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu May 13 23:32:08 CEST 2021" guiVersion="7.2.0.8" id="1620942810007" licenseCode="CLP1DCLOVE94730539BY" name="GetDropDownItems" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/GetDropDownItems</UrlPath>
+<RequestMethod name="GET"/>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata id="HTTPConnector_Response">
+<Record fieldDelimiter="|" name="HTTPConnector_Response" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="content" type="string"/>
+<Field name="statusCode" trim="true" type="integer"/>
+<Field containerType="map" name="header" type="string"/>
+<Field name="errorMessage" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="JobInfo" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field name="value" type="string"/>
+<Field name="label" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter name="ITEMS_TO_RETURN" value="10"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="clover-server.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="176" id="Note0" textColor="444444" width="751" x="225" y="350">
+<attr name="text"><![CDATA[h3. Data provider data service for DataAppWithAutofilledDropwdown Data App
+
+This Data Service is used to populate a dropdown in a Data App called DataAppWithAutofilledDropdown. It calls CloverDX REST API to query list of recent executions and returns basic information about each execution. Any other logic can be implemented instead of this API call.
+
+This Data Service is called from DataAppWithAutofilledDropdown.js script. Note that the scripts expects the data to be returned in certain format (JSON with top-level array in this case) and our output settings and format must match that.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FFBF59" folded="false" fontSize="medium" height="101" id="Note1" textColor="444444" width="751" x="225" y="525">
+<attr name="text"><![CDATA[h3. Prerequisities
+* parameters in clover-server.prm (located in the root of the project) must be configured to match your CloverDX Server environemnt
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+<ExecutionConfig>
+<Property name="debug_mode" value="true"/>
+</ExecutionConfig>
+</Global>
+<Phase number="0">
+<Node addInputFieldsAsParameters="false" guiName="Executions API" guiX="270" guiY="50" id="EXECUTIONS_API1" password="${PASSWORD}" requestMethod="GET" type="HTTP_CONNECTOR" url="${SERVER_URL}/${API_ROOT}/executions" username="${USER_NAME}">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.3.pageSize = "${ITEMS_TO_RETURN}";
+
+	return ALL;
+}
+]]></attr>
+<attr name="standardOutputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+<attr name="headerProperties"><![CDATA[X-Requested-By=clover-${RUN_ID}
+]]></attr>
+<attr name="requestParameters"><![CDATA[pageSize=
+]]></attr>
+</Node>
+<Node guiName="Fail" guiX="795" guiY="200" id="FAIL" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = "HTTP " + $in.0.statusCode + ": " + nvl($in.0.errorMessage, "(no message)");
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Fail" guiX="520" guiY="200" id="FAIL1" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = "Connection failed: " + $in.0.errorMessage;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Is error?" guiX="520" guiY="50" id="IS_ERROR" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.statusCode == 200]]></attr>
+</Node>
+<Node guiName="Parse" guiX="795" guiY="50" id="PARSE" type="NORMALIZER">
+<attr name="normalize"><![CDATA[//#CTL2
+variant currentResponse;
+
+function integer count() {
+	currentResponse = parseJson($in.0.content);
+	
+	return length(currentResponse["members"]);
+}
+
+function integer transform(integer i) {
+	string runId = toString(currentResponse["members"][i]["runId"]);
+	string jobFile = cast(currentResponse["members"][i]["jobFile"], string);
+	string sandboxCode = cast(currentResponse["members"][i]["sandboxCode"], string);
+	
+	$out.0.value = runId;
+	$out.0.label = sandboxCode + ":" + jobFile + " (" + runId + ")";
+	
+
+	return OK;
+}
+]]></attr>
+</Node>
+<Node guiName="Input" guiX="70" guiY="25" id="RESTJOB_INPUT0" requestFormat="BINARY" restJobInput="true" type="RESTJOB_INPUT"/>
+<Node attachment="false" guiName="Output" guiX="1045" guiY="25" id="RESTJOB_OUTPUT0" metadataName="false" responseFormat="JSON" restJobOutput="true" topLevelArray="true" type="RESTJOB_OUTPUT"/>
+<Edge fromNode="EXECUTIONS_API1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="HTTPConnector_Response" outPort="Port 0 (out)" toNode="IS_ERROR:0"/>
+<Edge fromNode="EXECUTIONS_API1:1" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="FAIL1:0"/>
+<Edge fromNode="IS_ERROR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="PARSE:0"/>
+<Edge fromNode="IS_ERROR:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 1 (rejected)" toNode="FAIL:0"/>
+<Edge fromNode="PARSE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="RESTJOB_OUTPUT0:0"/>
+</Phase>
+</Graph>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="JanSlechta" created="Mon Oct 27 17:29:50 CET 2025" guiVersion="7.2.0.8" id="1762265937170" licenseCode="CLCDSCLOVE85208925SP" name="4 - Retrieve Data Chart" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/RetrieveDataChart</UrlPath>
+<Description>Simple Data App allowing users to manually trigger a job without entering CloverDX Server operations console.</Description>
+<EndpointName>Retrieve Data Chart</EndpointName>
+<Category>Standard use cases</Category>
+<RequestMethod name="GET"/>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata fileURL="${META_DIR}/UpdatedDonation.fmt" id="Metadata1"/>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="Output" recordDelimiter="\r\n" type="delimited">
+<Field name="svgContent" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="requestEcho" recordDelimiter="\r\n" type="delimited">
+<Field name="requestBody" type="string"/>
+<Field name="requestClientIpAddress" type="string"/>
+<Field name="requestContentType" type="string"/>
+<Field name="requestEncoding" type="string"/>
+<Field name="requestHeaders" type="string"/>
+<Field name="requestMethod" type="string"/>
+<Field name="requestParameters" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="151" id="Note0" textColor="444444" width="875" x="275" y="25">
+<attr name="text"><![CDATA[h3. Retrieve data chart
+* not only data grids can be returned to the users
+* you can set content type to display output data you need - in this case, data is converted to an SVG, but you can return HTML, etc.
+** content-type can be set via Output component or using CTL in one of CloverDX component (using _setResponseContentType()_).
+* data does not need to be sent to Output component, but instead can be written to response:body directly from a writer component
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="AnalyzeDonations" guiX="270" guiY="225" id="ANALYZE_DONATIONS" jobURL="${GRAPH_DIR}/helper/AnalyzeDonations.grf" type="EXECUTE_GRAPH"/>
+<Node guiName="Input" guiX="70" guiY="25" id="RESTJOB_INPUT0" requestFormat="JSON" restJobInput="true" type="RESTJOB_INPUT"/>
+</Phase>
+<Phase number="1">
+<Node guiName="Compose SVG" guiX="770" guiY="225" id="COMPOSE_SVG" type="DENORMALIZER">
+<attr name="denormalize"><![CDATA[//#CTL2
+map[boolean, integer] donationsCount;
+map[boolean, decimal] donationsAmount;
+
+function integer append() {
+	donationsCount[$in.0.significantAmount] = donationsCount[$in.0.significantAmount] + 1;
+	donationsAmount[$in.0.significantAmount] = donationsAmount[$in.0.significantAmount] + $in.0.totalAmount;	
+	return OK;
+}
+
+function integer transform() {
+	
+	decimal barLength = 740;
+	decimal total = donationsCount[false] + donationsCount[true];
+	decimal signicantPercentage = donationsCount[true] / total * 100;
+	decimal otherPercentage = donationsCount[false] / total * 100;
+	decimal signifantBar = signicantPercentage / 100 * barLength;
+	decimal otherBar = otherPercentage / 100 * barLength;
+	
+	$out.0.svgContent = """
+		<svg width="800" height="140" xmlns="http://www.w3.org/2000/svg">
+		  <style>
+		    text {
+		      font-family: Arial, sans-serif;
+		      text-transform: uppercase;
+		      dominant-baseline: middle;
+		    }
+		  </style>
+		
+		  <text x="10" y="45" font-size="16" fill="black">Significant</text>
+		  <text x="10" y="105" font-size="16" fill="black">Other</text>
+		
+		  <!-- Bar 1 Background -->
+		  <rect x="120" y="20" width="740" height="50" fill="#e6f9e6" />
+		  <rect x="120" y="20" width='""" + signifantBar + """' height="50" fill="#00ff00" />
+		  <text x="130" y="35" font-size="16" fill="black">""" + num2str(signicantPercentage, "###.##") + """%, count: """ + donationsCount[true] + """</text>
+		  <text x="130" y="56" font-size="16" fill="black">$""" + num2str(donationsAmount[true], "###,###.##") + """</text>
+		
+		  <!-- Bar 2 Background -->
+		  <rect x="120" y="80" width="740" height="50" fill="#e6f9e6" />
+		  <rect x="120" y="80" width='""" + otherBar + """' height="50" fill="#006400" />
+		  <text x="130" y="95" font-size="16" fill="white">""" + num2str(otherPercentage, "###.##") + """%, count: """ + donationsCount[false] + """</text>
+  		  <text x="130" y="116" font-size="16" fill="white">$""" + num2str(donationsAmount[false], "###,###.##") + """</text>
+		</svg>
+	""";
+	
+	return OK;
+}
+
+function boolean init() {
+	donationsCount[true] = 0;
+	donationsCount[false] = 0;
+	donationsAmount[true] = 0;
+	donationsAmount[false] = 0;
+	return true;
+}
+]]></attr>
+</Node>
+<Node fileURL="${DATATMP_DIR}/${ROOT_RUN_ID}.parquet" guiName="Read Results" guiX="520" guiY="225" id="READ_RESULTS" type="PARQUET_READER"/>
+<Node attachment="false" contentType="image/svg+xml" guiName="Output" guiX="1270" guiY="25" id="RESTJOB_OUTPUT0" metadataName="true" responseFormat="CUSTOM" restJobOutput="true" topLevelArray="true" type="RESTJOB_OUTPUT"/>
+<Node fileURL="response:body" guiName="Write SVG" guiX="1020" guiY="225" id="WRITE_SVG" type="FLAT_FILE_WRITER"/>
+<Edge fromNode="COMPOSE_SVG:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="WRITE_SVG:0"/>
+<Edge fromNode="READ_RESULTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (output)" toNode="COMPOSE_SVG:0"/>
+</Phase>
+</Graph>

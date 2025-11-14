@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="|" name="UpdatedDonation" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Year" name="year" trim="true" type="integer"/>
+<Field label="Electoral Event" name="electoralEvent" type="string"/>
+<Field label="Source" name="source" type="string"/>
+<Field label="Contributor Type" name="contributorType" type="string"/>
+<Field label="Contributor" name="contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="contributorCityProvincePostal" type="string"/>
+<Field label="Recipient" name="recipient" type="string"/>
+<Field label="Political Party" name="politicalParty" type="string"/>
+<Field label="Political Entity" name="politicalEntity" type="string"/>
+<Field label="Total Amount" name="totalAmount" trim="true" type="long"/>
+<Field label="Significant Amount" name="significantAmount" trim="true" type="boolean"/>
+<Field label="Over Average" length="12" name="overAverageAmount" scale="2" trim="true" type="boolean"/>
+<Field label="Over Median" length="12" name="overMedianAmount" scale="2" trim="true" type="boolean"/>
+<Field label="Significant Amount Threshold" length="12" name="significantThreshold" scale="2" trim="true" type="decimal"/>
+</Record>

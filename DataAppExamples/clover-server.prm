@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GraphParameters>
+<GraphParameter name="SERVER_URL" value="http://localhost:8083/clover"/>
+<GraphParameter name="USER_NAME" value="clover"/>
+<GraphParameter name="PASSWORD" value="clover"/>
+<GraphParameter name="API_ROOT" value="api/rest/v1"/>
+</GraphParameters>

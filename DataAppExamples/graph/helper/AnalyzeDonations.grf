@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="JanSlechta" created="Mon Oct 27 17:29:50 CET 2025" guiVersion="7.2.0.8" id="1762266052286" licenseCode="CLCDSCLOVE85208925SP" name="UnderlyingProcess" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/UpdatedDonation.fmt" id="Metadata1"/>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="DonationsData" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field label="Year" name="year" type="integer"/>
+<Field label="Electoral Event" name="electoralEvent" type="string"/>
+<Field label="Source" name="source" type="string"/>
+<Field label="Contributor Type" name="contributorType" type="string"/>
+<Field label="Contributor" name="contributor" type="string"/>
+<Field label="Contributor City/Province/Postal" name="contributorCityProvincePostal" type="string"/>
+<Field label="Recipient" name="recipient" type="string"/>
+<Field label="Political Party" name="politicalParty" type="string"/>
+<Field label="Political Entity" name="politicalEntity" type="string"/>
+<Field label="Total Amount" name="totalAmount" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="YearlyDataProfile" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Field length="12" name="totalMax" scale="2" trim="true" type="decimal"/>
+<Field length="12" name="significantThreshold" scale="2" trim="true" type="decimal"/>
+<Field name="totalAverage" trim="true" type="number"/>
+<Field name="totalMedian" trim="true" type="number"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameter label="File URL" name="FILE_URL" public="true" required="false" value="${DATAIN_DIR}/DonationsAbbr2016to2018.xlsx">
+<ComponentReference referencedComponent="READ_DONATIONS" referencedProperty="fileURL"/>
+</GraphParameter>
+<GraphParameter name="THRESHOLD_RATIO" value="0.8"/>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Count significant threshold" guiX="370" guiY="125" id="COUNT_SIGNIFICANT_THRESHOLD" type="PROFILER_PROBE">
+<attr name="metrics"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<listOfFunctions>
+    <metadataField name="year" type="integer"/>
+    <metadataField name="electoralEvent" type="string"/>
+    <metadataField name="source" type="string"/>
+    <metadataField name="contributorType" type="string"/>
+    <metadataField name="contributor" type="string"/>
+    <metadataField name="contributorCityProvincePostal" type="string"/>
+    <metadataField name="recipient" type="string"/>
+    <metadataField name="politicalParty" type="string"/>
+    <metadataField name="politicalEntity" type="string"/>
+    <metadataField name="totalAmount" type="long">
+        <function name="avg"/>
+        <function name="median"/>
+        <function name="max"/>
+    </metadataField>
+</listOfFunctions>
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.1.totalMax = $in.1.totalAmount__max;
+	$out.1.significantThreshold = $in.1.totalAmount__max * ${THRESHOLD_RATIO};
+	$out.1.totalAverage = $in.1.totalAmount__avg;
+	$out.1.totalMedian = $in.1.totalAmount__median;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node guiName="CrossJoin" guiX="670" guiY="125" id="CROSS_JOIN" type="CROSS_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.significantAmount = iif((nvl($in.0.totalAmount,0) >= $in.1.significantThreshold), true, false);
+	$out.0.overAverageAmount = iif((nvl($in.0.totalAmount,0) >= $in.1.totalAverage), true, false);
+	$out.0.overMedianAmount = iif((nvl($in.0.totalAmount,0) >= $in.1.totalMedian), true, false);
+	$out.0.significantThreshold = $in.1.significantThreshold;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node guiName="Ignore invalid records" guiX="370" guiY="325" id="IGNORE_INVALID_RECORDS" type="TRASH"/>
+<Node fileURL="${FILE_URL}" guiName="Read donations" guiX="120" guiY="125" id="READ_DONATIONS" type="SPREADSHEET_READER"/>
+<Node fileURL="${DATATMP_DIR}/${ROOT_RUN_ID}.parquet" guiName="Write extracted results" guiX="920" guiY="125" id="WRITE_EXTRACTED_RESULTS" type="PARQUET_WRITER"/>
+<Edge fromNode="COUNT_SIGNIFICANT_THRESHOLD:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (master)" outPort="Port 0 (copy of input)" toNode="CROSS_JOIN:0"/>
+<Edge fromNode="COUNT_SIGNIFICANT_THRESHOLD:1" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 1 (slave)" metadata="Metadata2" outPort="Port 1 (results)" toNode="CROSS_JOIN:1"/>
+<Edge fromNode="CROSS_JOIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (input)" metadata="Metadata1" outPort="Port 0 (out)" toNode="WRITE_EXTRACTED_RESULTS:0"/>
+<Edge fromNode="READ_DONATIONS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="COUNT_SIGNIFICANT_THRESHOLD:0"/>
+<Edge fromNode="READ_DONATIONS:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 1 (logs)" toNode="IGNORE_INVALID_RECORDS:0"/>
+</Phase>
+</Graph>

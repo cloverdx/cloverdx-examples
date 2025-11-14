@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu May 13 23:32:08 CEST 2021" guiVersion="7.2.0.8" id="1620984285506" licenseCode="CLP1DCLOVE94730539BY" name="1 - Data App With Default Values.rjob" nature="restJob" showComponentDetails="true">
+<Global>
+<EndpointSettings>
+<UrlPath>/DataAppWithDefaultValues</UrlPath>
+<Description>This app shows how to use custom JavaScript to populate input parameters with their default values.</Description>
+<EndpointName>Data App with Default values</EndpointName>
+<Category>JavaScript backed services</Category>
+<DataApp injectedJSFile="trans/js/DataAppWithDefaultValues.js"/>
+<RequestMethod name="GET"/>
+<RequestParameter id="RestJobParameter0" label="Integer example" location="query" name="intValue" required="false" type="num_int"/>
+<RequestParameter id="RestJobParameter1" label="Date example" location="query" name="dateValue" required="false" sensitive="false" type="date"/>
+<RequestParameter id="RestJobParameter2" label="String example" location="query" name="stringValue" type="string"/>
+</EndpointSettings>
+<RestJobResponseStatus>
+<JobError>
+<reasonPhrase>Job failed</reasonPhrase>
+<statusCode>500</statusCode>
+<ReasonPhrase>Job failed</ReasonPhrase>
+<StatusCode>500</StatusCode>
+</JobError>
+<Success>
+<statusCode>200</statusCode>
+<StatusCode>200</StatusCode>
+</Success>
+<ValidationError>
+<reasonPhrase>Request validation failed</reasonPhrase>
+<statusCode>400</statusCode>
+<ReasonPhrase>Request validation failed</ReasonPhrase>
+<StatusCode>400</StatusCode>
+</ValidationError>
+</RestJobResponseStatus>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="|" name="requestEcho" recordDelimiter="\r\n" type="delimited">
+<Field name="requestBody" type="string"/>
+<Field name="requestClientIpAddress" type="string"/>
+<Field name="requestContentType" type="string"/>
+<Field name="requestEncoding" type="string"/>
+<Field name="requestHeaders" type="string"/>
+<Field name="requestMethod" type="string"/>
+<Field name="requestParameters" type="string"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="251" id="Note0" textColor="444444" width="375" x="400" y="200">
+<attr name="text"><![CDATA[h3. Example - Request parameter set via JavaScript
+
+This Data App shows how custom javascript can be used to set default values of different input parameters.
+
+The javascript is configured in job properties (to see it, click on empty space in the job, then on _Properties_ view, then look for _Path to injected JS file_ property)]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node guiName="Input" guiX="70" guiY="25" id="RESTJOB_INPUT0" requestFormat="BINARY" restJobInput="true" type="RESTJOB_INPUT"/>
+<Node attachment="false" guiName="Output" guiX="1095" guiY="25" id="RESTJOB_OUTPUT0" metadataName="true" responseFormat="JSON" restJobOutput="true" topLevelArray="true" type="RESTJOB_OUTPUT"/>
+<Edge fromNode="RESTJOB_INPUT0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (Parameters)" toNode="RESTJOB_OUTPUT0:0"/>
+</Phase>
+</Graph>
