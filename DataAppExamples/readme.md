@@ -12,14 +12,16 @@ This project is a demo of some of the Data App or Data Service features. It show
 * Most common use cases for Data Apps - process triggering, file upload, getting just-in-time data reports
 
 The project contains the following REST jobs (all located in data-service directory):
-* 1_DataAppWithDefaultValues.rjob - shows how default values can be generated using a linked JavaScript
-* 2_DataAppWithAutofilledDropdown.rjob - dropdown items populated using results from a linked data service (data-service/backend-services/GetDropDownItems.rjob)
-* 3_DataAppWithAutofilledDropdownViaJS.rjob - dropdown items populated using JavaScript
-* 4_ProcessTrigger.rjob - an example of how Data Apps can be used a simple manual trigger without entering backend ops console
-* 5_UploadAndProcessFile.rjob - an example of how Data Apps can be used as data ingestor (data can not only be ingested but also further processed)
-* 6_RetrieveData.rjob - an example of how Data Aps can be used as a simple reporting tool - providing just-in-time data output in human readable formats 
-* 7_RetrieveDataChart.rjob - an example of how Data Aps can output various output formats (in this case SVG)
-
+* **Standard use cases** (standard-use-cases)
+	- _1 - Process Trigger.rjob_ - an example of how Data Apps can be used a simple manual trigger without entering backend ops console
+	- _2 - Upload And Process File.rjob_ - an example of how Data Apps can be used as data ingestor (data can not only be ingested but also further processed)
+	- _3 - Retrieve Data.rjob_ - an example of how Data Aps can be used as a simple reporting tool - providing just-in-time data output in human readable formats 
+	- _4 - Retrieve Data Chart.rjob_ - an example of how Data Aps can output various output formats (in this case SVG)
+* **Populating drop down with dynamic content** (dynamic-dropdown-content)
+	- _1 - Data App With Autofilled Dropdown.rjob_ - dropdown items populated using results from a linked data service (data-service/backend-services/GetDropDownItems.rjob)
+* **Data App customization with JS** (customization-with-js)
+	- _1 - Data App With Default Values.rjob_ - shows how default values can be generated using a linked JavaScript
+	- _2 - Data App With Autofilled Dropdown Via JS.rjob_ - dropdown items populated using JavaScript
 
 ## Installation
 
@@ -47,4 +49,5 @@ Unless otherwise specified, the code in this repository is licensed under
 
 We welcome your feedback and contributions. You can:
 - Submit comments or pull requests here on GitHub.
+
 - Reach out to us through [cloverdx.com](https://www.cloverdx.com).
