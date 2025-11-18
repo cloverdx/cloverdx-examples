@@ -22,3 +22,20 @@ By default this connection assumes postgres is running on localhost, and that th
 Author: Branislav Repcek <branislav.repcek@cloverdx.com>  
 Version: 1.3  
 Compatible: CloverDX 6.5+  
+
+## Usage and licensing
+
+Feel free to reuse or fork these projects in your own CloverDX solutions.
+
+Note that the code in this repository is provided on an **"as is" basis, without
+warranties or conditions of any kind, either express or implied, including,
+without limitation, any warranties or conditions of title, non-infringement,
+merchantability, or fitness for a particular purpose.**
+Unless otherwise specified, the code in this repository is licensed under
+[Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
+
+## Contributing
+
+We welcome your feedback and contributions. You can:
+- submit comments or pull requests here on GitHub,
+- reach out to us through [cloverdx.com](https://www.cloverdx.com).

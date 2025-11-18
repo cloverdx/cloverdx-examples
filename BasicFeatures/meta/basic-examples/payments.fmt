@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter=";" name="Payments" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="paymentId" type="long"/>
+<Field name="orderId" type="long"/>
+<Field name="customerId" type="long"/>
+<Field name="paymentType" type="string"/>
+<Field name="paidAmount" scale="2" type="decimal"/>
+<Field eofAsDelimiter="true" name="paymentDate" type="date"/>
+</Record>
