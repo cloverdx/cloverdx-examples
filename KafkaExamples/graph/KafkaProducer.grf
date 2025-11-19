@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Tue Dec 15 15:15:30 CET 2020" guiVersion="7.2.0.8" id="1608043542313" licenseCode="CLP1DCLOVE85832080BY" name="KafkaProducer" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/Customer.fmt" id="Metadata0"/>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="CustomerOffset" recordDelimiter="\r\n" type="delimited">
+<Field name="id" type="string"/>
+<Field name="kafkaOffset" type="long"/>
+<Field name="partition" type="long"/>
+<Field name="topic" type="string"/>
+</Record>
+</Metadata>
+<Connection config="${CONN_DIR}/KafkaDocker.cfg" id="KAFKA0" type="KAFKA"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="175" id="Note0" textColor="444444" width="1426" x="50" y="50">
+<attr name="text"><![CDATA[h3. Example: Kafka Producer
+* Data is read from a flat file (could be any random data source).
+* Each line (customer record) is converted into a JSON message using JSONWriter component.
+* Each message is separatelly pushed into Kafka Topic.
+* In case of error, appropriate messageis mapped to the fail component and printed into the log.]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FFBF59" folded="false" fontSize="medium" height="175" id="Note1" textColor="444444" width="1426" x="50" y="575">
+<attr name="text"><![CDATA[h3. Requirements
+* Kafka connection (KafkaDocker) must be valid.
+* Kafka broker can be created using attached docker compose file (deploy folder).]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/Customers.csv" guiName="Customers" guiX="45" guiY="275" id="CUSTOMERS" type="FLAT_FILE_READER">
+<attr name="guiDescription"><![CDATA[customers.new]]></attr>
+</Node>
+<Node createEmptyFiles="false" fileURL="port:$0.value:discrete" guiName="Customer JSON Message" guiX="545" guiY="425" id="CUSTOMER_JSON_MESSAGE" recordsPerFile="1" type="JSON_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<customer xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <clover:elements clover:include="$0.*"/>
+</customer>]]></attr>
+</Node>
+<Node guiName="Key + Msg" guiX="845" guiY="275" id="KEY_MSG" type="COMBINE">
+<attr name="transform"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.1.*;
+	$out.0.key = num2str($in.0.id);
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="Produce messages" guiX="1095" guiY="275" id="PRODUCE_MESSAGES" kafkaConnection="KAFKA0" topic="customers.new" type="KAFKA_WRITER">
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.id = $in.0.key;
+	$out.0.* = $in.1.*;
+	$out.0.kafkaOffset = $in.1.offset;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SimpleCopy" guiX="295" guiY="275" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node guiName="Success" guiX="1345" guiY="275" id="SUCCESS" type="SUCCESS"/>
+<Edge fromNode="CUSTOMERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="SIMPLE_COPY:0"/>
+<Edge fromNode="CUSTOMER_JSON_MESSAGE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 1 (in)" metadataRef="#//Edge3" outPort="Port 0 (out)" toNode="KEY_MSG:1"/>
+<Edge fromNode="KEY_MSG:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="PRODUCE_MESSAGES:0"/>
+<Edge fromNode="PRODUCE_MESSAGES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (success)" toNode="SUCCESS:0"/>
+<Edge fromNode="PRODUCE_MESSAGES:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 1 (fail)" toNode="FAIL:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="KEY_MSG:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="CUSTOMER_JSON_MESSAGE:0"/>
+</Phase>
+<Phase number="5">
+<Node guiName="Fail" guiX="1345" guiY="425" id="FAIL" type="FAIL">
+<attr name="mapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.errorMessage = $in.0.errorMessage;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+</Phase>
+</Graph>

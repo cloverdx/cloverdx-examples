@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record fieldDelimiter="\t" name="Customer" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="id" type="long"/>
+<Field name="fullName" type="string"/>
+<Field name="streetAddress" type="string"/>
+<Field name="city" type="string"/>
+<Field name="postalCode" type="string"/>
+<Field name="state" type="string"/>
+<Field name="country" type="string"/>
+<Field name="email" type="string"/>
+<Field name="phone" type="string"/>
+<Field format="yyyy-MM-dd" name="accountCreated" timeZone="UTC" type="date"/>
+<Field name="isActive" type="boolean"/>
+</Record>

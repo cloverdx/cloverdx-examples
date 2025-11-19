@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="JanSlechta" created="Fri Nov 14 18:26:45 CET 2025" guiVersion="7.2.0.8" id="1763558660895" licenseCode="CLCDSCLOVE85208925SP" name="CreateDbTable" showComponentDetails="true">
+<Global>
+<Connection dbConfig="${CONN_DIR}/CustomerDB.cfg" id="JDBC0" type="JDBC"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="150" id="Note0" textColor="444444" width="326" x="425" y="50">
+<attr name="text"><![CDATA[h3. Init step #2
+* PostgreSQL DB must be created and available on host/port configured in the connection file (default localhost:15432)]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="150" id="Note1" textColor="444444" width="326" x="50" y="50">
+<attr name="text"><![CDATA[h3. Init step #1
+* Deploy docker containers using init/compose.yml or provide below services a update externalized connections:
+** Kafka broker (default localhost:19092)
+** PostgreSQL DB (default localhost:15432)]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" guiName="Create PostgreSQL table" guiX="495" guiY="250" id="CREATE_POSTGRE_SQL_TABLE" type="DB_EXECUTE" url="${TRANS_DIR}/sql/create-tables.sql"/>
+</Phase>
+</Graph>
