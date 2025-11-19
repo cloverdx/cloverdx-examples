@@ -17,6 +17,7 @@ pre-requisites it may have (e.g., database, API key, ...).
 | [DataAppExamples](./DataAppExamples/) | A collection of examples showing basic Data App use cases and extensions using JS. |
 | [DataQualityExamples](./DataQualityExamples/) | Examples showing how to work with Data Quality components in CloverDX. |
 | [IntroExamples](./IntroExamples/) | A collection of basic examples showing various CloverDX features. |
+| [KafkaExamples](./KafkaExamples/) | A collection of examples showing integration with Apache Kafka. |
 | [WranglerTutorial](./WranglerTutorial/) | Examples files for Wrangler tutorial from [CloverDX Documentation](https://doc.cloverdx.com/latest/user/wrangler-tutorial.html) |
 
 ## Usage and licensing
