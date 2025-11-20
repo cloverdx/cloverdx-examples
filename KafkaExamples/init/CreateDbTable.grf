@@ -11,7 +11,7 @@
 </RichTextNote>
 <RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="150" id="Note1" textColor="444444" width="326" x="50" y="50">
 <attr name="text"><![CDATA[h3. Init step #1
-* Deploy docker containers using init/compose.yml or provide below services a update externalized connections:
+* Deploy docker containers using init/compose.yml or provide below services and update externalized connections:
 ** Kafka broker (default localhost:19092)
 ** PostgreSQL DB (default localhost:15432)]]></attr>
 </RichTextNote>

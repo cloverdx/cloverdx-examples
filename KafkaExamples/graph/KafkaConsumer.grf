@@ -36,9 +36,9 @@
 <attr name="text"><![CDATA[h3. Example: Kafka Consumer
 * Messages are consumed from the selected Kafka topic, parsed and written into a database table.
 * Data must be written into the DB table before the message is committed. 
-** KafkaReader allows to commit messages immediatelly but in order assure transactionality explicit commit using KafkaCommit is recommended. 
-* Kafka consumer graph can be attached to a Kafka lister - [https://doc.cloverdx.com/latest/operations/listeners.html#id_kafka_msg_listeners]
-** An example of exported Kafka Event Listener configuration is available in the root of the project.]]></attr>
+** KafkaReader allows to commit messages immediatelly but in order to ensure transactionality explicit commit using KafkaCommit is recommended. 
+* Kafka consumer graph can be attached to a Kafka listener - [https://doc.cloverdx.com/latest/operations/listeners.html#id_kafka_msg_listeners]
+** An example of exported Kafka Message Listener configuration is available in the root of the project.]]></attr>
 </RichTextNote>
 <RichTextNote backgroundColor="FFBF59" folded="false" fontSize="medium" height="175" id="Note1" textColor="444444" width="876" x="50" y="425">
 <attr name="text"><![CDATA[h3. Requirements

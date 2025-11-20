@@ -17,9 +17,9 @@
 <RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="175" id="Note0" textColor="444444" width="1426" x="50" y="50">
 <attr name="text"><![CDATA[h3. Example: Kafka Producer
 * Data is read from a flat file (could be any random data source).
-* Each line (customer record) is converted into a JSON message using JSONWriter component.
-* Each message is separatelly pushed into Kafka Topic.
-* In case of error, appropriate messageis mapped to the fail component and printed into the log.]]></attr>
+* Each line (customer record) is converted to a JSON message using JSONWriter component.
+* Each message is separatelly produced in Kafka Topic.
+* In case of error, appropriate messages are mapped to the fail component and printed into the log.]]></attr>
 </RichTextNote>
 <RichTextNote backgroundColor="FFBF59" folded="false" fontSize="medium" height="175" id="Note1" textColor="444444" width="1426" x="50" y="575">
 <attr name="text"><![CDATA[h3. Requirements
