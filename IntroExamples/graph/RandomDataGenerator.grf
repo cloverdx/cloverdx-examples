@@ -1,40 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="dpavlis" created="Wed Jul 23 09:52:36 CEST 2014" guiVersion="0.0.0.devel" id="1406104458027" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:25:32 CET 2016" modifiedBy="jansedlacek" name="RandomPersonsUS" revision="1.10" showComponentDetails="true">
+<Graph author="dpavlis" created="Wed Jul 23 09:52:36 CEST 2014" guiVersion="7.2.0.8" id="1406104458027" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:25:32 CET 2016" modifiedBy="jansedlacek" name="RandomPersonsUS" revision="1.10" showComponentDetails="true">
 <Global>
-<MetadataGroup name="Implicit metadata" type="implicit">
-<Metadata id="RANDOM_PERSON_GENERATOR_Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Person" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
-<Field name="firstname" type="string"/>
-<Field name="lastname" type="string"/>
-<Field name="birthdate" trim="true" type="date"/>
-<Field name="address1" type="string"/>
-<Field name="address2" type="string"/>
-<Field name="address3" type="string"/>
-<Field name="city" type="string"/>
-<Field name="state" type="string"/>
-<Field name="statecode" type="string"/>
-<Field name="zip" type="string"/>
-<Field name="phone" type="string"/>
-<Field name="email" type="string"/>
-</Record>
-</Metadata>
-<Metadata id="RANDOM_COMPANY_GENERATOR_Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Company" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
-<Field name="company" type="string"/>
-<Field name="address1" type="string"/>
-<Field name="address2" type="string"/>
-<Field name="address3" type="string"/>
-<Field name="city" type="string"/>
-<Field name="state" type="string"/>
-<Field name="statecode" type="string"/>
-<Field name="zip" type="string"/>
-<Field name="phone" type="string"/>
-<Field name="fax" type="string"/>
-<Field name="www" type="string"/>
-<Field name="email" type="string"/>
-</Record>
-</Metadata>
-</MetadataGroup>
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
@@ -57,11 +23,11 @@ Uses a third party library to generated the data  - located in [trans|file://Bas
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node charset="UTF-8" enabled="enabled" fileURL="${DATAOUT_DIR}/random_companies.txt" guiName="random companies" guiX="447" guiY="382" id="RANDOM_COMPANIES" type="DATA_WRITER"/>
-<Node __RECORDS_NUMBER="150" enabled="enabled" guiName="RandomCompanyGenerator" guiX="105" guiY="382" id="RANDOM_COMPANY_GENERATOR" jobURL="${SUBGRAPH_DIR}/RandomCompanyGenerator.sgrf" type="SUBGRAPH"/>
-<Node charset="UTF-8" enabled="enabled" fileURL="${DATAOUT_DIR}/random_persons.txt" guiName="random persons" guiX="447" guiY="258" id="RANDOM_PERSONS" type="DATA_WRITER"/>
-<Node __RECORDS_NUMBER="200" enabled="enabled" guiName="RandomPersonGenerator" guiX="105" guiY="258" id="RANDOM_PERSON_GENERATOR" jobURL="${SUBGRAPH_DIR}/RandomPersonGenerator.sgrf" type="SUBGRAPH"/>
-<Edge debugMode="true" fromNode="RANDOM_COMPANY_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (out)" persistedImplicitMetadata="RANDOM_COMPANY_GENERATOR_Metadata1" toNode="RANDOM_COMPANIES:0"/>
-<Edge debugMode="true" fromNode="RANDOM_PERSON_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" persistedImplicitMetadata="RANDOM_PERSON_GENERATOR_Metadata1" toNode="RANDOM_PERSONS:0"/>
+<Node charset="UTF-8" enabled="enabled" fileURL="${DATAOUT_DIR}/random_companies.txt" guiName="random companies" guiX="470" guiY="400" id="RANDOM_COMPANIES" type="DATA_WRITER"/>
+<Node __RECORDS_NUMBER="150" enabled="enabled" guiName="RandomCompanyGenerator" guiX="120" guiY="400" id="RANDOM_COMPANY_GENERATOR" jobURL="${SUBGRAPH_DIR}/RandomCompanyGenerator.sgrf" type="SUBGRAPH"/>
+<Node charset="UTF-8" enabled="enabled" fileURL="${DATAOUT_DIR}/random_persons.txt" guiName="random persons" guiX="470" guiY="250" id="RANDOM_PERSONS" type="DATA_WRITER"/>
+<Node __RECORDS_NUMBER="200" enabled="enabled" guiName="RandomPersonGenerator" guiX="120" guiY="250" id="RANDOM_PERSON_GENERATOR" jobURL="${SUBGRAPH_DIR}/RandomPersonGenerator.sgrf" type="SUBGRAPH"/>
+<Edge fromNode="RANDOM_COMPANY_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="RANDOM_COMPANIES:0"/>
+<Edge fromNode="RANDOM_PERSON_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="RANDOM_PERSONS:0"/>
 </Phase>
 </Graph>

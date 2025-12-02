@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="krivanekm" created="Fri May 20 11:52:48 CEST 2011" guiVersion="4.4.0.M1" id="1305887240084" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:57:21 CET 2016" modifiedBy="jansedlacek" name="PackageDelivery" revision="1.80" showComponentDetails="true">
+<Graph author="krivanekm" created="Fri May 20 11:52:48 CEST 2011" guiVersion="7.2.0.8" id="1305887240084" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:57:21 CET 2016" modifiedBy="jansedlacek" name="PackageDelivery" revision="1.80" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
 <Record fieldDelimiter="|" name="in_batch" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
@@ -86,16 +86,16 @@
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="106" id="Note0" textColor="000000" width="765" x="34" y="18">
+<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="400" id="Note0" textColor="000000" width="1350" x="50" y="25">
 <attr name="text"><![CDATA[h3. Advanced Validation with External Components
 Check if the total value of shipments plus the total value of charges matches the value from the preceding batch header using two aggregators and a joiner.]]></attr>
 </RichTextNote>
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node aggregateKey="stationCode;batchId" enabled="enabled" guiName="Sum Shipments" guiX="260" guiY="195" id="AGGREGATE0" mapping="$stationCode:=$stationCode;$batchId:=$batchId;$aggregateValue:=sum($baseValue);" sorted="false" type="AGGREGATE"/>
-<Node aggregateKey="stationCode;batchId" enabled="enabled" guiName="Sum Charges" guiX="260" guiY="303" id="AGGREGATE1" mapping="$stationCode:=$stationCode;$batchId:=$batchId;$aggregateValue:=sum($chargeValue);" sorted="false" type="AGGREGATE"/>
-<Node enabled="enabled" fileURL="${DATAIN_DIR}/others/Logistics_in.txt" guiName="ComplexDataReader" guiX="34" guiY="151" id="COMPLEX_DATA_READER0" selectorProperties="*Charge|4_2=3&#13;&#10;*Batch|7_3=5&#13;&#10;*Station|2_2=4&#13;&#10;*Shipment|0_2=2&#13;&#10;*Batch|6_2=5&#13;&#10;*Charge|5_3=3&#13;&#10;*Station|3_3=4&#13;&#10;*Shipment|1_3=2&#13;&#10;" stateMetadata="Metadata0:station&#10;Metadata1:batch&#10;Metadata2:shipment&#10;Metadata3:charge&#10;:to-station&#10;:to-batch" type="COMPLEX_DATA_READER">
+<Node aggregateKey="stationCode;batchId" enabled="enabled" guiName="Sum Shipments" guiX="320" guiY="125" id="AGGREGATE0" mapping="$stationCode:=$stationCode;$batchId:=$batchId;$aggregateValue:=sum($baseValue);" sorted="false" type="AGGREGATE"/>
+<Node aggregateKey="stationCode;batchId" enabled="enabled" guiName="Sum Charges" guiX="320" guiY="250" id="AGGREGATE1" mapping="$stationCode:=$stationCode;$batchId:=$batchId;$aggregateValue:=sum($chargeValue);" sorted="false" type="AGGREGATE"/>
+<Node enabled="enabled" fileURL="${DATAIN_DIR}/others/Logistics_in.txt" guiName="ComplexDataReader" guiX="45" guiY="100" id="COMPLEX_DATA_READER0" selectorProperties="*Charge|4_2=3&#13;&#10;*Batch|7_3=5&#13;&#10;*Station|2_2=4&#13;&#10;*Shipment|0_2=2&#13;&#10;*Batch|6_2=5&#13;&#10;*Charge|5_3=3&#13;&#10;*Station|3_3=4&#13;&#10;*Shipment|1_3=2&#13;&#10;" stateMetadata="Metadata0:station&#10;Metadata1:batch&#10;Metadata2:shipment&#10;Metadata3:charge&#10;:to-station&#10;:to-batch" type="COMPLEX_DATA_READER">
 <attr name="guiDescription"><![CDATA[Reading non-homogenous data with a state automaton and a selector. The automaton detects if the number of records does not match the header.]]></attr>
 <attr name="transformCode"><![CDATA[//#CTL2:COMPILE
 
@@ -263,11 +263,11 @@ function integer nextOutput(integer state, integer seq) {
 //md5sum: 51B8E2D1DC559889F313F97C741DFF2F
 ]]></attr>
 </Node>
-<Node enabled="enabled" guiName="Filter Batches" guiX="671" guiY="151" id="EXT_FILTER0" type="EXT_FILTER">
+<Node enabled="enabled" guiName="Filter Batches" guiX="1045" guiY="100" id="EXT_FILTER0" type="EXT_FILTER">
 <attr name="filterExpression"><![CDATA[//#CTL2
 $0.totalValue == $0.aggregateValue]]></attr>
 </Node>
-<Node enabled="enabled" guiName="Join with Batches" guiX="471" guiY="151" id="EXT_HASH_JOIN0" joinKey="$stationCode=$stationCode;$batchId=$batchId#$stationCode=$stationCode;$batchId=$batchId" joinType="leftOuter" type="EXT_HASH_JOIN">
+<Node enabled="enabled" guiName="Join with Batches" guiX="745" guiY="100" id="EXT_HASH_JOIN0" joinKey="$stationCode=$stationCode;$batchId=$batchId#$stationCode=$stationCode;$batchId=$batchId" joinType="leftOuter" type="EXT_HASH_JOIN">
 <attr name="transform"><![CDATA[//#CTL2
 
 // Transforms input record into output record.
@@ -301,13 +301,13 @@ function integer transform() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node enabled="enabled" guiName="Valid Batches" guiX="671" guiY="262" id="TRASH1" type="TRASH"/>
-<Edge debugMode="true" fromNode="AGGREGATE0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 1 (slave)" metadata="Metadata7" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN0:1"/>
-<Edge debugMode="true" fromNode="AGGREGATE1:0" guiBendpoints="452:323|452:199" guiLocks="452|null|null" guiRouter="Manual" id="Edge6" inPort="Port 2 (slave)" metadata="Metadata8" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN0:2"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (driver)" metadata="Metadata4" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN0:0"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER0:1" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 1 (out)" toNode="AGGREGATE0:0"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER0:2" guiBendpoints="217:179|217:323" guiLocks="217|null|null" guiRouter="Manual" id="Edge3" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 2 (out)" toNode="AGGREGATE1:0"/>
-<Edge debugMode="true" fromNode="EXT_FILTER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 0 (accepted)" persistedImplicitMetadata="Metadata4" toNode="TRASH1:0"/>
-<Edge debugMode="true" fromNode="EXT_HASH_JOIN0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="EXT_FILTER0:0"/>
+<Node enabled="enabled" guiName="Valid Batches" guiX="1245" guiY="100" id="TRASH1" type="TRASH"/>
+<Edge fromNode="AGGREGATE0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 1 (slave)" metadata="Metadata7" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN0:1"/>
+<Edge fromNode="AGGREGATE1:0" guiBendpoints="483:275|483:175" guiLocks="483|475|null" guiRouter="Manual" id="Edge6" inPort="Port 2 (slave)" metadata="Metadata8" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN0:2"/>
+<Edge fromNode="COMPLEX_DATA_READER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (driver)" metadata="Metadata4" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN0:0"/>
+<Edge fromNode="COMPLEX_DATA_READER0:1" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 1 (out)" toNode="AGGREGATE0:0"/>
+<Edge fromNode="COMPLEX_DATA_READER0:2" guiBendpoints="217:179|217:323" guiLocks="217|null|null" guiRouter="Manual" id="Edge3" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 2 (out)" toNode="AGGREGATE1:0"/>
+<Edge fromNode="EXT_FILTER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="TRASH1:0"/>
+<Edge fromNode="EXT_HASH_JOIN0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="EXT_FILTER0:0"/>
 </Phase>
 </Graph>

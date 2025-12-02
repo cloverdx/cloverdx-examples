@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="dpavlis" created="Thu Jul 10 09:29:34 CEST 2014" guiVersion="7.1.0.8" id="1404980749010" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 10:08:46 CET 2016" modifiedBy="jansedlacek" name="CloverTweets" nature="subgraph" revision="1.69" showComponentDetails="true">
+<Graph author="dpavlis" created="Thu Jul 10 09:29:34 CEST 2014" guiVersion="7.2.0.8" id="1404980749010" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 10:08:46 CET 2016" modifiedBy="jansedlacek" name="CloverTweets" nature="subgraph" revision="1.69" showComponentDetails="true">
 <Global>
 <inputPorts>
 <singlePort connected="true" name="0"/>
@@ -46,7 +46,7 @@ Custom keywords (with their classification) can be provided to the subgraph via 
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node debugInput="true" enabled="enabled" guiName="DataGenerator" guiX="34" guiY="224" id="DATA_GENERATOR" recordsNumber="5" type="DATA_GENERATOR">
+<Node enabled="enabled" guiName="DataGenerator" guiX="34" guiY="224" id="DATA_GENERATOR" recordsNumber="5" type="DATA_GENERATOR">
 <attr name="generate"><![CDATA[//#CTL2
 
 string[] texts= ["What a classic final match between #ArgentinaVsGermany seen by the whole world in #WorldCup2014 #BRA thanks again for the wonderful FInal..",
@@ -83,7 +83,7 @@ function integer generate() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node debugInput="true" enabled="never" guiName="DataGenerator" guiX="34" guiY="302" id="DATA_GENERATOR1" type="DATA_GENERATOR">
+<Node enabled="never" guiName="DataGenerator" guiX="34" guiY="302" id="DATA_GENERATOR1" type="DATA_GENERATOR">
 <attr name="generate"><![CDATA[//#CTL2
 
 // Generates output record.
@@ -130,9 +130,9 @@ function integer generate() {
 <Edge fromNode="SUBGRAPH_INPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="SIMPLE_GATHER:0"/>
 </Phase>
 <Phase number="1">
-<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1084" guiY="154" id="DEBUG_OUTPUT" type="TRASH"/>
-<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1084" guiY="224" id="DEBUG_OUTPUT1" type="TRASH"/>
-<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1084" guiY="294" id="DEBUG_OUTPUT2" type="TRASH"/>
+<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1045" guiY="100" id="DEBUG_OUTPUT" type="TRASH"/>
+<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1045" guiY="225" id="DEBUG_OUTPUT1" type="TRASH"/>
+<Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1045" guiY="350" id="DEBUG_OUTPUT2" type="TRASH"/>
 <Node enabled="enabled" guiName="Reformat" guiX="520" guiY="225" id="REFORMAT" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 KeywordsLookup keywordRec;

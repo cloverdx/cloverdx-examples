@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.1.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
+<Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.2.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata4">
 <Record fieldDelimiter="," name="Employee" previewAttachment="${DATAIN_DIR}/snowflake/employees.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
@@ -15,7 +15,7 @@
 <GraphParameter name="TABLE_NAME" value="cloverdx_example_employees"/>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="DAD8C9" folded="false" fontSize="large" height="200" id="Note2" textColor="444444" width="1175" x="25" y="25">
+<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="large" height="200" id="Note2" textColor="444444" width="1175" x="25" y="25">
 <attr name="text"><![CDATA[h3. Working with Snowflake
 This example demonstrates writing various data types to Snowflake and then reading them back.
 
@@ -25,26 +25,21 @@ For writing, there are two interchangeable components:
 
 For reading, use [DatabaseReader|element://DATABASE_READER].]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="225" id="Note7" textColor="444444" width="1175" x="25" y="225">
+<RichTextNote backgroundColor="DEF4AB" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="200" id="Note7" textColor="444444" width="1175" x="25" y="225">
 <attr name="text"><![CDATA[h3. Connect to Snowflake
 
 First, you'll need to configure a Snowflake connection in [Outline > Connections > Snowflake.cfg|element://JDBC0].
 
 Replace the placeholders in the URL and set User and Password.]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="425" id="Note1" textColor="444444" width="450" x="750" y="500">
+<RichTextNote backgroundColor="DEF4AB" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="425" id="Note1" textColor="444444" width="450" x="750" y="450">
 <attr name="text"><![CDATA[h3. Use SnowflakeBulkWriter for big data
 The components can be used interchangeably.]]></attr>
-</RichTextNote>
-<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="175" id="Note4" textColor="444444" width="1175" x="25" y="975">
-<attr name="text"><![CDATA[h3. Reading and Writing Dates
-
-See [SnowflakeDateTime.grf|open://BasicExamples/graph/SnowflakeDateTime.grf].]]></attr>
 </RichTextNote>
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node dbConnection="JDBC0" guiName="Create table" guiX="70" guiY="350" id="CREATE_TABLE" type="DB_EXECUTE">
+<Node dbConnection="JDBC0" guiName="Create table" guiX="70" guiY="325" id="CREATE_TABLE" type="DB_EXECUTE">
 <attr name="sqlQuery"><![CDATA[create or replace transient table ${TABLE_NAME} (
 	id DECIMAL(20,0),
 	first_name VARCHAR,
@@ -58,16 +53,16 @@ See [SnowflakeDateTime.grf|open://BasicExamples/graph/SnowflakeDateTime.grf].]]>
 <Phase number="1">
 <Node batchMode="true" batchSize="100" dbConnection="JDBC0" dbTable="${TABLE_NAME}" guiName="DatabaseWriter" guiX="420" guiY="475" id="DATABASE_WRITER" type="DB_OUTPUT_TABLE"/>
 <Node fileURL="${DATAIN_DIR}/snowflake/employees.csv" guiName="Read CSV" guiX="70" guiY="475" id="READ_CSV" type="FLAT_FILE_READER"/>
-<Node dbConnection="JDBC0" dbTable="${TABLE_NAME}" enabled="trash" guiName="SnowflakeBulkWriter" guiX="770" guiY="625" id="SNOWFLAKE_BULK_WRITER" removeFilesFromStage="false" type="SNOWFLAKE_BULK_WRITER"/>
-<Node guiName="Trash" guiX="1020" guiY="625" id="TRASH" type="TRASH"/>
+<Node dbConnection="JDBC0" dbTable="${TABLE_NAME}" guiName="SnowflakeBulkWriter" guiX="770" guiY="575" id="SNOWFLAKE_BULK_WRITER" removeFilesFromStage="false" type="SNOWFLAKE_BULK_WRITER"/>
+<Node guiName="Trash" guiX="1020" guiY="575" id="TRASH" type="TRASH"/>
 <Edge fromNode="READ_CSV:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="DATABASE_WRITER:0"/>
 <Edge fromNode="SNOWFLAKE_BULK_WRITER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (chunks)" toNode="TRASH:0"/>
 </Phase>
 <Phase number="2">
-<Node dbConnection="JDBC0" enabled="trash" fetchSize="100" guiName="DatabaseReader" guiX="70" guiY="800" id="DATABASE_READER" type="DB_INPUT_TABLE">
+<Node dbConnection="JDBC0" enabled="trash" fetchSize="100" guiName="DatabaseReader" guiX="70" guiY="625" id="DATABASE_READER" type="DB_INPUT_TABLE">
 <attr name="sqlQuery"><![CDATA[select * from ${TABLE_NAME} order by id]]></attr>
 </Node>
-<Node fileURL="${DATAOUT_DIR}/snowflake/employees.out.csv" guiName="Write CSV" guiX="420" guiY="800" id="WRITE_CSV" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
+<Node fileURL="${DATAOUT_DIR}/snowflake/employees.out.csv" guiName="Write CSV" guiX="420" guiY="625" id="WRITE_CSV" makeDirs="true" outputFieldNames="true" type="FLAT_FILE_WRITER"/>
 <Edge fromNode="DATABASE_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (out)" toNode="WRITE_CSV:0"/>
 </Phase>
 </Graph>
