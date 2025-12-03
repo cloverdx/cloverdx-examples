@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="User" created="Wed Mar 26 11:06:38 CET 2014" guiVersion="0.0.0.devel" id="1395840759846" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 10:13:30 CET 2016" modifiedBy="jansedlacek" name="Default graph name" nature="subgraph" revision="1.17" showComponentDetails="true">
+<Graph author="User" created="Wed Mar 26 11:06:38 CET 2014" guiVersion="7.2.0.8" id="1395840759846" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 10:13:30 CET 2016" modifiedBy="jansedlacek" name="Default graph name" nature="subgraph" revision="1.17" showComponentDetails="true">
 <Global>
 <inputPorts>
 <singlePort connected="true" name="0"/>
@@ -28,7 +28,7 @@
 </GraphParameter>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="F9EB81" enabled="true" folded="false" fontSize="medium" height="173" id="Note0" textColor="000000" width="547" x="271" y="-10">
+<RichTextNote backgroundColor="F9EB81" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="173" id="Note0" textColor="000000" width="547" x="271" y="-10">
 <attr name="text"><![CDATA[h3. EmailValidator Subgraph
 Subgraph that validates email addresses. Type of validation is configurable via the LEVEL_OF_INSPECTION graph parameter. Output files are configured via ACCEPTED_FILE and REJECTED_FILE parameters.
 
@@ -85,12 +85,12 @@ function integer generate() {
 <Port guiY="273" name="0"/>
 <Port guiY="344" name="1"/>
 </Node>
-<Node enabled="enabled" guiName="SubgraphOutput" guiX="833" guiY="-100" id="SUBGRAPH_OUTPUT0" type="SUBGRAPH_OUTPUT">
+<Node enabled="enabled" guiName="SubgraphOutput" guiX="833" guiY="-112" id="SUBGRAPH_OUTPUT0" type="SUBGRAPH_OUTPUT">
 <Port guiY="0" name="0"/>
 </Node>
-<Edge debugMode="true" fromNode="CHECK_EMAIL_SYNTAX:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (accepted records)" toNode="DATA_WRITER0:0"/>
-<Edge debugMode="true" fromNode="CHECK_EMAIL_SYNTAX:1" guiBendpoints="706:326|706:340" guiLocks="706|745|null" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 1 (rejected records)" toNode="DATA_WRITER1:0"/>
-<Edge debugMode="true" fromNode="DEBUG_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="SUBGRAPH_INPUT:0"/>
-<Edge debugMode="true" fromNode="SUBGRAPH_INPUT:0" guiBendpoints="506:562|506:566" guiLocks="506|263|null" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (input records)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CHECK_EMAIL_SYNTAX:0"/>
+<Edge fromNode="CHECK_EMAIL_SYNTAX:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (accepted records)" toNode="DATA_WRITER0:0"/>
+<Edge fromNode="CHECK_EMAIL_SYNTAX:1" guiBendpoints="706:326|706:340" guiLocks="706|745|null" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 1 (rejected records)" toNode="DATA_WRITER1:0"/>
+<Edge fromNode="DEBUG_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="SUBGRAPH_INPUT:0"/>
+<Edge fromNode="SUBGRAPH_INPUT:0" guiBendpoints="506:562|506:566" guiLocks="506|263|null" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (input records)" metadata="Metadata0" outPort="Port 0 (out)" toNode="CHECK_EMAIL_SYNTAX:0"/>
 </Phase>
 </Graph>

@@ -89,17 +89,17 @@
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="DAD8C9" enabled="true" folded="false" fontSize="medium" height="225" id="Note0" textColor="000000" width="1200" x="0" y="0">
+<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="126" id="Note0" textColor="000000" width="1200" x="0" y="0">
 <attr name="text"><![CDATA[h3. Using Web Service tools
 Example demonstrates a functional Web service providing a list of *.grf files from the demo CloverDX server called by the WebServiceClient component. Example shows cascade of SOAP API calls. The results are returned in XML format which are then parsed, consolidated and written to an Excel file. This example requires CloverDX Server running locally on port 8083.
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="DEF4AB" enabled="true" folded="false" fontSize="medium" height="175" id="Note3" textColor="000000" width="1225" x="0" y="800">
+<RichTextNote backgroundColor="DEF4AB" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="175" id="Note3" textColor="000000" width="1225" x="0" y="450">
 <attr name="text"><![CDATA[h3. Step-by-step tutorial available online
 
 [https://blog.cloverdx.com/data-integration-with-web-services]]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FFFFE1" enabled="true" folded="false" fontSize="medium" height="500" id="Note1" textColor="000000" width="1201" x="0" y="250">
+<RichTextNote backgroundColor="FFFFE1" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="326" id="Note1" textColor="000000" width="1201" x="0" y="125">
 <attr name="text"><![CDATA[h3. WebServiceClient
 
 
@@ -111,15 +111,15 @@ Example demonstrates a functional Web service providing a list of *.grf files fr
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node existingSheetsActions="DO_NOTHING" fileURL="${DATAOUT_DIR}/GraphsOnCloverDemoServer.xlsx" guiName="File list to XLSX" guiX="1070" guiY="575" id="FILE_LIST_TO_XLSX" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_MEMORY">
+<Node existingSheetsActions="DO_NOTHING" fileURL="${DATAOUT_DIR}/GraphsOnCloverDemoServer.xlsx" guiName="File list to XLSX" guiX="1070" guiY="275" id="FILE_LIST_TO_XLSX" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_MEMORY">
 <attr name="guiDescription"><![CDATA[Write the file list into an Excel file]]></attr>
 </Node>
-<Node guiName="Graphs only" guiX="845" guiY="575" id="GRAPHS_ONLY" type="EXT_FILTER">
+<Node guiName="Graphs only" guiX="845" guiY="275" id="GRAPHS_ONLY" type="EXT_FILTER">
 <attr name="filterExpression"><![CDATA[//#CTL2
 endsWith($in.0.name,".grf")]]></attr>
 <attr name="guiDescription"><![CDATA[Name ends with .grf]]></attr>
 </Node>
-<Node guiName="List files in graph directory" guiX="520" guiY="575" id="LIST_FILES_IN_GRAPH_DIRECTORY" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#ListFiles" type="WEB_SERVICE_CLIENT" wsdlURL="http://localhost:8083/clover/webservice?wsdl">
+<Node guiName="List files in graph directory" guiX="520" guiY="275" id="LIST_FILES_IN_GRAPH_DIRECTORY" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#ListFiles" type="WEB_SERVICE_CLIENT" wsdlURL="http://localhost:8083/clover/webservice?wsdl">
 <attr name="requestStructure"><![CDATA[<clov:ListFiles xmlns:clov="http://server.cloveretl.com/CloverServerWS/">
   <sessionToken>$session</sessionToken>
   <sandboxCode>$code</sandboxCode>
@@ -142,7 +142,7 @@ endsWith($in.0.name,".grf")]]></attr>
 incl=http://www.w3.org/2004/08/xop/include
 XMLS=http://www.w3.org/2001/XMLSchema]]></attr>
 </Node>
-<Node guiName="List sandboxes" guiX="270" guiY="575" id="LIST_SANDBOXES" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#GetSandboxes" type="WEB_SERVICE_CLIENT" wsdlURL="http://localhost:8083/clover/webservice?wsdl">
+<Node guiName="List sandboxes" guiX="270" guiY="275" id="LIST_SANDBOXES" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#GetSandboxes" type="WEB_SERVICE_CLIENT" wsdlURL="http://localhost:8083/clover/webservice?wsdl">
 <attr name="requestStructure"><![CDATA[<clov:GetSandboxes xmlns:clov="http://server.cloveretl.com/CloverServerWS/">
   <sessionToken>$session</sessionToken>
 </clov:GetSandboxes>
@@ -162,7 +162,7 @@ XMLS=http://www.w3.org/2001/XMLSchema]]></attr>
 incl=http://www.w3.org/2004/08/xop/include
 XMLS=http://www.w3.org/2001/XMLSchema]]></attr>
 </Node>
-<Node enabled="enabled" guiName="Login" guiX="20" guiY="575" id="LOGIN" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#Login" type="WEB_SERVICE_CLIENT" wsdlURL="http://localhost:8083/clover/webservice?wsdl">
+<Node enabled="enabled" guiName="Login" guiX="20" guiY="275" id="LOGIN" operationName="{http://server.cloveretl.com/CloverServerWS/}CloverServerWS_service#CloverServerWS_port#Login" type="WEB_SERVICE_CLIENT" wsdlURL="http://localhost:8083/clover/webservice?wsdl">
 <attr name="requestStructure"><![CDATA[<clov:Login xmlns:clov="http://server.cloveretl.com/CloverServerWS/">
   <username>clover</username>
   <password>clover</password>

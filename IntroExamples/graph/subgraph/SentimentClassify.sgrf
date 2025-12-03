@@ -31,7 +31,7 @@
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
 <LookupTable charset="ISO-8859-1" id="LookupTable0" initialSize="512" key="keyword" metadata="Metadata0" name="KeyWordsLookup" type="simpleLookup"/>
-<RichTextNote backgroundColor="F9EB81" enabled="true" folded="false" fontSize="medium" height="230" id="Note0" textColor="000000" width="590" x="269" y="-16">
+<RichTextNote backgroundColor="F9EB81" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="230" id="Note0" textColor="000000" width="590" x="269" y="-16">
 <attr name="text"><![CDATA[Classify sentiment of input senteces/text. 
 Sentiment classification: 
 
@@ -46,7 +46,7 @@ Custom keywords (with their classification) can be provided to the subgraph via 
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node enabled="enabled" guiName="DataGenerator" guiX="34" guiY="224" id="DATA_GENERATOR" recordsNumber="5" type="DATA_GENERATOR">
+<Node debugInput="true" enabled="enabled" guiName="DataGenerator" guiX="34" guiY="224" id="DATA_GENERATOR" recordsNumber="5" type="DATA_GENERATOR">
 <attr name="generate"><![CDATA[//#CTL2
 
 string[] texts= ["What a classic final match between #ArgentinaVsGermany seen by the whole world in #WorldCup2014 #BRA thanks again for the wonderful FInal..",
@@ -83,7 +83,7 @@ function integer generate() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node enabled="never" guiName="DataGenerator" guiX="34" guiY="302" id="DATA_GENERATOR1" type="DATA_GENERATOR">
+<Node debugInput="true" enabled="never" guiName="DataGenerator" guiX="34" guiY="302" id="DATA_GENERATOR1" type="DATA_GENERATOR">
 <attr name="generate"><![CDATA[//#CTL2
 
 // Generates output record.
@@ -197,8 +197,8 @@ function integer transform() {
 <Edge debugMode="false" fromNode="REFORMAT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
 <Edge debugMode="false" fromNode="REFORMAT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 1 (in)" outPort="Port 1 (out)" toNode="SUBGRAPH_OUTPUT:1"/>
 <Edge debugMode="false" fromNode="REFORMAT:2" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 2 (in)" outPort="Port 2 (out)" toNode="SUBGRAPH_OUTPUT:2"/>
-<Edge debugMode="true" fromNode="SUBGRAPH_OUTPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="DEBUG_OUTPUT:0"/>
-<Edge debugMode="true" fromNode="SUBGRAPH_OUTPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="DEBUG_OUTPUT1:0"/>
-<Edge debugMode="true" fromNode="SUBGRAPH_OUTPUT:2" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="DEBUG_OUTPUT2:0"/>
+<Edge fromNode="SUBGRAPH_OUTPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="DEBUG_OUTPUT:0"/>
+<Edge fromNode="SUBGRAPH_OUTPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="DEBUG_OUTPUT1:0"/>
+<Edge fromNode="SUBGRAPH_OUTPUT:2" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="DEBUG_OUTPUT2:0"/>
 </Phase>
 </Graph>
