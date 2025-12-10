@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.1.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
+<Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.2.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
 <Record fieldDelimiter="|" name="Account" recordDelimiter="\n" type="delimited">
@@ -28,11 +28,11 @@
 <Field delimiter="," name="AccountId" type="string"/>
 </Record>
 </Metadata>
-<Connection config="${CONN_DIR}/My Salesforce.cfg" id="MY_SALESFORCE" type="SALESFORCE"/>
+<Connection config="${CONN_DIR}/MySalesforce.cfg" id="MYSALESFORCE" type="SALESFORCE"/>
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="DAD8C9" folded="false" fontSize="large" height="202" id="Note2" textColor="444444" width="1175" x="25" y="25">
+<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="large" height="202" id="Note2" textColor="444444" width="1175" x="25" y="25">
 <attr name="text"><![CDATA[h3. Reading from Salesforce
 This example demonstrates reading from Salesforce to get the information about Accounts with the highest total value of won Opportunities. 
 
@@ -40,7 +40,7 @@ This example shows 2 approaches - using SalesforceBulkReader components (that us
 
 See also the [SalesforceMigration|open://BasicExamples/graph/SalesforceMigration.grf] example.]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="225" id="Note0" textColor="444444" width="375" x="25" y="650">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="225" id="Note0" textColor="444444" width="225" x="25" y="650">
 <attr name="text"><![CDATA[h3. Bulk Reading from Salesforce
 
 The SalesforceBulkReader component is used to read from Salesforce via the bulk API.
@@ -49,12 +49,12 @@ It uses a Salesforce connection for credentials and connection configuration.
 
 A SOQL query defines what data are returned and an output mapping maps them to output metadata.]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="325" id="Note1" textColor="444444" width="200" x="575" y="550">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="325" id="Note1" textColor="444444" width="200" x="575" y="550">
 <attr name="text"><![CDATA[h3. Joining
 
 By joining Opportunities with Accounts on the Account IDs we get the data necessary to calculate the best accounts with the following components.]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="DEF4AB" folded="false" fontSize="medium" height="149" id="Note7" textColor="444444" width="1175" x="25" y="250">
+<RichTextNote backgroundColor="DEF4AB" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="149" id="Note7" textColor="444444" width="1175" x="25" y="250">
 <attr name="text"><![CDATA[h3. Connect to Salesforce
 
 First, you'll need to configure a Salesforce connection in [Outline > Connections > My Salesforce|element://SALESFORCE0].
@@ -65,7 +65,7 @@ If you don't have a Salesforce Username, Password and Security Token, follow the
 # Get your Security Token (in Salesforce go to "Your Account Name" > My Settings > Personal > Reset My Security Token) - this will send the token to your email
 # Enter your username, password and security token in the [Salesforce connection|element://SALESFORCE0]]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="250" id="Note3" textColor="444444" width="375" x="25" y="900">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="250" id="Note3" textColor="444444" width="375" x="175" y="900">
 <attr name="text"><![CDATA[h3. SOAP Reading from Salesforce
 
 The SalesforceReader component is used to read from Salesforce via the SOAP API. 
@@ -111,10 +111,10 @@ function integer transform() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node guiName="Salesforce: Bulk Read Accounts" guiX="20" guiY="550" id="SALESFORCE_BULK_READ_ACCOUNTS" sfConnection="MY_SALESFORCE" type="SALESFORCE_BULK_READER">
+<Node guiName="Salesforce: Bulk Read Accounts" guiX="20" guiY="550" id="SALESFORCE_BULK_READ_ACCOUNTS" sfConnection="MYSALESFORCE" type="SALESFORCE_BULK_READER">
 <attr name="soqlQuery"><![CDATA[SELECT Name,Id From Account]]></attr>
 </Node>
-<Node guiName="Salesforce: Bulk Read Opportunities" guiX="20" guiY="425" id="SALESFORCE_BULK_READ_OPPORTUNITIES" sfConnection="MY_SALESFORCE" type="SALESFORCE_BULK_READER">
+<Node guiName="Salesforce: Bulk Read Opportunities" guiX="20" guiY="425" id="SALESFORCE_BULK_READ_OPPORTUNITIES" sfConnection="MYSALESFORCE" type="SALESFORCE_BULK_READER">
 <attr name="soqlQuery"><![CDATA[SELECT Name,Amount,AccountId FROM Opportunity WHERE IsWon = true]]></attr>
 <attr name="outputMapping"><![CDATA[//#CTL2
 
@@ -146,7 +146,7 @@ function integer transform() {
 // function string getMessage() {}
 ]]></attr>
 </Node>
-<Node guiName="Salesforce: Complex SOQL via SOAP" guiX="545" guiY="900" id="SALESFORCE_COMPLEX_SOQL_VIA_SOAP" sfConnection="MY_SALESFORCE" type="SALESFORCE_READER">
+<Node guiName="Salesforce: Complex SOQL via SOAP" guiX="545" guiY="900" id="SALESFORCE_COMPLEX_SOQL_VIA_SOAP" sfConnection="MYSALESFORCE" type="SALESFORCE_READER">
 <attr name="soqlQuery"><![CDATA[SELECT Account.Name, SUM(Amount) FROM Opportunity WHERE IsWon = true GROUP BY Account.Name ORDER BY SUM(Amount) DESC]]></attr>
 <attr name="outputMapping"><![CDATA[//#CTL2
 
@@ -179,11 +179,11 @@ function integer transform() {
 </Node>
 <Node guiName="Sort by amounts" guiX="970" guiY="450" id="SORT_BY_AMOUNTS" sortKey="WonAmount(d)" type="EXT_SORT"/>
 <Node aggregateKey="AccountID" guiName="Sum amounts" guiX="820" guiY="450" id="SUM_AMOUNTS" mapping="$Name:=first($AccountName);$WonAmount:=sum($Amount);" sorted="false" type="AGGREGATE"/>
-<Edge debugMode="true" fromNode="ENRICH_OPPORTUNITIES_WITH_ACCOUNTS:0" guiBendpoints="804:423|804:573|746:573|746:675" guiLocks="804|746|573" guiRouter="Manual" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="SUM_AMOUNTS:0"/>
-<Edge debugMode="true" fromNode="SALESFORCE_BULK_READ_ACCOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 1 (slave)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ENRICH_OPPORTUNITIES_WITH_ACCOUNTS:1"/>
-<Edge debugMode="true" fromNode="SALESFORCE_BULK_READ_OPPORTUNITIES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (driver)" metadata="Metadata1" outPort="Port 0 (out)" toNode="ENRICH_OPPORTUNITIES_WITH_ACCOUNTS:0"/>
-<Edge debugMode="true" fromNode="SALESFORCE_COMPLEX_SOQL_VIA_SOAP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="BEST_ACCOUNTS_VIA_SOAP_API:0"/>
-<Edge debugMode="true" fromNode="SORT_BY_AMOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="BEST_ACCOUNTS_VIA_BULK_API:0"/>
-<Edge debugMode="true" fromNode="SUM_AMOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SORT_BY_AMOUNTS:0"/>
+<Edge fromNode="ENRICH_OPPORTUNITIES_WITH_ACCOUNTS:0" guiBendpoints="804:423|804:573|746:573|746:675" guiLocks="804|746|573" guiRouter="Manual" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="SUM_AMOUNTS:0"/>
+<Edge fromNode="SALESFORCE_BULK_READ_ACCOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 1 (slave)" metadata="Metadata0" outPort="Port 0 (out)" toNode="ENRICH_OPPORTUNITIES_WITH_ACCOUNTS:1"/>
+<Edge fromNode="SALESFORCE_BULK_READ_OPPORTUNITIES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (driver)" metadata="Metadata1" outPort="Port 0 (out)" toNode="ENRICH_OPPORTUNITIES_WITH_ACCOUNTS:0"/>
+<Edge fromNode="SALESFORCE_COMPLEX_SOQL_VIA_SOAP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="BEST_ACCOUNTS_VIA_SOAP_API:0"/>
+<Edge fromNode="SORT_BY_AMOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="BEST_ACCOUNTS_VIA_BULK_API:0"/>
+<Edge fromNode="SUM_AMOUNTS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SORT_BY_AMOUNTS:0"/>
 </Phase>
 </Graph>

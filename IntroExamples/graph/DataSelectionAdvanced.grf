@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="Petr" created="Thu Jul 01 14:14:48 CEST 2010" guiVersion="7.1.0.8" id="1277991711576" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 11:13:09 CET 2016" modifiedBy="jansedlacek" name="graphAccessingDataSources" revision="1.108" showComponentDetails="true">
+<Graph author="Petr" created="Thu Jul 01 14:14:48 CEST 2010" guiVersion="7.2.0.8" id="1277991711576" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 11:13:09 CET 2016" modifiedBy="jansedlacek" name="graphAccessingDataSources" revision="1.108" showComponentDetails="true">
 <Global>
 <Metadata fileURL="${META_DIR}/orders_with_autofilling.fmt" id="Metadata0"/>
 <Metadata fileURL="${META_DIR}/orders.fmt" id="Metadata2"/>
@@ -36,17 +36,17 @@
 <GraphParameter name="CONST" value="ORDERS."/>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="DAD8C9" enabled="true" folded="false" fontSize="medium" height="46" id="Note3" textColor="000000" width="1038" x="13" y="16">
+<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="46" id="Note3" textColor="000000" width="1162" x="13" y="16">
 <attr name="text"><![CDATA[h3. Selecting data from data sources, autofilling
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FFFFE1" enabled="true" folded="false" fontSize="medium" height="304" id="Note0" textColor="000000" width="309" x="12" y="67">
+<RichTextNote backgroundColor="FFFFE1" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="309" id="Note0" textColor="000000" width="309" x="12" y="67">
 <attr name="text"><![CDATA[h3. Autofilling metadata feature
 Input data read from [Excel file|open://BasicExamples/data-in/delimited/Orders.xlsx] containing the data organized into sheets by country.
 *Autofilling* enriches the data set by sheet name (country name) and is defined for the field *ShipCountry*.
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FFFFE1" enabled="true" folded="false" fontSize="medium" height="304" id="Note4" textColor="000000" width="547" x="329" y="67">
+<RichTextNote backgroundColor="FFFFE1" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="309" id="Note4" textColor="000000" width="847" x="329" y="67">
 <attr name="text"><![CDATA[h3. Aggregator
 
 Records with the same "*ShipCountry*" key field value are grouped and the aggregation function *count()* is applied.
@@ -60,11 +60,11 @@ The following  can be mapped to output fields:
 - function (count())
 - constant ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FFFFE1" enabled="true" folded="false" fontSize="medium" height="444" id="Note1" textColor="000000" width="259" x="13" y="377">
+<RichTextNote backgroundColor="FFFFE1" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="449" id="Note1" textColor="000000" width="259" x="13" y="377">
 <attr name="text"><![CDATA[h3. Archived files
 Clover can read data from *zipped/gzipped/tar* files. You can select specific file(s) or use wildcards (?,*).]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FFFFE1" enabled="true" folded="false" fontSize="medium" height="265" id="Note2" textColor="000000" width="259" x="13" y="826">
+<RichTextNote backgroundColor="FFFFE1" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="265" id="Note2" textColor="000000" width="259" x="13" y="826">
 <attr name="text"><![CDATA[h3. Input port reading
 Clover is able to read files (URLs) stored externally. In this way you can easily parameterize the graph processing. Instead of a specific URL, a special syntax is used - each record of a single field represents the URL of an input file:
 
@@ -139,7 +139,7 @@ Clover is able to read files (URLs) stored externally. In this way you can easil
 <Edge fromNode="CONCATENATE0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="EXT_SORT0:0"/>
 <Edge fromNode="DATA_READER0:0" guiBendpoints="266:391|266:489" guiLocks="254|null|null" guiRouter="Manual" id="Edge7" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="CONCATENATE0:0"/>
 <Edge fromNode="DEDUP0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" outPort="Port 0 (unique)" toNode="AGGREGATE1:0"/>
-<Edge fromNode="DEDUP0:1" guiBendpoints="820:624|820:724|815:564|815:616" guiLocks="820|760|467" guiRouter="Manual" id="Edge11" inPort="Port 0 (in)" outPort="Port 1 (duplicate)" toNode="DATA_WRITER0:0"/>
+<Edge fromNode="DEDUP0:1" guiBendpoints="820:624|820:724|815:564|815:616" guiLocks="821|761|468" guiRouter="Manual" id="Edge11" inPort="Port 0 (in)" outPort="Port 1 (duplicate)" toNode="DATA_WRITER0:0"/>
 <Edge fromNode="EXT_SORT0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="DEDUP0:0"/>
 </Phase>
 <Phase number="2">

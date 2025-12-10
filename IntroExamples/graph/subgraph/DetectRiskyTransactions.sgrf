@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="User" created="Wed Apr 02 17:07:51 CEST 2014" guiVersion="7.1.0.8" id="1396451422194" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 10:15:23 CET 2016" modifiedBy="jansedlacek" name="Default graph name" nature="subgraph" revision="1.8" showComponentDetails="true">
+<Graph author="User" created="Wed Apr 02 17:07:51 CEST 2014" guiVersion="7.2.0.8" id="1396451422194" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 10:15:23 CET 2016" modifiedBy="jansedlacek" name="Default graph name" nature="subgraph" revision="1.8" showComponentDetails="true">
 <Global>
 <inputPorts>
 <singlePort connected="true" name="0"/>
@@ -46,7 +46,7 @@
 <GraphParameter name="RATES_FILE" value="https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"/>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="F9EB81" enabled="true" folded="false" fontSize="medium" height="225" id="Note0" textColor="000000" width="800" x="700" y="-50">
+<RichTextNote backgroundColor="F9EB81" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="225" id="Note0" textColor="000000" width="800" x="700" y="-50">
 <attr name="text"><![CDATA[h3. DetectRiskyTransactions
 Subgraph that detects risky transactions based on some rules. First, an incoming data stream is joined with XML data read from the ${RATES_FILE}. In the ExtHashJoin component, id and currency are the join keys to get an enriched dataset. Records are then sent to a Partition component that splits the record stream into different outputs. The first output is for records with a null customerid field. The second output port is all the records with valid currency values. The third output port takes this dataste, aggregates using an Aggregate components to show the total sum of transactions by customer. It is then sent to a filter component that looks for any customer that has > 400,000 in transactions. These results are then sorted in descending order and pushed the final output port on this subgraph.]]></attr>
 </RichTextNote>
@@ -237,19 +237,19 @@ function integer getOutputPort() {
 </Node>
 <Node aggregateKey="customer_id" enabled="enabled" guiName="Sum Transactions by Customer" guiX="1270" guiY="425" id="SUM_TRANSACTIONS_BY_CUSTOMER" mapping="$customer_id:=$customer_id;$customer_last_name:=first($customer_last_name);$customer_first_name:=first($customer_first_name);$amount:=sum($amount);$currency:=&quot;€&quot;;" type="AGGREGATE"/>
 <Edge debugMode="false" fromNode="AMOUNT_400K:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" outPort="Port 0 (accepted)" toNode="SORT_AMOUNT_DESCENDING:0"/>
-<Edge debugMode="true" fromNode="CONVERT_CURRENCY:0" guiBendpoints="1004:731|1004:992|331:992|331:1235" guiLocks="1358|685|506" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SPLIT_RECORD_BY_LOGIC:0"/>
+<Edge fromNode="CONVERT_CURRENCY:0" guiBendpoints="1004:731|1004:992|331:992|331:1235" guiLocks="1358|685|506" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SPLIT_RECORD_BY_LOGIC:0"/>
 <Edge fromNode="DEBUG_INPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SUBGRAPH_INPUT:0"/>
-<Edge debugMode="true" fromNode="FORMAT_FIELDS:0" guiBendpoints="717:688|717:387" guiLocks="1089|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 1 (slave)" metadata="Metadata4" outPort="Port 0 (out)" toNode="CONVERT_CURRENCY:1"/>
+<Edge fromNode="FORMAT_FIELDS:0" guiBendpoints="717:688|717:387" guiLocks="1089|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 1 (slave)" metadata="Metadata4" outPort="Port 0 (out)" toNode="CONVERT_CURRENCY:1"/>
 <Edge fromNode="FORMAT_FIELDS_FOR_OUTPUT:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:0"/>
-<Edge debugMode="true" fromNode="LOAD_ONLINE_EXCHANGE_RATES1:0" guiBendpoints="17:0|17:-104|363:-104|363:-69" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="FORMAT_FIELDS:0"/>
+<Edge fromNode="LOAD_ONLINE_EXCHANGE_RATES1:0" guiBendpoints="17:0|17:-104|363:-104|363:-69" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="FORMAT_FIELDS:0"/>
 <Edge debugMode="false" fromNode="SORT_AMOUNT_DESCENDING:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge13" inPort="Port 2 (in)" outPort="Port 0 (out)" toNode="SUBGRAPH_OUTPUT:2"/>
-<Edge debugMode="true" fromNode="SPLIT_RECORD_BY_LOGIC:0" guiBendpoints="1304:729|1304:881" guiLocks="1640|573|null" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="FORMAT_FIELDS_FOR_OUTPUT:0"/>
+<Edge fromNode="SPLIT_RECORD_BY_LOGIC:0" guiBendpoints="1304:729|1304:881" guiLocks="1640|573|null" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="FORMAT_FIELDS_FOR_OUTPUT:0"/>
 <Edge debugMode="false" fromNode="SPLIT_RECORD_BY_LOGIC:1" guiBendpoints="1179:383|1179:578" guiLocks="805|-103|null" guiRouter="Manhattan" id="Edge9" inPort="Port 1 (in)" outPort="Port 1 (out)" toNode="SUBGRAPH_OUTPUT:1"/>
-<Edge debugMode="true" fromNode="SPLIT_RECORD_BY_LOGIC:2" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="SUM_TRANSACTIONS_BY_CUSTOMER:0"/>
-<Edge debugMode="true" fromNode="SUBGRAPH_INPUT:0" guiBendpoints="39:0|39:119" guiLocks="null|null|null" guiRouter="Manual" id="Edge2" inPort="Port 0 (driver)" metadata="Metadata1" outPort="Port 0 (out)" toNode="CONVERT_CURRENCY:0"/>
+<Edge fromNode="SPLIT_RECORD_BY_LOGIC:2" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" outPort="Port 2 (out)" toNode="SUM_TRANSACTIONS_BY_CUSTOMER:0"/>
+<Edge fromNode="SUBGRAPH_INPUT:0" guiBendpoints="39:0|39:119" guiLocks="null|null|null" guiRouter="Manual" id="Edge2" inPort="Port 0 (driver)" metadata="Metadata1" outPort="Port 0 (out)" toNode="CONVERT_CURRENCY:0"/>
 <Edge fromNode="SUBGRAPH_OUTPUT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="DEBUG_OUTPUT:0"/>
 <Edge fromNode="SUBGRAPH_OUTPUT:1" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 1 (out)" toNode="DEBUG_OUTPUT1:0"/>
 <Edge fromNode="SUBGRAPH_OUTPUT:2" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 2 (out)" toNode="DEBUG_OUTPUT2:0"/>
-<Edge debugMode="true" fromNode="SUM_TRANSACTIONS_BY_CUSTOMER:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="AMOUNT_400K:0"/>
+<Edge fromNode="SUM_TRANSACTIONS_BY_CUSTOMER:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (out)" toNode="AMOUNT_400K:0"/>
 </Phase>
 </Graph>

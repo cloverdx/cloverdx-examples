@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="avackova" created="Wed Aug 04 09:04:37 CEST 2010" guiVersion="4.4.0.M1" id="1280396941728" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:19:54 CET 2016" modifiedBy="jansedlacek" name="graphParsingTextData" revision="1.127" showComponentDetails="true">
+<Graph author="avackova" created="Wed Aug 04 09:04:37 CEST 2010" guiVersion="7.2.0.8" id="1280396941728" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:19:54 CET 2016" modifiedBy="jansedlacek" name="graphParsingTextData" revision="1.127" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
 <Record fieldDelimiter=" " name="master" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
@@ -18,22 +18,22 @@
 <GraphParameters>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="DAD8C9" enabled="true" folded="false" fontSize="medium" height="46" id="Note2" textColor="000000" width="602" x="4" y="16">
+<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="150" id="Note2" textColor="000000" width="925" x="0" y="25">
 <attr name="text"><![CDATA[h3. How to process files with complicated structure?
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="225" id="Note0" textColor="000000" width="602" x="4" y="73">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="400" id="Note0" textColor="000000" width="925" x="0" y="200">
 <attr name="text"><![CDATA[h5. The order of states is known
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="218" id="Note1" textColor="000000" width="602" x="4" y="302">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="525" id="Note1" textColor="000000" width="925" x="0" y="625">
 <attr name="text"><![CDATA[h5. Prefix is used to identify the state
 ]]></attr>
 </RichTextNote>
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node enabled="enabled" fileURL="${DATAIN_DIR}/delimited/peoples.txt" guiName="Multi Type Reader" guiX="26" guiY="137" id="COMPLEX_DATA_READER0" stateMetadata="Metadata0:person&#10;Metadata2:spouse&#10;Metadata2:children" type="COMPLEX_DATA_READER">
+<Node enabled="enabled" fileURL="${DATAIN_DIR}/delimited/peoples.txt" guiName="Multi Type Reader" guiX="20" guiY="250" id="COMPLEX_DATA_READER0" stateMetadata="Metadata0:person&#10;Metadata2:spouse&#10;Metadata2:children" type="COMPLEX_DATA_READER">
 <attr name="guiDescription"><![CDATA[Parses text file with various kinds of records. In this, easier case, we know, how the states go each after another, so we don't need to create a selector. We add a unique id, that idetifies the person, his/her spouse and children. The unique id is used in downstream transformation (XMLWriter) to join corresponding records together.]]></attr>
 <attr name="transformCode"><![CDATA[//#CTL2:COMPILE
 
@@ -128,7 +128,7 @@ function integer nextOutput(integer state, integer seq) {
 //md5sum: 253FBCDD28E18F7B838D760304909074
 ]]></attr>
 </Node>
-<Node enabled="enabled" fileURL="${DATAOUT_DIR}/people.xml" guiName="XMLWriter" guiX="450" guiY="137" id="EXT_XML_WRITER0" omitNewLines="false" type="EXT_XML_WRITER">
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/people.xml" guiName="XMLWriter" guiX="670" guiY="250" id="EXT_XML_WRITER0" omitNewLines="false" type="EXT_XML_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <persons xmlns:clover="http://www.cloveretl.com/ns/xmlmapping">
   <person clover:inPort="0">
@@ -139,7 +139,7 @@ function integer nextOutput(integer state, integer seq) {
 </persons>]]></attr>
 <attr name="guiDescription"><![CDATA[Joins person with her/his spouse and children and formats the data into xml file]]></attr>
 </Node>
-<Node enabled="enabled" guiName="Normalizer" guiX="258" guiY="181" id="NORMALIZER0" type="NORMALIZER">
+<Node enabled="enabled" guiName="Normalizer" guiX="345" guiY="450" id="NORMALIZER0" type="NORMALIZER">
 <attr name="normalize"><![CDATA[//#CTL2
 // This transformation defines the way in which a single input record is normalized
 // into multiple output records.
@@ -198,14 +198,13 @@ function void clean() {
 ]]></attr>
 <attr name="guiDescription"><![CDATA[Cuts record that contains all children of one person to one record for one children.]]></attr>
 </Node>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:0"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER0:1" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="EXT_XML_WRITER0:1"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER0:2" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="NORMALIZER0:0"/>
+<Edge fromNode="COMPLEX_DATA_READER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:0"/>
+<Edge fromNode="COMPLEX_DATA_READER0:1" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="EXT_XML_WRITER0:1"/>
+<Edge fromNode="COMPLEX_DATA_READER0:2" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="NORMALIZER0:0"/>
 <Edge debugMode="false" fromNode="NORMALIZER0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge6" inPort="Port 2 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:2"/>
 </Phase>
 <Phase number="1">
-<Node fileURL="${DATAIN_DIR}/delimited/peoples.txt" guiName="Multi Type Reader" guiX="26" guiY="362" id="COMPLEX_DATA_READER1" selectorProperties="*children\:|0_=2&#13;&#10;*spouse\:|1_=1&#13;&#10;" stateMetadata="Metadata0:person&#10;Metadata2:spouse&#10;Metadata2:children" type="COMPLEX_DATA_READER">
-<attr name="guiDescription"><![CDATA[Parses text file with various kinds of records. Two of them are identified by prefix; record without prefix is sent to 0th output port.  We add a unique id, that idetifies the person, his/her spouse and children. The unique id is used in downstream transformation (XMLWriter) to join corresponding records together.]]></attr>
+<Node fileURL="${DATAIN_DIR}/delimited/peoples.txt" guiName="Multi Type Reader" guiX="70" guiY="825" id="COMPLEX_DATA_READER1" selectorProperties="*children\:|0_=2&#13;&#10;*spouse\:|1_=1&#13;&#10;" stateMetadata="Metadata0:person&#10;Metadata2:spouse&#10;Metadata2:children" type="COMPLEX_DATA_READER">
 <attr name="selectorCode"><![CDATA[import com.opensys.cloveretl.component.complexdatareader.ComplexDataParser;
 import com.opensys.cloveretl.component.complexdatareader.PrefixInputMetadataSelector;
 
@@ -220,6 +219,7 @@ public class PrefixInputMetadataSelectorWithDefault extends	PrefixInputMetadataS
 	
 }
 ]]></attr>
+<attr name="guiDescription"><![CDATA[Parses text file with various kinds of records. Two of them are identified by prefix; record without prefix is sent to 0th output port.  We add a unique id, that idetifies the person, his/her spouse and children. The unique id is used in downstream transformation (XMLWriter) to join corresponding records together.]]></attr>
 <attr name="transformCode"><![CDATA[//#CTL2:COMPILE
 
 long counter0 = 0;
@@ -313,7 +313,7 @@ function integer nextOutput(integer state, integer seq) {
 //md5sum: 97FAAF3A3C00137AFC5A6A9BDBA5AB0E
 ]]></attr>
 </Node>
-<Node enabled="enabled" fileURL="${DATAOUT_DIR}/people1.xml" guiName="XMLWriter" guiX="450" guiY="362" id="EXT_XML_WRITER1" omitNewLines="false" type="EXT_XML_WRITER">
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/people1.xml" guiName="XMLWriter" guiX="720" guiY="825" id="EXT_XML_WRITER1" omitNewLines="false" type="EXT_XML_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <persons xmlns:clover="http://www.cloveretl.com/ns/xmlmapping">
   <person clover:inPort="0">
@@ -324,7 +324,7 @@ function integer nextOutput(integer state, integer seq) {
 </persons>]]></attr>
 <attr name="guiDescription"><![CDATA[Joins person with her/his spouse and children and formats the data into xml file]]></attr>
 </Node>
-<Node guiName="Normalizer" guiX="258" guiY="400" id="NORMALIZER1" type="NORMALIZER">
+<Node guiName="Normalizer" guiX="395" guiY="975" id="NORMALIZER1" type="NORMALIZER">
 <attr name="normalize"><![CDATA[//#CTL2
 // This transformation defines the way in which a single input record is normalized
 // into multiple output records.
@@ -383,9 +383,9 @@ function void clean() {
 ]]></attr>
 <attr name="guiDescription"><![CDATA[Cuts record that contains all children of one person to one record for one children.]]></attr>
 </Node>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER1:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_XML_WRITER1:0"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER1:1" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="EXT_XML_WRITER1:1"/>
-<Edge debugMode="true" fromNode="COMPLEX_DATA_READER1:2" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="NORMALIZER1:0"/>
+<Edge fromNode="COMPLEX_DATA_READER1:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_XML_WRITER1:0"/>
+<Edge fromNode="COMPLEX_DATA_READER1:1" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 1 (in)" metadata="Metadata2" outPort="Port 1 (out)" toNode="EXT_XML_WRITER1:1"/>
+<Edge fromNode="COMPLEX_DATA_READER1:2" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 2 (out)" toNode="NORMALIZER1:0"/>
 <Edge debugMode="false" fromNode="NORMALIZER1:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge7" inPort="Port 2 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="EXT_XML_WRITER1:2"/>
 </Phase>
 </Graph>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="lucie" created="Wed Jul 28 10:10:37 CEST 2010" guiVersion="7.1.0.8" id="1280312940927" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 14:07:20 CET 2016" modifiedBy="jansedlacek" name="graphFilters_Lookups" revision="1.45" showComponentDetails="true">
+<Graph author="lucie" created="Wed Jul 28 10:10:37 CEST 2010" guiVersion="7.2.0.8" id="1280312940927" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 14:07:20 CET 2016" modifiedBy="jansedlacek" name="graphFilters_Lookups" revision="1.45" showComponentDetails="true">
 <Global>
 <Metadata fileURL="${META_DIR}/customers.fmt" id="Metadata0"/>
 <Metadata fileURL="${META_DIR}/orders.fmt" id="Metadata1"/>
@@ -17,7 +17,7 @@
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
 <LookupTable charset="ISO-8859-1" id="LookupTable0" initialSize="512" key="customerid" metadata="Metadata0" name="customers_look" type="simpleLookup"/>
-<RichTextNote backgroundColor="DAD8C9" enabled="true" folded="false" fontSize="medium" height="136" id="Note0" textColor="000000" width="932" x="19" y="15">
+<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="136" id="Note0" textColor="000000" width="1107" x="19" y="15">
 <attr name="text"><![CDATA[h3. TASK: Find which customers received their order late due to delayed shipping
 *SOLUTION*: Data from files with different metadata must be put together and compared using lookup table
 
@@ -26,7 +26,7 @@
 - Files with customers can identify who is behind the selected customerID
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="203" id="Note1" textColor="000000" width="428" x="525" y="150">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="176" id="Note1" textColor="000000" width="428" x="525" y="150">
 <attr name="text"><![CDATA[h5. How to fill in a lookup table with data?
 
 Case 1: Before the graph runs
@@ -38,20 +38,20 @@ Case 2: During the graph run
 - using [LookupTableReaderWriter|element://LOOKUP_TABLE_READER_WRITER0] component
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="272" id="Note4" textColor="000000" width="248" x="178" y="378">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="272" id="Note4" textColor="000000" width="223" x="178" y="378">
 <attr name="text"><![CDATA[h5. Filtering
 We want only orders where
 
 {noformat}ShipDate > RequiredDate{noformat}]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="266" id="Note5" textColor="000000" width="280" x="625" y="375">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="301" id="Note5" textColor="000000" width="280" x="575" y="375">
 <attr name="text"><![CDATA[h5. Reading from the lookup table
 
 For each record:
 - lookup table is searched for the OrderID value
 - if found, selected field values (see [customers_out|element://Metadata2] metadata) are mapped to output fields]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="626" id="Note2" textColor="000000" width="176" x="975" y="125">
+<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="626" id="Note2" textColor="000000" width="176" x="950" y="150">
 <attr name="text"><![CDATA[Customer information is read in using two FlatFileReader Components that are then gathered into a single file. This combined dataset is written to a lookup table called customers_look using the LookupTableReaderWriter
 
 Then a SpreadSheetDataReader is used to parse Orders.xlsx, filter through that information using a filter component. Then, using a map component, customers are looked up using the following CTL2: matched_record = lookup(customers_look).get($in.0.OrderID); 
@@ -110,12 +110,12 @@ This combined lookup data is then written out to a file called orders_late.txt u
 <Edge fromNode="READS_ORDERS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (output)" toNode="EXT_FILTER0:0"/>
 </Phase>
 <Phase number="1">
-<Node append="false" enabled="enabled" fileURL="${DATAOUT_DIR}/orders_late.txt" guiName="writes info in file" guiX="720" guiY="550" id="DATA_WRITER1" outputFieldNames="true" type="DATA_WRITER"/>
+<Node append="false" enabled="enabled" fileURL="${DATAOUT_DIR}/orders_late.txt" guiName="writes info in file" guiX="595" guiY="550" id="DATA_WRITER1" outputFieldNames="true" type="DATA_WRITER"/>
 <Node enabled="enabled" guiName="shipped late" guiX="220" guiY="550" id="EXT_FILTER0" type="EXT_FILTER">
 <attr name="filterExpression"><![CDATA[//#CTL2
 $0.ShippedDate != null && $0.RequiredDate < $0.ShippedDate]]></attr>
 </Node>
-<Node enabled="enabled" guiName="orders + lookup tbl" guiX="470" guiY="550" id="REFORMAT0" type="REFORMAT">
+<Node enabled="enabled" guiName="orders + lookup tbl" guiX="420" guiY="550" id="REFORMAT0" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 customers matched_record;
 // Transforms input record into output record.
