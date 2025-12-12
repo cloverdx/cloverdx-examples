@@ -1,0 +1,48 @@
+{
+  "data": [
+    {
+      "id": "1850041123456789123",
+      "text": "CloverDX makes API integrations surprisingly easy. #ETL #dataengineering",
+      "author_id": "93284722",
+      "created_at": "2025-01-08T14:32:10.000Z",
+      "lang": "en",
+      "public_metrics": {
+        "retweet_count": 2,
+        "reply_count": 0,
+        "like_count": 14,
+        "quote_count": 1
+      }
+    },
+    {
+      "id": "1850040987654321012",
+      "text": "Exploring data pipelines with CloverDX today. Loving the RESTConnector!",
+      "author_id": "55123999",
+      "created_at": "2025-01-08T14:30:02.000Z",
+      "lang": "en",
+      "public_metrics": {
+        "retweet_count": 1,
+        "reply_count": 0,
+        "like_count": 7,
+        "quote_count": 0
+      }
+    },
+    {
+      "id": "1850039501234567890",
+      "text": "Keyword search demo: testing how to read tweets via API. #cloverdx",
+      "author_id": "77881200",
+      "created_at": "2025-01-08T14:15:27.000Z",
+      "lang": "en",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 3,
+        "quote_count": 0
+      }
+    }
+  ],
+  "meta": {
+    "newest_id": "1850041123456789123",
+    "oldest_id": "1850039501234567890",
+    "result_count": 3
+  }
+}

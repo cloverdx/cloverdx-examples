@@ -9,18 +9,15 @@
 <SingleType name="string"/>
 </GraphParameter>
 <GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="meta/Tweets.prm"/>
 </GraphParameters>
 <Dictionary/>
 </Global>
 <Phase number="0">
 <Node debugOutput="true" enabled="enabled" guiName="DebugOutput" guiX="1620" guiY="350" id="DEBUG_OUTPUT" type="TRASH"/>
-<Node enabled="enabled" guiName="TwitterReaderFollowing" guiX="445" guiY="900" id="READING1ST" jobURL="${SUBGRAPH_DIR}/TwitterReaderFollowing.sgrf" type="SUBGRAPH">
-<attr name="___TWITTER__QUERY1"><![CDATA[${__TWITTER___QUERY1}]]></attr>
-</Node>
-<Node enabled="enabled" guiName="TwitterReaderFollowing" guiX="770" guiY="1500" id="READING2ND" jobURL="${SUBGRAPH_DIR}/TwitterReaderFollowing.sgrf" type="SUBGRAPH">
-<attr name="___TWITTER__QUERY1"><![CDATA[${__TWITTER___QUERY1}]]></attr>
-</Node>
-<Node enabled="enabled" guiName="SimpleGather" guiX="1145" guiY="350" id="SIMPLE_GATHER" type="SIMPLE_GATHER"/>
+<Node ___TWITTER__QUERY1="${__TWITTER___QUERY1}" enabled="enabled" guiName="TwitterReaderFollowing" guiX="420" guiY="150" id="READING1ST" jobURL="${SUBGRAPH_DIR}/TwitterReaderFollowing.sgrf" type="SUBGRAPH"/>
+<Node ___TWITTER__QUERY1="${__TWITTER___QUERY1}" enabled="enabled" guiName="TwitterReaderFollowing" guiX="695" guiY="200" id="READING2ND" jobURL="${SUBGRAPH_DIR}/TwitterReaderFollowing.sgrf" type="SUBGRAPH"/>
+<Node enabled="enabled" guiName="SimpleGather" guiX="1170" guiY="75" id="SIMPLE_GATHER" type="SIMPLE_GATHER"/>
 <Node enabled="enabled" guiName="SubgraphInput" guiX="45" guiY="-2" id="SUBGRAPH_INPUT" type="SUBGRAPH_INPUT">
 <Port guiY="110" name="0"/>
 </Node>
@@ -28,11 +25,8 @@
 <Port guiY="106" name="0"/>
 <Port guiY="176" name="1"/>
 </Node>
-<Node enabled="enabled" guiName="Trash" guiX="1145" guiY="1500" id="TRASH3" type="TRASH"/>
-<Node enabled="enabled" guiName="TwitterReader" guiX="170" guiY="350" id="TWITTER_READER" jobURL="${SUBGRAPH_DIR}/TwitterReader.sgrf" type="SUBGRAPH">
-<attr name="___TWITTER__QUERY1"><![CDATA[${__TWITTER___QUERY1}]]></attr>
-<attr name="___NUM__TWEETS"><![CDATA[100]]></attr>
-</Node>
+<Node enabled="enabled" guiName="Trash" guiX="945" guiY="250" id="TRASH3" type="TRASH"/>
+<Node ___NUM__TWEETS="100" ___TWITTER__QUERY1="${__TWITTER___QUERY1}" enabled="enabled" guiName="TwitterReader" guiX="170" guiY="75" id="TWITTER_READER" jobURL="${SUBGRAPH_DIR}/TwitterReader.sgrf" type="SUBGRAPH"/>
 <Edge fromNode="READING1ST:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 1 (in)" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:1"/>
 <Edge fromNode="READING1ST:1" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" outPort="Port 1 (out)" toNode="READING2ND:0"/>
 <Edge fromNode="READING2ND:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 2 (in)" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:2"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Graph author="dpavlis" created="Wed Jul 09 15:34:33 CEST 2014" guiVersion="7.1.0.8" id="1404915642404" largeIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_48.png" licenseCode="Commercial Devel" licenseType="Commercial" mediumIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_32.png" modified="Wed Feb 24 09:55:24 CET 2016" modifiedBy="jansedlacek" name="TwitterReader" nature="subgraph" revision="1.39" showComponentDetails="true" smallIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_16.png">
+<Graph author="dpavlis" created="Wed Jul 09 15:34:33 CEST 2014" guiVersion="7.2.0.8" id="1404915642404" largeIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_48.png" licenseCode="Commercial Devel" licenseType="Commercial" mediumIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_32.png" modified="Wed Feb 24 09:55:24 CET 2016" modifiedBy="jansedlacek" name="TwitterReader" nature="subgraph" revision="1.39" showComponentDetails="true" smallIconPath="${SUBGRAPH_DIR}/icons/twitter/Twitter_logo_blue_16.png">
 <Global>
 <inputPorts>
 <singlePort connected="false" name="0"/>
@@ -34,15 +34,14 @@
 </Record>
 </Metadata>
 <GraphParameters>
-<GraphParameter label="TWITTER_QUERY" name="_TWITTER__QUERY1" public="true" required="false" value="dummy"/>
-<GraphParameter category="basic" label="NUM_TWEETS" name="_NUM__TWEETS" public="true" required="false" value="100"/>
 <GraphParameter name="OAUTH_CONSUMER_KEY" value="xiKI3LT6IHGv2z1dDT6uWoARC"/>
 <GraphParameter name="OAUTH_CONSUMER_SECRET" value="OE1tbQR14e3E00JRnMMFnfF1jN1q4KIMLXiWVbvKQqesnCf3mE"/>
 <GraphParameter name="OAUTH_ACCESS_TOKEN" value="2613582000-IeOh0AY3Mkr3JyxRba2bN7Qslzk0DNrq85LQwaa"/>
 <GraphParameter name="OAUTH_ACCESS_TOKEN_SECRET" value="eCWm4HECCTFM2MaBodPtslx2z646mXTfl8T7z1eIDgm31"/>
 <GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="meta/Tweets.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="F9EB81" enabled="true" folded="false" fontSize="medium" height="64" id="Note0" textColor="000000" width="590" x="300" y="75">
+<RichTextNote backgroundColor="F9EB81" enabled="true" folded="false" fontSize="medium" height="64" id="Note0" textColor="000000" width="590" x="325" y="75">
 <attr name="text"><![CDATA[Query "older" tweets based on the same query as the previous TWITTER request]]></attr>
 </RichTextNote>
 <Dictionary/>
@@ -114,17 +113,39 @@ function integer generate() {
 <attr name="inputMapping"><![CDATA[//#CTL2
 
 // Transforms input record into output record.
+//#CTL2
+
+// Transforms input record into output record
+
 function integer transform() {
 
-	$out.0.URL = "https://api.twitter.com/1.1/search/tweets.json?q=" + escapeUrlFragment(getComponentProperty("TWITTER_QUERY"))
-					+ "&count="  + getComponentProperty("NUM_TWEETS") + "&max_id=" + ($in.0.minID-1);
-	$out.0.consumerKey = "xiKI3LT6IHGv2z1dDT6uWoARC";
-	$out.0.consumerSecret = "OE1tbQR14e3E00JRnMMFnfF1jN1q4KIMLXiWVbvKQqesnCf3mE";
-	$out.0.oAuthAccessToken = "2613582000-IeOh0AY3Mkr3JyxRba2bN7Qslzk0DNrq85LQwaa";
-	$out.0.oAuthAccessTokenSecret = "eCWm4HECCTFM2MaBodPtslx2z646mXTfl8T7z1eIDgm31";
-	
-	return ALL;
+    $out.0.URL =
+        "${TW_BASE_URL}"
+        + "?query=" + escapeUrlFragment("${TW_QUERY}")
+        + "&max_results=" + "${TW_MAX_RESULTS}"
+        + "&tweet.fields=created_at,author_id,text";
+
+    return ALL;
 }
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+
 
 // Called during component initialization.
 // function boolean init() {}

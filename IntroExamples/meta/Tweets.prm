@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GraphParameters>
+<GraphParameter label="Twitter Base URL" name="TW_BASE_URL" public="true" required="false" value="https://api.x.com/2/tweets/search/recent"/>
+<GraphParameter category="basic" label="Query Term" name="TW_QUERY" public="true" required="false" value="#DataIntegration"/>
+<GraphParameter label="Max Results" name="TW_MAX_RESULTS" public="true" value="10"/>
+<GraphParameter label="Bearer Token API Key" name="TW_BEARER_TOKEN" public="true" secure="true" value="enc#QoksL63OMXQ2SYbrT2M3ZW8SnI3BqyHapKYAuiOqIkFuywTmFpnLWpV0ZOAehll+6jZVvUH+fmtW0Fpyp1Flw67WllM+k1JXyz2rMUKyTYoV0sdwHaH3hTn2MtFkz2imXJCt1Kr/gmKD6rLeNOQhUsddA9rKfWcqlCV9v7VtSRGkAfnslNVsR0s7DuefqgLWzudYN+Gxvi5pHlZAQxf42Q=="/>
+</GraphParameters>

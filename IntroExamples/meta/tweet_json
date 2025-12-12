@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="json_object" type="json_objectType"/>
+  <xs:complexType name="public_metricsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="retweet_count"/>
+      <xs:element type="xs:string" name="reply_count"/>
+      <xs:element type="xs:string" name="like_count"/>
+      <xs:element type="xs:string" name="quote_count"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="dataType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="id"/>
+      <xs:element type="xs:string" name="text"/>
+      <xs:element type="xs:string" name="author_id"/>
+      <xs:element type="xs:string" name="created_at"/>
+      <xs:element type="xs:string" name="lang"/>
+      <xs:element type="public_metricsType" name="public_metrics"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="arrayElem" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="metaType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="newest_id"/>
+      <xs:element type="xs:string" name="oldest_id"/>
+      <xs:element type="xs:string" name="result_count"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="json_objectType">
+    <xs:sequence>
+      <xs:element type="dataType" name="data" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="metaType" name="meta"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
