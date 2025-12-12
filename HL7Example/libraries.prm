@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GraphParameters>
+<GraphParameter name="DATA_TRACKER_LIB" value="sandbox://DataTrackerLib_1.0"/>
+<GraphParameter name="AZURE_FILE_STORAGE_LIB" value="sandbox://AzureFileStorageLib_1.0"/>
+</GraphParameters>

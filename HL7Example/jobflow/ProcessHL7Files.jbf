@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="Branislav Repcek" created="Thu Sep 22 11:29:23 CEST 2022" guiVersion="7.2.0.8" id="1663844313308" licenseCode="CloverDX-Internal-License" name="ProcessHL7Files" nature="jobflow" showComponentDetails="true">
+<Global>
+<Metadata id="ListFiles_Result">
+<Record fieldDelimiter="|" name="FileInfo" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="URL" type="string"/>
+<Field name="name" type="string"/>
+<Field format="yyyy-MM-dd HH:mm:ss" name="lastModified" trim="true" type="date"/>
+<Field name="size" trim="true" type="long"/>
+<Field name="fileId" type="long"/>
+</Record>
+</Metadata>
+<Metadata id="ExecuteGraph_RunStatus" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="ProcessingSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="URL" type="string"/>
+<Field name="runId" trim="true" type="long"/>
+<Field name="duration" trim="true" type="long"/>
+<Field name="status" type="string"/>
+<Field name="errException" type="string"/>
+<Field name="errMessage" type="string"/>
+<Field name="fileId" trim="true" type="long"/>
+<Field name="discardedMessages" trim="true" type="long"/>
+</Record>
+</Metadata>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+<GraphParameterFile fileURL="libraries.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="301" id="Note0" textColor="444444" width="876" x="225" y="50">
+<attr name="text"><![CDATA[h3. Process Multiple HL7 Files
+
+This Jobflow showshow to process several HL7 files from a directory and log the outcomes. 
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node fileURL="${DATAIN_DIR}/hl7 v2/*.txt" guiName="List HL7 files" guiX="245" guiY="200" id="LIST_HL7_FILES" type="LIST_FILES"/>
+<Node fileURL="${DATAOUT_DIR}/Output_${ROOT_RUN_ID}.txt" guiName="Log File Status" guiX="920" guiY="200" id="LOG_FILE_STATUS" type="FLAT_FILE_WRITER"/>
+<Node guiName="Process HL7 files" guiX="470" guiY="200" id="PROCESS_HL7_FILES" jobURL="${GRAPH_DIR}/ProcessHL7File.grf" type="EXECUTE_GRAPH">
+<attr name="inputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.INPUT_FILE_URL = $in.0.URL;
+	$out.1.INPUT_FILE_ID = num2str($in.0.fileId);
+	$out.0.executionLabel = $in.0.name;
+
+	return ALL;
+}
+]]></attr>
+<attr name="outputMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.0.* = $in.0.*;
+	$out.0.* = $in.1.*;
+	$out.0.discardedMessages = $in.3.outputPort_1_HL7READER_totalRecords;
+
+	return ALL;
+}
+]]></attr>
+<attr name="errorMapping"><![CDATA[//#CTL2
+
+function integer transform() {
+	$out.1.* = $in.0.*;
+	$out.1.* = $in.1.*;
+
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node guiName="SimpleGather" guiX="695" guiY="200" id="SIMPLE_GATHER" type="SIMPLE_GATHER"/>
+<Edge fromNode="LIST_HL7_FILES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="ListFiles_Result" outPort="Port 0 (out)" toNode="PROCESS_HL7_FILES:0"/>
+<Edge fromNode="PROCESS_HL7_FILES:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="ExecuteGraph_RunStatus" outPort="Port 0 (out)" toNode="SIMPLE_GATHER:0"/>
+<Edge fromNode="PROCESS_HL7_FILES:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 1 (in)" metadata="ExecuteGraph_RunStatus" outPort="Port 1 (error)" toNode="SIMPLE_GATHER:1"/>
+<Edge fromNode="SIMPLE_GATHER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="LOG_FILE_STATUS:0"/>
+</Phase>
+</Graph>

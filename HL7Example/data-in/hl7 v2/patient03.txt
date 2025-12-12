@@ -1,0 +1,15 @@
+MSH|^~\&||HUB|||202203031530||ORU^R01|9000003|P|2.3|||AL|NE|
+PID|1|100003333|100003333^^^HOSP^MR||Chen^David^K^^^^L||19751123000000|M|||89^^Pasadena^CA^91101||6265550202||||M|234567890|555-222-3333|
+PV1|1|E|ED02||||987654321^Patel^Rina^^^^^^^^^^XX|||||||||N||ER||OHIP|||||||||||||||||||HUB||REG|||20220303141500|
+OBR|1||7100HUB||ED NOTE^EDCON|||202203031520|||||MARTIN|||||||HIM|TEST.EDCON||||D||^^^202203031520|||||^Physician^ER^^^^^^^^^^XX|||^Physician^ER^^^^^^^^^^XX|
+OBX|1|TX|||Allergies / Adverse Reactions|
+OBX|2|TX|||No Known Drug Allergies (Verified 03/03/22 15:10)|
+OBX|3|TX|||ED Course / Discharge Plan|
+OBX|4|TX|||Serial troponins negative, ECG without acute ischemic changes.|
+OBX|5|TX|||Medications At Discharge:|
+OBX|6|TX|||ibuprofen 600 mg Tablet – 600 mg PO Q6HR PRN (Pain) 0RF|
+OBX|7|TX|||omeprazole 20 mg Capsule – 20 mg PO DAILY Qty: 30 0RF|
+OBX|8|TX|||Symptoms for HPI: Reports: Chest Discomfort, Anxiety; Does Not Report: Shortness of Breath, Syncope|
+OBX|9|TX|||Complications: None; No hemodynamic instability noted.|
+OBX|10|TX|||Follow-up with cardiology within 1 week; return precautions reviewed with patient.|
+OBX|11|TX|||If this is not your patient and you have received this notification in error please fax back to 416-242-1085.|

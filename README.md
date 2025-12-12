@@ -19,6 +19,7 @@ pre-requisites it may have (e.g., database, API key, ...).
 | [IntroExamples](./IntroExamples/) | A collection of basic examples showing various CloverDX features. |
 | [KafkaExamples](./KafkaExamples/) | A collection of examples showing integration with Apache Kafka. |
 | [WranglerTutorial](./WranglerTutorial/) | Examples files for Wrangler tutorial from [CloverDX Documentation](https://doc.cloverdx.com/latest/user/wrangler-tutorial.html) |
+| [Hl7Example](./HL7Example/) |Example showing how to parse and work with Hl7 Data in CloverDX. |
 
 ## Usage and licensing
 

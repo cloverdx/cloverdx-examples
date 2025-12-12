@@ -1,0 +1,15 @@
+MSH|^~\&||HUB|||202203051830||ORU^R01|9000005|P|2.3|||AL|NE|
+PID|1|100005555|100005555^^^HOSP^MR||Johnson^Mark^L^^^^L||19691225000000|M|||200^^Glendale^CA^91201||8185550404||||M|456789012|555-444-5555|
+PV1|1|E|ED04||||321654987^Olsen^Karen^^^^^^^^^^XX|||||||||N||ER||OHIP|||||||||||||||||||HUB||REG|||20220305171500|
+OBR|1||7300HUB||ED NOTE^EDCON|||202203051825|||||WILSON|||||||HIM|TEST.EDCON||||D||^^^202203051825|||||^Physician^ER^^^^^^^^^^XX|||^Physician^ER^^^^^^^^^^XX|
+OBX|1|TX|||Allergies / Adverse Reactions|
+OBX|2|TX|||NKDA – No Known Drug Allergies (Verified 03/05/22 17:20)|
+OBX|3|TX|||Discharge Plan|
+OBX|4|TX|||Home isolation instructions reviewed; written information provided.|
+OBX|5|TX|||Medications At Discharge:|
+OBX|6|TX|||acetaminophen 500 mg Tablet – 500 mg PO Q6HR PRN (Fever) 0RF|
+OBX|7|TX|||benzonatate 100 mg Capsule – 100 mg PO TID PRN (Cough) Qty: 21 0RF|
+OBX|8|TX|||Symptoms for HPI COVID: Reports: Cough, Fatigue, Myalgias; Does Not Report: Shortness of Breath, Chest Pain|
+OBX|9|TX|||Function/abilities important to patient: Able to work remotely from home without symptom worsening.|
+OBX|10|TX|||Complications: None; Oxygen saturation remained >96% on room air.|
+OBX|11|TX|||If this is not your patient and you have received this notification in error please fax back to 416-242-1085.|

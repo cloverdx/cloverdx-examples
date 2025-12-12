@@ -1,0 +1,16 @@
+MSH|^~\&||HUB|||202203011030||ORU^R01|9000001|P|2.3|||AL|NE|
+PID|1|100001111|100001111^^^HOSP^MR||Herring^Ada^M^^^^L||19890718000000|F|||554^^South El Monte^CA^91733||5555052||||S|365733956|942-769-3358|
+PV1|1|E|WER||||422297266^Garcia^Hubert^^^^^^^^^^XX|||||||||N||ER||OHIP|||||||||||||||||||HUB||REG|||20220301091500|
+OBR|1||5235HUB||DISCHARGE NOTE^EDCON|||202203011020|||||WILSON|||||||HIM|TEST.EDCON||||D||^^^202203011020|||||^Physician^ER^^^^^^^^^^XX|||^Physician^ER^^^^^^^^^^XX|
+OBX|1|TX|||Allergies / Adverse Reactions|
+OBX|2|TX|||No Known Drug Allergies (Unverified 03/01/22 09:50)|
+OBX|3|TX|||Discharge Plan|
+OBX|4|TX|||Medications At Discharge|
+OBX|5|TX|||**Med Reconciliation is not currently done in the ED. New=Prescription   No Action=No Changes Made to Meds**|
+OBX|6|TX|||Medications:|
+OBX|7|TX|||docusate sodium [Colace] 100 mg capsule – 100 mg PO BID Qty: 120 2RF|
+OBX|8|TX|||Lasix 10 mg/mL solution – 10 mg PO BID Qty: 30 1RF|
+OBX|9|TX|||acetaminophen 160 mg/5 mL Liquid – 640 mg PO Q4HR PRN (Fever/Pain) 0RF|
+OBX|10|TX|||Follow-up with primary care in 3 days|
+OBX|11|TX|||Symptoms for HPI COVID: Reports: Cough, Shortness of Breath, Fatigue; Does Not Report: Chest Pain, Nausea/Vomiting/Diarrhea|
+OBX|12|TX|||If this is not your patient and you have received this notification in error please fax back to 416-242-1085.|

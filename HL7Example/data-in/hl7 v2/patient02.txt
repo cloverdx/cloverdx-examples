@@ -1,0 +1,17 @@
+MSH|^~\&||HUB|||202203021245||ORU^R01|9000002|P|2.3|||AL|NE|
+PID|1|100002222|100002222^^^HOSP^MR||Lopez^Maria^^^^^L||19830514000000|F|||1200^^Los Angeles^CA^90001||3235550101||||M|123456789|555-111-2222|
+PV1|1|E|ED01||||123456789^Nguyen^Alan^^^^^^^^^^XX|||||||||N||ER||OHIP|||||||||||||||||||HUB||REG|||20220302113000|
+OBR|1||7002HUB||DISCHARGE NOTE^EDCON|||202203021240|||||MARTIN|||||||HIM|TEST.EDCON||||D||^^^202203021240|||||^Physician^ER^^^^^^^^^^XX|||^Physician^ER^^^^^^^^^^XX|
+OBX|1|TX|||Allergies / Adverse Reactions|
+OBX|2|TX|||Penicillin – Rash (Verified 02/01/20 14:10)|
+OBX|3|TX|||Discharge Plan|
+OBX|4|TX|||Medications At Discharge|
+OBX|5|TX|||**Med Reconciliation is not currently done in the ED. New=Prescription   No Action=No Changes Made to Home Meds**|
+OBX|6|TX|||Medications:|
+OBX|7|TX|||metformin 500 mg Tablet – 500 mg PO BID with meals Qty: 60 2RF|
+OBX|8|TX|||lisinopril 10 mg Tablet – 10 mg PO DAILY Qty: 30 2RF|
+OBX|9|TX|||atorvastatin 20 mg Tablet – 20 mg PO QHS Qty: 30 2RF|
+OBX|10|TX|||Patient counseled on diet and exercise; printed education provided.|
+OBX|11|TX|||Symptoms for HPI: Reports: Dizziness, Polyuria; Does Not Report: Chest Pain, Shortness of Breath|
+OBX|12|TX|||Complications: None; No signs of hypoglycemia or ketoacidosis|
+OBX|13|TX|||If this is not your patient and you have received this notification in error please fax back to 416-242-1085.|
