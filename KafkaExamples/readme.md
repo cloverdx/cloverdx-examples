@@ -1,4 +1,4 @@
-# Data App Features
+# Apache Kafka examples
 
 This project is a demo of Apache Kafka components. It showcases the following:
 
@@ -44,3 +44,4 @@ We welcome your feedback and contributions. You can:
 - Submit comments or pull requests here on GitHub.
 
 - Reach out to us through [cloverdx.com](https://www.cloverdx.com).
+
