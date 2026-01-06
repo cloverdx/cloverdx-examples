@@ -7,32 +7,32 @@
 <GraphParameter name="FULL_FILE" value="5555"/>
 <GraphParameterFile fileURL="workspace.prm"/>
 </GraphParameters>
-<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="150" id="Note0" textColor="000000" width="1250" x="50" y="0">
+<RichTextNote backgroundColor="DAD8C9" enabled="true" folded="false" fontSize="medium" height="150" id="Note0" textColor="000000" width="1250" x="50" y="0">
 <attr name="text"><![CDATA[h3. Gather all customers from the same state into separate files. 
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="F9EB81" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="125" id="Note2" textColor="000000" width="425" x="875" y="350">
+<RichTextNote backgroundColor="F9EB81" folded="false" fontSize="medium" height="150" id="Note2" textColor="000000" width="324" x="975" y="325">
 <attr name="text"><![CDATA[h3. See results in Project Explorer:
 After running a graph, you can see results in project [BasicExamples|file://BasicExamples]
 
 [data-out/customers/*.txt|file://BasicExamples/data-out/customers]
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="DAD8C9" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="100" id="Note3" textColor="000000" width="1250" x="50" y="500">
+<RichTextNote backgroundColor="DAD8C9" enabled="true" folded="false" fontSize="medium" height="100" id="Note3" textColor="000000" width="1250" x="50" y="500">
 <attr name="text"><![CDATA[h3. Instead of two big files with customer data create smaller ones with the given number of records each. 
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="FAF6D6" backgroundColorB="" backgroundColorG="" backgroundColorR="" enabled="true" folded="false" fontSize="medium" height="175" id="Note1" textColor="000000" width="425" x="875" y="1525">
+<RichTextNote backgroundColor="FAF6D6" enabled="true" folded="false" fontSize="medium" height="126" id="Note1" textColor="000000" width="226" x="350" y="875">
 <attr name="text"><![CDATA[Note the difference how SimpleGather and Concatenate component put data from various inputs together]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="F9EB81" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="125" id="Note6" textColor="000000" width="425" x="875" y="800">
+<RichTextNote backgroundColor="F9EB81" folded="false" fontSize="medium" height="150" id="Note6" textColor="000000" width="325" x="975" y="775">
 <attr name="text"><![CDATA[h3. See results in Project Explorer:
 After running a graph, you can see results in project [BasicExamples|file://BasicExamples]
 
 [data-out/customers1/*.txt|file://BasicExamples/data-out/customers1]
 ]]></attr>
 </RichTextNote>
-<RichTextNote backgroundColor="F9EB81" backgroundColorB="" backgroundColorG="" backgroundColorR="" folded="false" fontSize="medium" height="550" id="Note4" textColor="000000" width="425" x="850" y="3150">
+<RichTextNote backgroundColor="F9EB81" folded="false" fontSize="medium" height="550" id="Note4" textColor="000000" width="425" x="850" y="3150">
 <attr name="text"><![CDATA[h3. See results in Project Explorer:
 After running a graph, you can see results in project [BasicExamples|file://BasicExamples]
 
@@ -45,28 +45,28 @@ After running a graph, you can see results in project [BasicExamples|file://Basi
 </Dictionary>
 </Global>
 <Phase number="0">
-<Node enabled="enabled" guiName="Concatenate" guiX="295" guiY="1325" id="CONCATENATE0" type="CONCATENATE"/>
-<Node charset="utf-8" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region1.csv" guiName="UTF-8" guiX="45" guiY="1150" id="DATA_READER0" type="DATA_READER">
+<Node enabled="enabled" guiName="Concatenate" guiX="295" guiY="1075" id="CONCATENATE0" type="CONCATENATE"/>
+<Node charset="utf-8" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region1.csv" guiName="UTF-8" guiX="45" guiY="900" id="DATA_READER0" type="DATA_READER">
 <attr name="guiDescription"><![CDATA[Read customers]]></attr>
 </Node>
-<Node charset="UTF-8" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region2.csv" guiName="UTF-8" guiX="45" guiY="1475" id="DATA_READER1" type="DATA_READER">
+<Node charset="UTF-8" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region2.csv" guiName="UTF-8" guiX="45" guiY="1225" id="DATA_READER1" type="DATA_READER">
 <attr name="guiDescription"><![CDATA[Read customers]]></attr>
 </Node>
-<Node charset="windows-1250" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region1.csv" guiName="windows-1250" guiX="45" guiY="650" id="DATA_READER2" type="DATA_READER">
+<Node charset="windows-1250" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region1.csv" guiName="windows-1250" guiX="45" guiY="625" id="DATA_READER2" type="DATA_READER">
 <attr name="guiDescription"><![CDATA[Read customers]]></attr>
 </Node>
-<Node charset="windows-1250" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region2.csv" guiName="windows-1250" guiX="45" guiY="800" id="DATA_READER3" type="DATA_READER">
+<Node charset="windows-1250" enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region2.csv" guiName="windows-1250" guiX="45" guiY="750" id="DATA_READER3" type="DATA_READER">
 <attr name="guiDescription"><![CDATA[Read customers]]></attr>
 </Node>
 <Node enabled="enabled" fileURL="${DATAIN_DIR}/delimited/customers_region1.csv" guiName="ISO-8859-1" guiX="45" guiY="200" id="DATA_READER4" type="DATA_READER">
 <attr name="guiDescription"><![CDATA[Read customers]]></attr>
 </Node>
-<Node charset="ISO-8859-1" enabled="enabled" fileURL="${DATAOUT_DIR}/customers/#.txt" guiName="division by state" guiX="1120" guiY="200" id="DATA_WRITER0" makeDirs="true" outputFieldNames="true" partitionFileTag="keyNameFileTag" partitionKey="state" type="DATA_WRITER"/>
-<Node charset="windows-1250" enabled="enabled" fileURL="${DATAOUT_DIR}/customers1/customers$.txt" guiName="by records per file" guiX="1120" guiY="650" id="DATA_WRITER1" makeDirs="true" partitionFileTag="numberFileTag" recordsPerFile="${FULL_FILE}" type="DATA_WRITER">
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="${DATAOUT_DIR}/customers/#.txt" guiName="division by state" guiX="1070" guiY="200" id="DATA_WRITER0" makeDirs="true" outputFieldNames="true" partitionFileTag="keyNameFileTag" partitionKey="state" type="DATA_WRITER"/>
+<Node charset="windows-1250" enabled="enabled" fileURL="${DATAOUT_DIR}/customers1/customers$.txt" guiName="by records per file" guiX="1070" guiY="650" id="DATA_WRITER1" makeDirs="true" partitionFileTag="numberFileTag" recordsPerFile="${FULL_FILE}" type="DATA_WRITER">
 <attr name="guiDescription"><![CDATA[The number of records per file is stored in FULL_FILE parameter.]]></attr>
 </Node>
-<Node enabled="enabled" guiName="ExtSort" guiX="545" guiY="1325" id="EXT_SORT0" sortKey="lastname(a)" type="EXT_SORT"/>
-<Node enabled="enabled" guiName="Reformat" guiX="795" guiY="1325" id="REFORMAT0" type="REFORMAT">
+<Node enabled="enabled" guiName="ExtSort" guiX="545" guiY="1075" id="EXT_SORT0" sortKey="lastname(a)" type="EXT_SORT"/>
+<Node enabled="enabled" guiName="Reformat" guiX="795" guiY="1075" id="REFORMAT0" type="REFORMAT">
 <attr name="transform"><![CDATA[//#CTL2
 integer fileNumber = 1;
 integer counter = 0;
@@ -164,7 +164,7 @@ function integer transform() {
 ]]></attr>
 </Node>
 <Node enabled="enabled" guiName="SimpleGather" guiX="395" guiY="650" id="SIMPLE_GATHER0" type="SIMPLE_GATHER"/>
-<Node append="false" enabled="enabled" fileURL="${DATAOUT_DIR}/customers2/customers$.xml" footer="&lt;/dataset&gt;" guiName="by records per file" guiX="1045" guiY="1325" header="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;dataset&gt;" id="STRUCTURE_WRITER0" makeDirs="true" mask="&lt;customers&gt;&#10;&#9;&lt;customerID&gt;$customerid&lt;/customerID&gt;&#10;&#9;&lt;firstname&gt;$firstname&lt;/firstname&gt;&#10;&#9;&lt;lastname&gt;$lastname&lt;/lastname&gt;&#10;&#9;&lt;address1&gt;$address1&lt;/address1&gt;&#10;&#9;&lt;address2&gt;$address2&lt;/address2&gt;&#10;&#9;&lt;city&gt;$city&lt;/city&gt;&#10;&#9;&lt;state&gt;$state&lt;/state&gt;&#10;&#9;&lt;zip&gt;$zip&lt;/zip&gt;&#10;&#9;&lt;country&gt;$country&lt;/country&gt;&#10;&#9;&lt;region&gt;$region&lt;/region&gt;&#10;&#9;&lt;email&gt;$email&lt;/email&gt;&#10;&#9;&lt;phone&gt;$phone&lt;/phone&gt;&#10;&#9;&lt;creditcardtype&gt;$creditcardtype&lt;/creditcardtype&gt;&#10;&#9;&lt;creditcard&gt;$creditcard&lt;/creditcard&gt;&#10;&#9;&lt;creditcardexpiration&gt;$creditcardexpiration&lt;/creditcardexpiration&gt;&#10;&#9;&lt;username&gt;$username&lt;/username&gt;&#10;&#9;&lt;password&gt;$password&lt;/password&gt;&#10;&#9;&lt;age&gt;$age&lt;/age&gt;&#10;&#9;&lt;income&gt;$income&lt;/income&gt;&#10;&#9;&lt;gender&gt;$gender&lt;/gender&gt;&#10;&lt;/customers&gt;&#10;" recordsPerFile="${FULL_FILE}" type="STRUCTURE_WRITER">
+<Node append="false" enabled="enabled" fileURL="${DATAOUT_DIR}/customers2/customers$.xml" footer="&lt;/dataset&gt;" guiName="by records per file" guiX="1070" guiY="1075" header="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;dataset&gt;" id="STRUCTURE_WRITER0" makeDirs="true" mask="&lt;customers&gt;&#10;&#9;&lt;customerID&gt;$customerid&lt;/customerID&gt;&#10;&#9;&lt;firstname&gt;$firstname&lt;/firstname&gt;&#10;&#9;&lt;lastname&gt;$lastname&lt;/lastname&gt;&#10;&#9;&lt;address1&gt;$address1&lt;/address1&gt;&#10;&#9;&lt;address2&gt;$address2&lt;/address2&gt;&#10;&#9;&lt;city&gt;$city&lt;/city&gt;&#10;&#9;&lt;state&gt;$state&lt;/state&gt;&#10;&#9;&lt;zip&gt;$zip&lt;/zip&gt;&#10;&#9;&lt;country&gt;$country&lt;/country&gt;&#10;&#9;&lt;region&gt;$region&lt;/region&gt;&#10;&#9;&lt;email&gt;$email&lt;/email&gt;&#10;&#9;&lt;phone&gt;$phone&lt;/phone&gt;&#10;&#9;&lt;creditcardtype&gt;$creditcardtype&lt;/creditcardtype&gt;&#10;&#9;&lt;creditcard&gt;$creditcard&lt;/creditcard&gt;&#10;&#9;&lt;creditcardexpiration&gt;$creditcardexpiration&lt;/creditcardexpiration&gt;&#10;&#9;&lt;username&gt;$username&lt;/username&gt;&#10;&#9;&lt;password&gt;$password&lt;/password&gt;&#10;&#9;&lt;age&gt;$age&lt;/age&gt;&#10;&#9;&lt;income&gt;$income&lt;/income&gt;&#10;&#9;&lt;gender&gt;$gender&lt;/gender&gt;&#10;&lt;/customers&gt;&#10;" recordsPerFile="${FULL_FILE}" type="STRUCTURE_WRITER">
 <attr name="guiDescription"><![CDATA[The number of records per file is stored in FULL_FILE parameter.]]></attr>
 </Node>
 <Edge fromNode="CONCATENATE0:0" guiBendpoints="" guiLocks="null|null|null" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" outPort="Port 0 (out)" toNode="EXT_SORT0:0"/>
