@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="\t" name="PhoneNumber" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="\t" name="PhoneNumber" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="customerId" type="long"/>
 <Field name="order" type="integer"/>
 <Field name="phone" type="string"/>

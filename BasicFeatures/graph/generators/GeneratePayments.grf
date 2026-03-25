@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/OrderPayment.fmt" id="Metadata1"/>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="OrderLineItem" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="OrderLineItem" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="orderId" type="long"/>
 <Field name="customerId" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="date" timeZone="UTC" type="date"/>
@@ -13,7 +13,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata5">
-<Record fieldDelimiter=";" name="OrderPaymentExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter=";" name="OrderPaymentExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="paymentId" type="string"/>
 <Field name="orderId" type="string"/>
 <Field name="customerId" type="long"/>
@@ -28,7 +28,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="OrderTotals" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="OrderTotals" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="orderId" type="long"/>
 <Field name="customerId" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="orderDate" timeZone="UTC" type="date"/>

@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Mon Jun 12 12:23:56 CEST 2017" guiVersion="7.2.0.8" id="1497264769632" licenseCode="CLP1DJAVLI10291612BY" name="GenerateAll" nature="jobflow" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record eofAsDelimiter="true" fieldDelimiter="|" name="Site" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record eofAsDelimiter="true" fieldDelimiter="|" name="Site" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="siteName" type="string"/>
 </Record>
 </Metadata>

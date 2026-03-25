@@ -7,13 +7,13 @@
 <singlePort connected="false" keepEdge="true" name="2" required="false"/>
 </outputPorts>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="ErrorMessage" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ErrorMessage" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="httpStatusCode" type="integer"/>
 <Field name="errorMessage" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="Status" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Status" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="cod" type="string"/>
 <Field name="message" type="string"/>
 <Field name="cnt" type="integer"/>
@@ -24,7 +24,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="\t" name="WeatherMain" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="\t" name="WeatherMain" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="dt" type="long"/>
 <Field format="yyyy-MM-dd HH:mm" label="Time" name="date_time" type="date"/>
 <Field label="Temperature" name="temp" scale="1" type="decimal"/>

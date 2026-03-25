@@ -14,7 +14,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata4">
-<Record fieldDelimiter="|" name="Name" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Name" recordDelimiter="\r?\n" type="delimited">
 <Field name="firstName" type="string"/>
 <Field name="middleInitial" type="string"/>
 <Field name="lastName" type="string"/>

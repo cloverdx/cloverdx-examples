@@ -3,13 +3,13 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/LogLine.fmt" id="Metadata0"/>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="\t" name="UniqueVisits" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="\t" name="UniqueVisits" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field label="Timestamp" name="timestamp" type="string"/>
 <Field label="Visits" name="visits" type="long"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="Visit" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Visit" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="UID" type="byte"/>
 <Field name="timestamp" type="string"/>
 </Record>

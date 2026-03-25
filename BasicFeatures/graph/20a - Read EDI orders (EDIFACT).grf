@@ -2,7 +2,7 @@
 <Graph author="Jan Slechta" created="Thu Apr 11 14:23:51 CEST 2024" guiVersion="7.2.0.8" id="1713180967151" licenseCode="CLCDSCLOVE85208925SP" name="19 - Write EDI orders" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="NAD0301_Name_and_address_line" type="string"/>
 <Field name="NAD06_City_name" type="string"/>
 <Field name="NAD07_Country_sub" type="string"/>
@@ -12,7 +12,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="MergedOrderInfo" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="MergedOrderInfo" recordDelimiter="\r?\n" type="delimited">
 <Field name="messageReferenceNumber" type="string"/>
 <Field name="lineItemCode" type="string"/>
 <Field name="qty" type="decimal"/>
@@ -26,7 +26,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="Order" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Order" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="ediMessage" type="long"/>
 <Field name="UNH01_Message_reference_number" type="string"/>
 <Field name="QTY0102_Quantity" type="decimal"/>

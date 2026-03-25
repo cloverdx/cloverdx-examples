@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/LogLine.fmt" id="Metadata2"/>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="UserAgent" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="UserAgent" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="ipAddress" type="string"/>
 <Field eofAsDelimiter="true" name="agent" type="string"/>
 </Record>

@@ -2,7 +2,7 @@
 <Graph author="Jan Slechta" created="Thu Apr 11 14:23:51 CEST 2024" guiVersion="7.2.0.8" id="1713180967151" licenseCode="CLCDSCLOVE85208925SP" name="19 - Write EDI orders" showComponentDetails="true">
 <Global>
 <Metadata id="Order">
-<Record fieldDelimiter="|" name="OrderEDI" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="OrderEDI" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="id" trim="true" type="long"/>
 <Field name="customerId" trim="true" type="long"/>
 <Field format="yyyyMMdd" name="orderDatetime" timeZone="UTC" trim="true" type="date"/>

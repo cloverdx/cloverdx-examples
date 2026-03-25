@@ -31,7 +31,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="requestEcho" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="requestEcho" recordDelimiter="\r?\n" type="delimited">
 <Field name="requestBody" type="string"/>
 <Field name="requestClientIpAddress" type="string"/>
 <Field name="requestContentType" type="string"/>

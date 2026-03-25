@@ -27,7 +27,7 @@
 </ValidationError>
 </RestJobResponseStatus>
 <Metadata id="Metadata0">
-<Record name="String" recordDelimiter="\r\n" type="delimited">
+<Record name="String" recordDelimiter="\r?\n" type="delimited">
 <Field name="value" type="string"/>
 </Record>
 </Metadata>

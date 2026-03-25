@@ -4,7 +4,7 @@
 <Metadata fileURL="${META_DIR}/online-store/Address.fmt" id="Metadata2"/>
 <Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata1"/>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="OrderWithItemCount" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="OrderWithItemCount" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="id" type="long"/>
 <Field name="customerId" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="orderDatetime" timeZone="UTC" type="date"/>

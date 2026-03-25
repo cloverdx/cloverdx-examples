@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Fri Feb 09 13:56:38 CET 2018" guiVersion="7.2.0.8" id="1518182014715" licenseCode="CLP1DJAVLI71979440BY" name="13 - Customer leaderboard - SQL" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="\t" name="CustomerContact" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="CustomerContact" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" skipSourceRows="1" type="delimited">
 <Field name="fullName" type="string"/>
 <Field name="email" type="string"/>
 <Field name="phone" type="string"/>

@@ -6,7 +6,7 @@
 <singlePort connected="true" keepEdge="false" name="1" required="false"/>
 </outputPorts>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="ConnectionProperties" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ConnectionProperties" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
 <Field name="jdbcUrl" type="string"/>
 <Field name="host" type="string"/>
 <Field name="username" type="string"/>
