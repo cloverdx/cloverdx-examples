@@ -4,7 +4,7 @@
 <Metadata fileURL="${META_DIR}/DonationsInput.fmt" id="Metadata4"/>
 <Metadata fileURL="${META_DIR}/DonationsTyped.fmt" id="Metadata0"/>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="ValidationResult" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ValidationResult" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Year" name="Year" type="string"/>
 <Field label="Electoral Event" name="Electoral_Event" type="string"/>
 <Field label="Source" name="Source" type="string"/>

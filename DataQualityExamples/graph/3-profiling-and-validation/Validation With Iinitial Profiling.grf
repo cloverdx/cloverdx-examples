@@ -4,7 +4,7 @@
 <Metadata fileURL="${META_DIR}/DonationsInput.fmt" id="Metadata4"/>
 <Metadata fileURL="${META_DIR}/DonationsTyped.fmt" id="Metadata0"/>
 <Metadata id="Metadata3" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="ProfilingResults" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ProfilingResults" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="Total_Amount_error_rate" type="number"/>
 <Field length="12" name="inputRecordCount" scale="2" trim="true" type="decimal"/>
 <Field name="Total_Amount__null_cnt" trim="true" type="long"/>
@@ -23,7 +23,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Year" name="Year" type="string"/>
 <Field label="Electoral Event" name="Electoral_Event" type="string"/>
 <Field label="Source" name="Source" type="string"/>

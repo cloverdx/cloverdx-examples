@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/customers.fmt" id="Metadata4"/>
 <Metadata id="Metadata5">
-<Record fieldDelimiter=";" name="CustomerAlternativeMetadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="CustomerAlternativeMetadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customerid" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="firstname" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="lastname" nullable="true" shift="0" size="0" type="string"/>
@@ -27,7 +27,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter=";" name="CustomersStandardized" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="CustomersStandardized" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customerid" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="firstname" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="lastname" nullable="true" shift="0" size="0" type="string"/>

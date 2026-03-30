@@ -2,7 +2,7 @@
 <Graph author="Honza" created="Wed Oct 05 11:03:29 CEST 2022" guiVersion="7.2.1.7" id="1665127014040" licenseCode="CLCDSCLOVE24765514SP" name="2 - Componentized Data Quality Check" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="," name="CountryAggregations" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="," name="CountryAggregations" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Country" name="country" type="string"/>
 <Field label="Not Null Count" name="notNullCount" type="integer"/>
 <Field label="Total Record Count" name="recordCount" type="integer"/>
@@ -10,7 +10,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter=";" name="Customers" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="Customers" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customerid" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="firstname" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="lastname" nullable="true" shift="0" size="0" type="string"/>
