@@ -2,7 +2,7 @@
 <Graph author="CalvinCortez" created="Wed Oct 01 09:30:25 EDT 2025" guiVersion="7.1.0.8" id="1760017182602" licenseCode="CLCDSCLOVE85208925SP" name="DataSelectionAdvanced" nature="subgraph" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata4" previewAttachment="${DATAIN_DIR}/Orders_Argentina.csv" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="orders_country" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" skipSourceRows="0" type="delimited">
+<Record fieldDelimiter="|" name="orders_country" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="0" type="delimited">
 <Field name="OrderID" type="string"/>
 <Field name="CustomerID" type="string"/>
 <Field name="EmployeeID" type="string"/>
@@ -20,7 +20,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="OrdersCount" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="OrdersCount" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field auto_filling="sheet_name" name="From" type="string"/>
 <Field name="Count" type="integer"/>
 </Record>

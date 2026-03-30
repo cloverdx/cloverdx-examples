@@ -5,7 +5,7 @@
 <singlePort connected="true" name="0"/>
 </inputPorts>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="debugInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="debugInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="name" nullable="false" type="string"/>
 <Field name="label" type="string"/>
 <Field default="string" name="type" type="string"/>
@@ -21,7 +21,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="metadataField" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="metadataField" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="fileName" type="string"/>
 <Field name="recordName" type="string"/>
 <Field name="name" nullable="false" type="string"/>

@@ -2,14 +2,14 @@
 <Graph author="avackova" created="Wed Aug 04 09:04:37 CEST 2010" guiVersion="7.2.0.8" id="1280396941728" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:19:54 CET 2016" modifiedBy="jansedlacek" name="graphParsingTextData" revision="1.127" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=" " name="master" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter=" " name="master" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field auto_filling="true" name="id" type="integer"/>
 <Field name="last_name" type="string"/>
 <Field name="first_name" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=":" name="person" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter=":" name="person" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field auto_filling="true" name="id" type="integer"/>
 <Field name="relationship" type="string"/>
 <Field name="name" trim="true" type="string"/>

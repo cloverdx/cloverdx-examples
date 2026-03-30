@@ -2,7 +2,7 @@
 <Graph author="krivanekm" created="Fri May 20 11:52:48 CEST 2011" guiVersion="7.2.0.8" id="1305887240084" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:57:21 CET 2016" modifiedBy="jansedlacek" name="PackageDelivery" revision="1.80" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="in_batch" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="in_batch" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="prefix" type="string"/>
 <Field name="batchId" type="string"/>
 <Field name="shipmentCount" type="integer"/>
@@ -11,7 +11,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="in_charge" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="in_charge" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="prefix" type="string"/>
 <Field name="AWB" type="string"/>
 <Field name="chargeCode" type="string"/>
@@ -20,7 +20,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="in_shipment" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="in_shipment" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="prefix" type="string"/>
 <Field name="AWB" type="string"/>
 <Field name="origin" type="string"/>
@@ -31,14 +31,14 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="in_station" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="in_station" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="prefix" type="string"/>
 <Field name="stationCode" type="string"/>
 <Field name="batchCount" type="integer"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="out_batch" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="out_batch" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stationCode" type="string"/>
 <Field name="batchId" type="string"/>
 <Field name="shipmentCount" type="integer"/>
@@ -48,7 +48,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata6" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="out_charge" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="out_charge" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stationCode" type="string"/>
 <Field name="batchId" type="string"/>
 <Field name="AWB" type="string"/>
@@ -58,7 +58,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="out_shipment" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="out_shipment" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stationCode" type="string"/>
 <Field name="batchId" type="string"/>
 <Field name="AWB" type="string"/>
@@ -70,14 +70,14 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata8">
-<Record fieldDelimiter="|" name="x_charges" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="x_charges" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stationCode" type="string"/>
 <Field name="batchId" type="string"/>
 <Field name="aggregateValue" type="decimal"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="x_shipments" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="x_shipments" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stationCode" type="string"/>
 <Field name="batchId" type="string"/>
 <Field name="aggregateValue" type="decimal"/>

@@ -2,7 +2,7 @@
 <Graph author="avackova" created="Tue Oct 24 10:36:22 CEST 2006" description="In this example data are read from ORDERS.xls file, partitioned to 3 parts and each of thees parts are saved in orders.partitioned.xls file in different sheets. " guiVersion="7.2.0.8" id="1199778867506" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 09:29:59 CET 2016" modifiedBy="jansedlacek" name="graphXLSRead" revision="1.277" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="_10staxss_Sheet1" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="_10staxss_Sheet1" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" label="Item" name="State" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" format="excel:#,##0" label="    Total taxes" name="Total_taxes" nullable="true" shift="0" size="0" type="long"/>
 <Field eofAsDelimiter="false" format="excel:#,##0" label="Property taxes" name="Property_taxes" nullable="true" shift="0" size="0" type="long"/>
@@ -69,7 +69,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="county_totals_2009_County" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="county_totals_2009_County" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" format="excel:@" label="FIPS STATE   CODE" name="FIPS_STATE_CODE" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" format="excel:@" label="STATE DESCRIPTION" name="STATE_DESCRIPTION" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" format="excel:@" label="FIPS COUNTY   CODE " name="FIPS_COUNTY_CODE" nullable="true" shift="0" size="0" type="string"/>
@@ -85,7 +85,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="ORDERS" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ORDERS" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="ORDERID,N,20,5" name="ORDERID_N_20_5" type="long"/>
 <Field label="CUSTOMERID,C,5" name="CUSTOMERID_C_5" type="string"/>
 <Field label="EMPLOYEEID,N,20,5" name="EMPLOYEEID_N_20_5" type="long"/>
@@ -103,7 +103,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="ORDERS_auto_filling" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ORDERS_auto_filling" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="ORDERID,N,20,5" name="ORDERID_N_20_5" type="long"/>
 <Field label="CUSTOMERID,C,5" name="CUSTOMERID_C_5" type="string"/>
 <Field label="EMPLOYEEID,N,20,5" name="EMPLOYEEID_N_20_5" type="long"/>
@@ -121,7 +121,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata9">
-<Record fieldDelimiter="|" name="tax_form_data_Sheet1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="tax_form_data_Sheet1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Tax Office" name="Tax_Office" type="string"/>
 <Field label=" Tax identification number" name="Tax_identification_number" type="long"/>
 <Field label="Personal identification number" name="Personal_identification_number" type="string"/>

@@ -11,7 +11,7 @@
 <singlePort connected="true" keepEdge="true" name="2" required="false"/>
 </outputPorts>
 <Metadata id="Metadata4">
-<Record fieldDelimiter="|" name="keyword_classification" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="keyword_classification" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="keyword" type="string"/>
 <Field name="positive" type="boolean"/>
 </Record>
@@ -23,7 +23,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="unittestMetadata" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="unittestMetadata" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="text" type="string"/>
 </Record>
 </Metadata>

@@ -2,19 +2,19 @@
 <Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.2.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="Account" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="Account" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field delimiter="," name="Name" type="string"/>
 <Field eofAsDelimiter="true" name="Id" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="AccountStats" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="AccountStats" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="Name" type="string"/>
 <Field length="12" name="WonAmount" scale="2" trim="true" type="decimal"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="AccountWithOpportunity" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="AccountWithOpportunity" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="AccountID" type="string"/>
 <Field delimiter="," name="AccountName" type="string"/>
 <Field delimiter="," name="OpportunityName" type="string"/>
@@ -22,7 +22,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Opportunity" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="Opportunity" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field delimiter="," name="Name" type="string"/>
 <Field delimiter="," length="18" name="Amount" scale="2" trim="true" type="decimal"/>
 <Field delimiter="," name="AccountId" type="string"/>

@@ -9,7 +9,7 @@
 <singlePort connected="true" keepEdge="true" name="1" required="false"/>
 </outputPorts>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="jira_query" type="string"/>
 <Field label="startAt" name="start_at" type="integer"/>
 <Field label="maxResults" name="max_results" type="integer"/>
@@ -17,14 +17,14 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search_result" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_search_result" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="issue_id" type="string"/>
 <Field name="type" type="string"/>
 <Field name="summary" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="query" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="query" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field name="query" type="string"/>
 <Field eofAsDelimiter="false" name="session_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="session_value" nullable="true" shift="0" size="0" type="string"/>
@@ -32,7 +32,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="query" type="string"/>
 <Field name="session_name" type="string"/>
 <Field name="session_value" type="string"/>
@@ -41,7 +41,7 @@
 </Metadata>
 <MetadataGroup name="Implicit metadata" type="implicit">
 <Metadata id="__static_metadata_HTTP_CONNECTOR_HTTPConnector_Response">
-<Record fieldDelimiter="|" name="HTTPConnector_Response" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="HTTPConnector_Response" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="content" type="string"/>
 <Field name="contentByte" type="byte"/>
 <Field name="outputFilePath" type="string"/>

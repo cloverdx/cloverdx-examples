@@ -10,20 +10,20 @@
 <singlePort connected="true" name="2"/>
 </outputPorts>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="rates" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="rates" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="currency" type="string"/>
 <Field length="10" name="rate" scale="5" type="decimal"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="rates_with_id" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="rates_with_id" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="currency" type="string"/>
 <Field length="10" name="rate" scale="5" type="decimal"/>
 <Field name="id" type="integer"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="transaction_joined" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="transaction_joined" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customer_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="customer_last_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="customer_first_name" nullable="true" shift="0" size="0" type="string"/>
@@ -33,7 +33,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="transaction_with_currency" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="transaction_with_currency" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customer_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="customer_last_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="customer_first_name" nullable="true" shift="0" size="0" type="string"/>

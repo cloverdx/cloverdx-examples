@@ -2,7 +2,7 @@
 <Graph author="avackova" created="Fri Jul 30 09:24:17 CEST 2010" guiVersion="4.6.0.M1" id="1253338896057" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 09:41:48 CET 2016" modifiedBy="jansedlacek" name="WebServiceCalls" revision="1.182" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Forecast" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Forecast" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="FIndexKey" type="long"/>
 <Field name="Desciption" type="string"/>
 <Field name="Low" type="string"/>
@@ -10,7 +10,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="ResultRecord" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ResultRecord" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="Result" type="string"/>
 </Record>
 </Metadata>

@@ -4,7 +4,7 @@
 <Metadata fileURL="${META_DIR}/customers.fmt" id="Metadata1"/>
 <Metadata fileURL="${META_DIR}/orders.fmt" id="Metadata4"/>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="," name="customers_out" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="fixed">
+<Record fieldDelimiter="," name="customers_out" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="fixed">
 <Field name="orderid" size="10" type="integer"/>
 <Field format="yyyy-MM-dd" name="required_date" size="15" type="date"/>
 <Field format="yyyy-MM-dd" name="shipped_date" size="15" type="date"/>

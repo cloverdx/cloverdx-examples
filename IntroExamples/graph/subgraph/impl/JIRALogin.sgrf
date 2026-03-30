@@ -5,7 +5,7 @@
 <singlePort connected="false" name="0"/>
 </outputPorts>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_login" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="jira_login" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="session_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="session_value" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="login_rest_response" nullable="true" shift="0" size="0" type="string"/>
@@ -14,19 +14,19 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="login" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="login" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="username" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="login_rest_call" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="login_rest_call" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="login_rest_response" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="login_rest_status_code" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="login_rest_error_message" nullable="true" shift="0" size="0" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="parsed_session" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="parsed_session" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="session_name" type="string"/>
 <Field name="session_value" type="string"/>
 </Record>

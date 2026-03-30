@@ -2,7 +2,7 @@
 <Graph author="Pavel" created="Thu Oct 04 11:41:15 CEST 2012" guiVersion="7.2.0.8" id="1349357018755" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 13:43:45 CET 2016" modifiedBy="jansedlacek" name="graphIntroduction" revision="1.49" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0" previewAttachment="${DATAIN_DIR}/delimited/addressbook.csv" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="," label="addressbook.csv" name="addressbook_csv" previewAttachment="${DATAIN_DIR}/delimited/addressbook.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="," label="addressbook.csv" name="addressbook_csv" previewAttachment="${DATAIN_DIR}/delimited/addressbook.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="firstname" type="string"/>
 <Field name="lastname" type="string"/>
 <Field name="address" type="string"/>
@@ -14,7 +14,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="addressbook_short" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="addressbook_short" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="name" type="string"/>
 <Field name="city" type="string"/>
 <Field name="email" type="string"/>

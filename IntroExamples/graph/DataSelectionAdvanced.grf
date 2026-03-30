@@ -4,12 +4,12 @@
 <Metadata fileURL="${META_DIR}/orders_with_autofilling.fmt" id="Metadata0"/>
 <Metadata fileURL="${META_DIR}/orders.fmt" id="Metadata2"/>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="FileURL" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="FileURL" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field eofAsDelimiter="true" name="fileURL" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachment="${DATAIN_DIR}/Orders_Argentina.csv" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="orders_country" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" skipSourceRows="0" type="delimited">
+<Record fieldDelimiter="|" name="orders_country" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="0" type="delimited">
 <Field name="OrderID" type="string"/>
 <Field name="CustomerID" type="string"/>
 <Field name="EmployeeID" type="string"/>
@@ -27,7 +27,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="OrdersCount" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="OrdersCount" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field auto_filling="sheet_name" name="From" type="string"/>
 <Field name="Count" type="integer"/>
 </Record>

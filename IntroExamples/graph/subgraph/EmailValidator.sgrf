@@ -5,12 +5,12 @@
 <singlePort connected="true" name="0"/>
 </inputPorts>
 <Metadata id="Metadata0">
-<Record name="input_record" recordDelimiter="\r\n" type="delimited">
+<Record name="input_record" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="email" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="output_record" recordDelimiter="\r" type="delimited">
+<Record fieldDelimiter="|" name="output_record" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="email" type="string"/>
 <Field name="status" type="integer"/>
 <Field name="error" type="string"/>

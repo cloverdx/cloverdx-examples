@@ -2,17 +2,17 @@
 <Graph author="dpavlis" created="Wed Jul 09 15:34:33 CEST 2014" guiVersion="7.2.0.8" id="1404915892380" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:27:48 CET 2016" modifiedBy="jansedlacek" name="CloverTweets" revision="1.134" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Texts" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="Texts" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="text" nullable="true" shift="0" size="0" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="words_stats" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="words_stats" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="word" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="WordsFrequencies" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="WordsFrequencies" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="word" type="string"/>
 <Field name="count" type="integer"/>
 </Record>

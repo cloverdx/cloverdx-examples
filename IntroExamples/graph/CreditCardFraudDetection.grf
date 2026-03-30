@@ -3,27 +3,27 @@
 <Global>
 <Metadata fileURL="${META_DIR}/Transactions.fmt" id="Metadata6"/>
 <Metadata id="Metadata7" previewAttachment="${DATAIN_DIR}/customers.csv" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=";" name="Customers" previewAttachment="${DATAIN_DIR}/customers.csv" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" skipFirstLine="true" type="delimited">
+<Record fieldDelimiter=";" name="Customers" previewAttachment="${DATAIN_DIR}/customers.csv" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipFirstLine="true" type="delimited">
 <Field name="Id" type="integer"/>
 <Field name="LastName" type="string"/>
 <Field name="FirstName" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="rates" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="rates" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="currency" type="string"/>
 <Field length="10" name="rate" scale="5" type="decimal"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="rates_with_id" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="rates_with_id" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="currency" type="string"/>
 <Field length="10" name="rate" scale="5" type="decimal"/>
 <Field name="id" type="integer"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="transaction_joined" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="transaction_joined" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customer_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="customer_last_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="customer_first_name" nullable="true" shift="0" size="0" type="string"/>
@@ -33,7 +33,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="transaction_with_currency" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="transaction_with_currency" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="customer_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="customer_last_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="customer_first_name" nullable="true" shift="0" size="0" type="string"/>
@@ -43,7 +43,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="transactions_only" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="transactions_only" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="amount" type="decimal"/>
 <Field name="currency_id" type="integer"/>

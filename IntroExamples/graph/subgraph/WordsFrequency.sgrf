@@ -8,18 +8,18 @@
 <singlePort connected="true" name="0"/>
 </outputPorts>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="text" nullable="true" shift="0" size="0" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="wordOccurence" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="wordOccurence" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="word" type="string"/>
 <Field name="count" type="integer"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="words_stats" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="words_stats" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="word" type="string"/>
 </Record>
 </Metadata>

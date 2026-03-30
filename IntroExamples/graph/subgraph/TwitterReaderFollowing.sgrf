@@ -9,18 +9,18 @@
 <singlePort connected="false" name="1"/>
 </outputPorts>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="Trends" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="Trends" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="name" type="string"/>
 <Field name="query" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="TweetMinID" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="TweetMinID" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="minID" type="long"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Tweets" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="Tweets" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="tweet_text" type="string"/>
 <Field name="created" type="string"/>
 <Field name="author" type="string"/>
@@ -28,7 +28,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="TwitterResponse" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="TwitterResponse" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="content" type="string"/>
 <Field name="query" type="string"/>
 </Record>

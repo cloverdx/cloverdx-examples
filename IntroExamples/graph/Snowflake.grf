@@ -2,7 +2,7 @@
 <Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.2.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata4">
-<Record fieldDelimiter="," name="Employee" previewAttachment="${DATAIN_DIR}/snowflake/employees.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="," name="Employee" previewAttachment="${DATAIN_DIR}/snowflake/employees.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="first_name" type="string"/>
 <Field name="last_name" type="string"/>

@@ -2,13 +2,13 @@
 <Graph author="Kokon" created="Wed Sep 16 10:19:19 CEST 2009" guiVersion="7.2.0.8" id="1253101461188" licenseCode="Commercial Devel" licenseType="Commercial" modified="Wed Feb 24 09:46:32 CET 2016" modifiedBy="jansedlacek" name="g" revision="1.403" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata10">
-<Record fieldDelimiter="|" name="ArrayOfForecast" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ArrayOfForecast" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="ArrayOfForecastId" type="string"/>
 <Field name="ForecastReturnId" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Forecast" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Forecast" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="ForecastId" type="string"/>
 <Field name="ArrayOfForecastId" type="string"/>
 <Field format="yyy-MM-dd'T'HH:mm:ss" name="Date" type="date"/>
@@ -17,7 +17,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Forecast1" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Forecast1" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="ForecastReturnId" type="integer"/>
 <Field name="Date" type="date"/>
 <Field name="WeatherID" type="string"/>
@@ -27,7 +27,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="ForecastResult" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ForecastResult" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="Date" type="date"/>
 <Field name="City" type="string"/>
 <Field name="State" type="string"/>
@@ -39,7 +39,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata6" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="ForecastReturn" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ForecastReturn" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="ForecastReturnId" type="string"/>
 <Field name="Success" type="string"/>
 <Field name="ResponseText" type="string"/>
@@ -49,14 +49,14 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="LoginResult" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="LoginResult" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="session" type="string"/>
 <Field name="userName" type="string"/>
 <Field name="message" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="code" type="string"/>
 <Field name="name" type="string"/>
 <Field name="rootPath" type="string"/>
@@ -65,7 +65,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata4">
-<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="path" type="string"/>
 <Field name="type" type="string"/>
 <Field name="name" type="string"/>
@@ -75,14 +75,14 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata8" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Temperature" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Temperature" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="ForecastId" type="string"/>
 <Field name="MorningLow" type="string"/>
 <Field name="DaytimeHigh" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="ZIP" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ZIP" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="ZIP" type="string"/>
 </Record>
 </Metadata>

@@ -2,7 +2,7 @@
 <Graph author="Petr" created="Fri Jul 02 14:49:13 CEST 2010" guiVersion="7.2.0.8" id="1278077546166" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 14:08:47 CET 2016" modifiedBy="jansedlacek" name="graphXMLProcessing" revision="1.97" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=";" name="actor" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="actor" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="actor_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="first_name" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="last_name" nullable="true" shift="0" size="0" type="string"/>
@@ -10,7 +10,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=";" name="movie" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="movie" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="movie_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="title" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="description" nullable="true" shift="0" size="0" type="string"/>
@@ -22,7 +22,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=";" name="movie_short" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="movie_short" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="movie_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="title" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="description" nullable="true" shift="0" size="0" type="string"/>
@@ -32,7 +32,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=";" name="movie_short_names" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter=";" name="movie_short_names" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="movie_id" nullable="true" shift="0" size="0" type="integer"/>
 <Field eofAsDelimiter="false" name="title" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" name="description" nullable="true" shift="0" size="0" type="string"/>

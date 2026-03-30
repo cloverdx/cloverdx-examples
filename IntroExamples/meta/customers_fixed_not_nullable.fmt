@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Record fieldDelimiter=";" name="customers_fixed" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="fixed">
+<Record fieldDelimiter=";" name="customers_fixed" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="fixed">
 <Field eofAsDelimiter="false" name="customerid" nullable="true" shift="0" size="7" type="integer"/>
 <Field eofAsDelimiter="false" name="firstname" nullable="true" shift="0" size="7" type="string"/>
 <Field eofAsDelimiter="false" name="lastname" nullable="true" shift="0" size="12" type="string"/>

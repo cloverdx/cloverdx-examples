@@ -1,4 +1,4 @@
-<Record fieldDelimiter="|" recordSize="-1" name="sampleProfiler_csv" skipSourceRows="1" type="delimited" recordDelimiter="\n">
+<Record fieldDelimiter="|" recordSize="-1" name="sampleProfiler_csv" skipSourceRows="1" type="delimited" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r">
 <Field  name="firstName" nullable="true" eofAsDelimiter="false" type="string" shift="0" size="0"/>
 <Field  name="lastName" nullable="true" eofAsDelimiter="false" type="string" shift="0" size="0"/>
 <Field  name="sex" nullable="true" eofAsDelimiter="false" type="string" shift="0" size="0"/>

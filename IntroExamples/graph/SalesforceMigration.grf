@@ -2,7 +2,7 @@
 <Graph author="User" created="Tue Aug 02 16:07:04 CEST 2016" guiVersion="7.2.0.8" id="1470149454547" licenseCode="CLP1DJAVLI21013179BY" name="crm_migration" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata4">
-<Record fieldDelimiter="|" name="attachment" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="attachment" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" trim="true" type="integer"/>
 <Field name="file_name" type="string"/>
 <Field name="attachment_name" type="string"/>
@@ -11,7 +11,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachment="${DATAIN_DIR}/salesforce/attachments.csv" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="," label="attachments.csv" name="attachments_csv" previewAttachment="${DATAIN_DIR}/salesforce/attachments.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="," label="attachments.csv" name="attachments_csv" previewAttachment="${DATAIN_DIR}/salesforce/attachments.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="file_name" type="string"/>
 <Field name="attachment_name" type="string"/>
@@ -25,7 +25,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="contacts_to_insert" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="contacts_to_insert" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" trim="true" type="integer"/>
 <Field name="name" type="string"/>
 <Field name="email" type="string"/>
@@ -35,14 +35,14 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0" previewAttachment="${DATAIN_DIR}/accounts.csv" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="," label="accounts.csv" name="import_accounts" previewAttachment="${DATAIN_DIR}/accounts.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="0" type="delimited">
+<Record fieldDelimiter="," label="accounts.csv" name="import_accounts" previewAttachment="${DATAIN_DIR}/accounts.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="0" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="name" type="string"/>
 <Field eofAsDelimiter="true" name="country" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachment="${DATAIN_DIR}/contacts.csv" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="," label="contacts.csv" name="import_contacts" previewAttachment="${DATAIN_DIR}/contacts.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="0" type="delimited">
+<Record fieldDelimiter="," label="contacts.csv" name="import_contacts" previewAttachment="${DATAIN_DIR}/contacts.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="0" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="name" type="string"/>
 <Field name="email" type="string"/>

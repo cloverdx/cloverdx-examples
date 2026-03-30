@@ -5,23 +5,23 @@
 <singlePort connected="true" name="0"/>
 </inputPorts>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="aggregated" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="aggregated" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="count" type="long"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="records" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="records" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="line" type="string"/>
 <Field name="separator" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="row" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="row" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field containerType="list" name="columns" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="sampleInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="|" name="sampleInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="Name" type="string"/>
 <Field eofAsDelimiter="true" name="TotalCost" type="integer"/>
 </Record>

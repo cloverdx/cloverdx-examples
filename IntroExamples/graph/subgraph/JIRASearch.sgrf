@@ -9,18 +9,18 @@
 <singlePort connected="false" keepEdge="true" name="1" required="false"/>
 </outputPorts>
 <Metadata id="Metadata4" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_search" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="query" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="jira_search_metadata" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field eofAsDelimiter="false" name="jira_query" nullable="true" shift="0" size="0" type="string"/>
 <Field eofAsDelimiter="false" label="total" name="total_results" nullable="true" shift="0" size="0" type="integer"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="query" type="string"/>
 <Field name="session_name" type="string"/>
 <Field name="session_value" type="string"/>
@@ -29,14 +29,14 @@
 </Metadata>
 <MetadataGroup name="Implicit metadata" type="implicit">
 <Metadata id="RUN_SEARCH_REST_Metadata0" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search_result" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_search_result" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="issue_id" type="string"/>
 <Field name="type" type="string"/>
 <Field name="summary" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="LOGIN_Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_login" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_login" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="session_name" type="string"/>
 <Field name="session_value" type="string"/>
 <Field name="login_rest_response" type="string"/>
@@ -45,7 +45,7 @@
 </Record>
 </Metadata>
 <Metadata id="GET_PAGING_INFO_Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="jira_query" type="string"/>
 <Field label="startAt" name="start_at" trim="true" type="integer"/>
 <Field label="maxResults" name="max_results" trim="true" type="integer"/>
@@ -53,7 +53,7 @@
 </Record>
 </Metadata>
 <Metadata id="RUN_SEARCH_REST_Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="query" type="string"/>
 <Field name="session_name" type="string"/>
 <Field name="session_value" type="string"/>
@@ -61,7 +61,7 @@
 </Record>
 </Metadata>
 <Metadata id="GET_PAGING_INFO_Metadata5" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="search_params" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="query" type="string"/>
 <Field name="session_name" type="string"/>
 <Field name="session_value" type="string"/>
@@ -69,7 +69,7 @@
 </Record>
 </Metadata>
 <Metadata id="RUN_SEARCH_REST_Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="jira_search_metadata" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="jira_query" type="string"/>
 <Field label="startAt" name="start_at" trim="true" type="integer"/>
 <Field label="maxResults" name="max_results" trim="true" type="integer"/>

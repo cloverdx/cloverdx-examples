@@ -2,7 +2,7 @@
 <Graph author="User" created="Thu Jun 19 15:50:49 CEST 2014" guiVersion="7.2.0.8" id="1403191563752" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 15:25:34 CET 2016" modifiedBy="jansedlacek" name="MetadataWriter" revision="1.19" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0" previewAttachment="${DATAIN_DIR}/TableDefinitions/employees.txt" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter=";" name="metadataDescription" previewAttachment="${DATAIN_DIR}/TableDefinitions/employees.txt" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" name="metadataDescription" previewAttachment="${DATAIN_DIR}/TableDefinitions/employees.txt" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field auto_filling="source_name" name="source_name" type="string"/>
 <Field name="fieldName" type="string"/>
 <Field name="fieldType" type="string"/>

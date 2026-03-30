@@ -2,12 +2,12 @@
 <Graph author="avackova" created="Fri Jul 30 09:24:17 CEST 2010" guiVersion="7.2.0.8" id="1227892536666" licenseCode="Commercial Devel" licenseType="Commercial" modified="Tue Feb 23 14:03:09 CET 2016" modifiedBy="jansedlacek" name="EmailValidation" revision="1.64" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record name="input_record" recordDelimiter="\r\n" type="delimited">
+<Record name="input_record" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="email" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="output_record" recordDelimiter="\r" type="delimited">
+<Record fieldDelimiter="|" name="output_record" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="email" type="string"/>
 <Field name="status" type="integer"/>
 <Field name="error" type="string"/>

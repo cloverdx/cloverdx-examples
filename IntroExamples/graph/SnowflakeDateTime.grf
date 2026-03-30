@@ -2,7 +2,7 @@
 <Graph author="User" created="Mon Aug 01 17:12:08 CEST 2016" guiVersion="7.2.0.8" id="1470069189046" licenseCode="CLP1DJAVLI21013179BY" name="best-accounts" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter=";" name="DateTime" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" name="DateTime" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field format="yyyy-MM-dd" name="date" type="date"/>
 <Field format="HH:mm:ss.SSS" name="time" type="date"/>
 <Field format="yyyy-MM-dd HH:mm:ss.SSS" name="timestampNTZ" type="date"/>
@@ -11,7 +11,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter=";" name="DateTime_strings" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" name="DateTime_strings" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="date" type="string"/>
 <Field name="time" type="string"/>
 <Field name="timestampNTZ" type="string"/>

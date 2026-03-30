@@ -5,12 +5,12 @@
 <singlePort connected="true" name="0"/>
 </outputPorts>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="debugInput1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="debugInput1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="field1" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Person" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="Person" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="firstname" type="string"/>
 <Field name="lastname" type="string"/>
 <Field name="birthdate" type="date"/>

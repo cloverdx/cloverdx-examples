@@ -5,7 +5,7 @@
 <singlePort connected="true" name="0"/>
 </outputPorts>
 <Metadata id="Metadata1" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="Company" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="Company" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="company" type="string"/>
 <Field name="address1" type="string"/>
 <Field name="address2" type="string"/>
@@ -21,7 +21,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="debugInput1" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="debugInput1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="field1" type="string"/>
 </Record>
 </Metadata>
