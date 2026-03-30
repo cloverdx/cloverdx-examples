@@ -2,7 +2,7 @@
 <Graph author="droben" created="Fri Jan 31 10:28:19 GMT 2020" guiVersion="7.2.0.8" id="1580477938641" licenseCode="CLP1DCLOVE64060597BY" name="16e01 - Validate customers" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter=";" label="Payments" name="Payments" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" label="Payments" name="Payments" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="paymentId" type="integer"/>
 <Field name="orderId" type="string"/>
 <Field name="customerId" type="string"/>

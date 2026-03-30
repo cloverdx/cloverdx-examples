@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata1"/>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="\t" name="CustomersInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="CustomersInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="string"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -18,7 +18,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="\t" name="CustomersInputWithPhone" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="CustomersInputWithPhone" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="string"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -35,7 +35,7 @@
 </Record>
 </Metadata>
 <Metadata id="Validator_ValidationResult">
-<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="recordNo" trim="true" type="long"/>
 <Field name="validationMessage" type="string"/>
 <Field name="ruleName" type="string"/>
@@ -45,7 +45,7 @@
 </Record>
 </Metadata>
 <Metadata id="Validator_ValidationResult1">
-<Record fieldDelimiter="|" name="ValidationResultSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ValidationResultSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="validationMessage" type="string"/>
 <Field name="ruleName" type="string"/>
 <Field name="ruleType" type="string"/>

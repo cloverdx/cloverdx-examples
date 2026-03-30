@@ -5,7 +5,7 @@
 <singlePort connected="false" name="0"/>
 </outputPorts>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="TestRec" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="TestRec" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Id" name="anInteger" type="integer"/>
 <Field format="yyyy-MM-dd" label="Long column name" name="aDate" type="date"/>
 <Field label="Even longer column name with many words" name="aString" type="string"/>

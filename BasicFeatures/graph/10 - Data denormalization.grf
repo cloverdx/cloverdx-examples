@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Thu Aug 24 06:07:41 CEST 2017" guiVersion="7.2.0.8" id="1503547701055" licenseCode="CLP1DJAVLI50596644BY" name="10e02 - Data denormalization" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="PreferredPayment" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="PreferredPayment" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="customerId" type="long"/>
 <Field name="preferredPaymentType" type="string"/>
 <Field name="totalPaymentCount" type="long"/>

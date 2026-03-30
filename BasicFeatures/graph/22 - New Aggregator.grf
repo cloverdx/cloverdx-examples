@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Tue Jul 16 09:44:38 CEST 2024" guiVersion="7.2.0.8" id="1721136625309" licenseCode="CloverDX-Internal-License" name="22 - New Aggregator" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter=";" name="TransactionSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter=";" name="TransactionSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field delimiter=";" name="customerId" trim="true" type="long"/>
 <Field default="0.0" delimiter=";" length="12" name="cashAmount" scale="2" trim="true" type="decimal"/>
 <Field default="0.0" delimiter=";" length="12" name="cardAmount" scale="2" trim="true" type="decimal"/>

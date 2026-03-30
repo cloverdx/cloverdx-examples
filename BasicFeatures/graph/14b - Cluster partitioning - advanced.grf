@@ -2,7 +2,7 @@
 <Graph author="Jan Slechta" created="Tue Mar 19 14:36:29 CET 2024" guiVersion="7.2.0.8" id="1711621762142" licenseCode="CLCDSCLOVE85208925SP" name="14 - Cluster partitioning" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata3" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="EnrichedErrorPayments" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="EnrichedErrorPayments" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" size="19" trim="true" type="long"/>
 <Field name="order_id" size="19" trim="true" type="long"/>
 <Field name="customer_id" size="19" trim="true" type="long"/>
@@ -18,7 +18,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="EnrichedPayments" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="EnrichedPayments" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" size="19" trim="true" type="long"/>
 <Field name="order_id" size="19" trim="true" type="long"/>
 <Field name="customer_id" size="19" trim="true" type="long"/>
@@ -32,7 +32,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter=";" name="Orders" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter=";" name="Orders" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" size="19" type="long"/>
 <Field name="customer_id" size="19" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss.SSS" name="order_datetime" size="19" type="date"/>
@@ -41,7 +41,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter=";" name="Payments" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter=";" name="Payments" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" size="19" type="long"/>
 <Field name="order_id" size="19" type="long"/>
 <Field name="customer_id" size="19" type="long"/>

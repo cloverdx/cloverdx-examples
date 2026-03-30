@@ -7,7 +7,7 @@
 <Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata1"/>
 <Metadata fileURL="${META_DIR}/online-store/Product.fmt" id="Metadata3"/>
 <Metadata id="Address" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="AddressWithId" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="AddressWithId" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" type="long"/>
 <Field name="type" type="string"/>
 <Field name="name" type="string"/>
@@ -19,7 +19,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata5">
-<Record fieldDelimiter="\t" name="LineItemFlat" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="\t" name="LineItemFlat" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" type="long"/>
 <Field format="0000000000" name="orderId" size="10" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="orderDatetime" size="19" type="date"/>

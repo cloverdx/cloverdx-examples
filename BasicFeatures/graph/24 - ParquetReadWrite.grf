@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/basic-examples/payments.fmt" id="Metadata0"/>
 <Metadata id="Metadata1">
-<Record fieldDelimiter=";" name="BasicInfo" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" name="BasicInfo" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="paymentId" type="long"/>
 <Field name="paymentType" type="string"/>
 <Field name="paidAmount" scale="2" type="decimal"/>

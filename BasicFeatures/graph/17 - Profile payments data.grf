@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Tue May 31 15:09:48 CEST 2022" guiVersion="7.2.0.8" id="1654080373138" licenseCode="CLP1DCLOVE94730539BY" name="17 - Profile payments data" showComponentDetails="true">
 <Global>
 <Metadata com.cloveretl.profiler.engine.components.mapping.metrics="mapping.metrics" id="Metadata0">
-<Record com.cloveretl.profiler.engine.components.mapping.metrics="mapping.metrics" fieldDelimiter="," name="RunResults" recordDelimiter="\n" type="delimited">
+<Record com.cloveretl.profiler.engine.components.mapping.metrics="mapping.metrics" fieldDelimiter="," name="RunResults" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="inputRecordCount" trim="true" type="long"/>
 <Field name="paymentId__null_cnt" trim="true" type="long"/>
 <Field name="orderId__null_cnt" trim="true" type="long"/>

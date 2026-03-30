@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="\t" name="CustomerMongo" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="CustomerMongo" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="long"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -18,7 +18,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="DateRange" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="DateRange" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field format="yyyy-MM-dd HH:mm:ss" name="rangeMin" type="date"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="rangeMax" type="date"/>
 </Record>

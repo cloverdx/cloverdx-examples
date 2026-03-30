@@ -2,14 +2,14 @@
 <Graph author="Branislav Repcek" created="Thu Jul 27 11:28:34 CEST 2017" guiVersion="7.2.0.8" id="1501150077535" licenseCode="CLP1DJAVLI50596644BY" name="09e05 - Retry job" nature="jobflow" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="LoopControl" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="LoopControl" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="currentRetryCounter" type="integer"/>
 <Field name="shouldContinue" type="boolean"/>
 <Field name="lastJobStatus" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="RunStatus" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="RunStatus" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="runId" trim="true" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="startTime" trim="true" type="date"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="endTime" trim="true" type="date"/>

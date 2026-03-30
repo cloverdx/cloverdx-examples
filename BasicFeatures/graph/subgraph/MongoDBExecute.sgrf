@@ -6,7 +6,7 @@
 <singlePort connected="true" keepEdge="false" name="1" required="false"/>
 </outputPorts>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="ConnectionProperties" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ConnectionProperties" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="jdbcUrl" type="string"/>
 <Field name="host" type="string"/>
 <Field name="username" type="string"/>
@@ -21,7 +21,7 @@
 </Record>
 </Metadata>
 <Metadata id="ExecuteScript_RunResult">
-<Record fieldDelimiter="|" name="ScriptExecutionFailResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ScriptExecutionFailResult" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stdOut" type="string"/>
 <Field name="errOut" type="string"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="startTime" trim="true" type="date"/>
@@ -34,7 +34,7 @@
 </Record>
 </Metadata>
 <Metadata id="ExecuteScript_RunResult1">
-<Record fieldDelimiter="|" name="ScriptExecutionSuccessResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ScriptExecutionSuccessResult" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="stdOut" type="string"/>
 <Field name="errOut" type="string"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="startTime" trim="true" type="date"/>

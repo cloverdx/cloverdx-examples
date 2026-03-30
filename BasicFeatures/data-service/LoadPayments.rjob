@@ -28,7 +28,7 @@
 </ValidationError>
 </RestJobResponseStatus>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="recordName1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="inputCount" type="long"/>
 <Field name="rejectedByDateCount" type="long"/>
 <Field name="validCount" type="long"/>

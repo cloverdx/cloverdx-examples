@@ -2,7 +2,7 @@
 <Graph author="droben" created="Fri Jan 31 10:28:19 GMT 2020" guiVersion="7.2.0.8" id="1580477938641" licenseCode="CLP1DCLOVE64060597BY" name="16e01 - Validate customers" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="\t" name="CustomersExt" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="CustomersExt" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="string"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -19,7 +19,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="\t" name="CustomersInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="CustomersInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="string"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -34,7 +34,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ValidationResult" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="recordNo" trim="true" type="long"/>
 <Field name="validationMessage" type="string"/>
 <Field name="ruleStatusCode" trim="true" type="integer"/>

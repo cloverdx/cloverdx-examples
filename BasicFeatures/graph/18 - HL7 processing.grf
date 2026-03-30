@@ -2,7 +2,7 @@
 <Graph author="Jan Slechta" created="Tue Apr 16 14:43:26 CEST 2024" guiVersion="7.2.0.8" id="1713345881627" licenseCode="CLCDSCLOVE85208925SP" name="18 - HL7 processing" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="Patient" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Patient" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="patientId" type="string"/>
 <Field name="firstName" type="string"/>
 <Field name="lastName" type="string"/>

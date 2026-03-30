@@ -2,7 +2,7 @@
 <Graph author="droben" created="Fri Jan 31 10:28:19 GMT 2020" guiVersion="7.2.0.8" id="1580477938641" licenseCode="CLP1DCLOVE64060597BY" name="16e01 - Validate customers" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="\t" name="Customers" previewAttachment="${DATAIN_DIR}/Customers.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="Customers" previewAttachment="${DATAIN_DIR}/Customers.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -17,7 +17,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="\t" name="ExtendedCustomers" previewAttachment="${DATAIN_DIR}/Customers.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="ExtendedCustomers" previewAttachment="${DATAIN_DIR}/Customers.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="statusField" type="integer"/>
 <Field name="errorField" type="string"/>
 <Field name="id" type="integer"/>

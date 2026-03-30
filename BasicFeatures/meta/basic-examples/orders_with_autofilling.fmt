@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Record fieldDelimiter="|" name="Orders_with_autofilling" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\n" recordSize="-1" type="delimited">
+<Record fieldDelimiter="|" name="Orders_with_autofilling" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" recordSize="-1" type="delimited">
 <Field format="#" name="OrderID" type="number"/>
 <Field name="CustomerID" type="string"/>
 <Field name="EmployeeID" type="integer"/>

@@ -3,13 +3,13 @@
 <Global>
 <Metadata fileURL="${META_DIR}/online-store/Customer.fmt" id="Metadata0"/>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="Order" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Order" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="customerId" type="long"/>
 <Field name="order" type="variant"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="Stats" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Stats" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="customerId" type="long"/>
 <Field name="orders" type="long"/>
 </Record>

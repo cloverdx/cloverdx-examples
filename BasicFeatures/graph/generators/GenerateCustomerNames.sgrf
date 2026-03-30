@@ -6,7 +6,7 @@
 </outputPorts>
 <Metadata fileURL="${META_DIR}/common/StringList.fmt" id="Metadata2"/>
 <Metadata id="Metadata1" previewAttachment="zip:(${DATAIN_DIR}/DataGenerators/names.zip)#last_names.csv" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="," name="LastName" previewAttachment="zip:(${DATAIN_DIR}/DataGenerators/names.zip)#last_names.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="," name="LastName" previewAttachment="zip:(${DATAIN_DIR}/DataGenerators/names.zip)#last_names.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field label="Last name" name="name" type="string"/>
 <Field label="Rank" name="rank" type="integer"/>
 <Field label="Number of occurrences" name="count" type="integer"/>
@@ -14,7 +14,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata4">
-<Record fieldDelimiter="|" name="Name" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="Name" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="firstName" type="string"/>
 <Field name="middleInitial" type="string"/>
 <Field name="lastName" type="string"/>
@@ -30,7 +30,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="NameLists" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="NameLists" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field containerType="list" name="firstNames" type="string"/>
 <Field containerType="list" name="lastNames" type="string"/>
 </Record>

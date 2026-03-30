@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Record fieldDelimiter="\t" name="Customer" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="Customer" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="long"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
