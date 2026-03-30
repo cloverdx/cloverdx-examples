@@ -2,13 +2,13 @@
 <Graph author="Branislav Repcek" created="Thu Sep 22 11:29:23 CEST 2022" guiVersion="7.2.0.8" id="1663844333056" licenseCode="CloverDX-Internal-License" name="ProcessHL7File" showComponentDetails="true">
 <Global>
 <Metadata id="HL7Reader_Output">
-<Record fieldDelimiter="|" name="HL7Reader_Output" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="HL7Reader_Output" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="hl7Message" type="variant"/>
 <Field auto_filling="source_name" name="sourceFileURL" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="ObservationDetails" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="ObservationDetails" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Patient name" name="patientName" type="string"/>
 <Field label="OBX text" name="obxText" type="string"/>
 </Record>

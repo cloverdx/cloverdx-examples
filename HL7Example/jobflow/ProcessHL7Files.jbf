@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Thu Sep 22 11:29:23 CEST 2022" guiVersion="7.2.0.8" id="1663844313308" licenseCode="CloverDX-Internal-License" name="ProcessHL7Files" nature="jobflow" showComponentDetails="true">
 <Global>
 <Metadata id="ListFiles_Result">
-<Record fieldDelimiter="|" name="FileInfo" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="FileInfo" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="URL" type="string"/>
 <Field name="name" type="string"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="lastModified" trim="true" type="date"/>
@@ -11,7 +11,7 @@
 </Record>
 </Metadata>
 <Metadata id="ExecuteGraph_RunStatus" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="ProcessingSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="ProcessingSummary" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="URL" type="string"/>
 <Field name="runId" trim="true" type="long"/>
 <Field name="duration" trim="true" type="long"/>
