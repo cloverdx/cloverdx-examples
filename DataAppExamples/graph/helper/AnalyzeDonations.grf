@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/UpdatedDonation.fmt" id="Metadata1"/>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="DonationsData" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="DonationsData" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Year" name="year" type="integer"/>
 <Field label="Electoral Event" name="electoralEvent" type="string"/>
 <Field label="Source" name="source" type="string"/>
@@ -17,7 +17,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="YearlyDataProfile" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="YearlyDataProfile" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field length="12" name="totalMax" scale="2" trim="true" type="decimal"/>
 <Field length="12" name="significantThreshold" scale="2" trim="true" type="decimal"/>
 <Field name="totalAverage" trim="true" type="number"/>

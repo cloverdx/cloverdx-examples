@@ -34,7 +34,7 @@
 </ValidationError>
 </RestJobResponseStatus>
 <Metadata id="HTTPConnector_Response">
-<Record fieldDelimiter="|" name="HTTPConnector_Response" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Record fieldDelimiter="|" name="HTTPConnector_Response" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="content" type="string"/>
 <Field name="statusCode" trim="true" type="integer"/>
 <Field containerType="map" name="header" type="string"/>
@@ -42,7 +42,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="JobDetail" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="JobDetail" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="json" type="string"/>
 </Record>
 </Metadata>

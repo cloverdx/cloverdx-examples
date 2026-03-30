@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Record fieldDelimiter="|" name="UpdatedDonation" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="UpdatedDonation" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field label="Year" name="year" trim="true" type="integer"/>
 <Field label="Electoral Event" name="electoralEvent" type="string"/>
 <Field label="Source" name="source" type="string"/>
