@@ -4,7 +4,7 @@
 <Metadata fileURL="${META_DIR}/online-store/Item.fmt" id="Metadata1"/>
 <Metadata fileURL="${META_DIR}/online-store/Order.fmt" id="Metadata0"/>
 <Metadata id="Metadata2">
-<Record fieldDelimiter="|" name="AddressExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="AddressExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
 <Field name="addressId" type="long"/>
 <Field name="orderId" type="long"/>
 <Field name="type" type="string"/>
@@ -17,21 +17,21 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3">
-<Record fieldDelimiter="|" name="AddressOrderId" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="AddressOrderId" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
 <Field name="addressId" type="long"/>
 <Field name="orderId" type="long"/>
 <Field name="type" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata5">
-<Record fieldDelimiter="|" name="OrderAddresses" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="OrderAddresses" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
 <Field name="id" type="long"/>
 <Field name="shipping_address_id" type="long"/>
 <Field name="billing_address_id" type="long"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata4" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="OrderExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="OrderExt" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
 <Field name="id" trim="true" type="long"/>
 <Field name="customer_id" trim="true" type="long"/>
 <Field format="yyyy-MM-dd HH:mm:ss" name="order_datetime" trim="true" type="date"/>

@@ -5,7 +5,7 @@
 <singlePort connected="false" name="0"/>
 </outputPorts>
 <Metadata id="Metadata0" previewAttachmentCharset="UTF-8">
-<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="Address" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
 <Field name="streetAddress" type="string"/>
 <Field name="postalCode" type="string"/>
 <Field name="city" type="string"/>
@@ -14,7 +14,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="AddressInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r?\n" skipSourceRows="0" type="delimited">
+<Record fieldDelimiter="|" name="AddressInput" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" skipSourceRows="0" type="delimited">
 <Field name="name" type="string"/>
 <Field name="type" type="string"/>
 <Field name="low" type="integer"/>
@@ -25,7 +25,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata3" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="IndexedAddress" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="IndexedAddress" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
 <Field name="id" type="integer"/>
 <Field name="street" type="string"/>
 <Field name="low" type="integer"/>
@@ -33,7 +33,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="," name="IndexedArea" previewAttachmentCharset="ISO-8859-1" quotedStrings="true" recordDelimiter="\r?\n" skipSourceRows="0" type="delimited">
+<Record fieldDelimiter="," name="IndexedArea" previewAttachmentCharset="ISO-8859-1" quotedStrings="true" recordDelimiter="\r\n" skipSourceRows="0" type="delimited">
 <Field name="zip" type="string"/>
 <Field name="city" type="string"/>
 <Field name="state" type="string"/>

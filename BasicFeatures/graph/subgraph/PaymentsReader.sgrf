@@ -7,7 +7,7 @@
 </outputPorts>
 <Metadata fileURL="${META_DIR}/online-store/OrderPayment.fmt" id="Metadata1"/>
 <Metadata id="Metadata0">
-<Record fieldDelimiter=";" name="PaymentsInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r?\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" name="PaymentsInput" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
 <Field name="paymentId" type="string"/>
 <Field name="orderId" type="string"/>
 <Field name="customerId" type="string"/>
@@ -19,7 +19,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata2">
-<Record fieldDelimiter=";" name="PaymentsInputError" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r?\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter=";" name="PaymentsInputError" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
 <Field name="recordNo" type="long"/>
 <Field name="fieldName" type="string"/>
 <Field name="originalData" type="string"/>

@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Mon Jul 03 22:59:45 CEST 2017" guiVersion="7.2.0.8" id="1499116639238" licenseCode="CLP1DJAVLI10291612BY" name="09e02 - Load and collect stats" nature="jobflow" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="FileStats" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="FileStats" recordDelimiter="\r\n" type="delimited">
 <Field name="fileUrl" type="string"/>
 <Field name="fileType" type="string"/>
 <Field name="validCount" trim="true" type="long"/>

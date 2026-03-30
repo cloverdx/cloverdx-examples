@@ -2,13 +2,13 @@
 <Graph author="Branislav Repcek" created="Tue Sep 05 09:50:08 CEST 2017" guiVersion="7.2.0.8" id="1504621619273" licenseCode="CLP1DJAVLI50596644BY" name="12e03 - List sandboxes" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="|" name="Credentials" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="Credentials" recordDelimiter="\r\n" type="delimited">
 <Field name="userName" type="string"/>
 <Field name="password" type="string"/>
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="Sandbox" previewAttachmentCharset="UTF-8" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="Sandbox" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
 <Field name="code" type="string"/>
 <Field name="name" type="string"/>
 <Field name="rootPath" type="string"/>
@@ -17,7 +17,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata7" previewAttachmentCharset="ISO-8859-1">
-<Record fieldDelimiter="|" name="SessionToken" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r?\n" type="delimited">
+<Record fieldDelimiter="|" name="SessionToken" previewAttachmentCharset="ISO-8859-1" recordDelimiter="\r\n" type="delimited">
 <Field name="sessionToken" type="string"/>
 </Record>
 </Metadata>
