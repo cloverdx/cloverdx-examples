@@ -2,7 +2,7 @@
 <Graph author="Branislav Repcek" created="Tue Dec 15 15:15:30 CET 2020" guiVersion="7.2.0.8" id="1608043551522" licenseCode="CLP1DCLOVE85832080BY" name="KafkaConsumer" showComponentDetails="true">
 <Global>
 <Metadata id="Metadata0">
-<Record fieldDelimiter="\t" name="KafkaCustomer" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Record fieldDelimiter="\t" name="KafkaCustomer" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" skipSourceRows="1" type="delimited">
 <Field name="id" type="long"/>
 <Field name="fullName" type="string"/>
 <Field name="streetAddress" type="string"/>
@@ -20,7 +20,7 @@
 </Record>
 </Metadata>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="WriteStatus" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="WriteStatus" previewAttachmentCharset="UTF-8" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" type="string"/>
 <Field name="topic" type="string"/>
 <Field name="offset" type="long"/>

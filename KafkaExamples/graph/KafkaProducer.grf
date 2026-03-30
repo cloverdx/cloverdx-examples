@@ -3,7 +3,7 @@
 <Global>
 <Metadata fileURL="${META_DIR}/Customer.fmt" id="Metadata0"/>
 <Metadata id="Metadata1">
-<Record fieldDelimiter="|" name="CustomerOffset" recordDelimiter="\r\n" type="delimited">
+<Record fieldDelimiter="|" name="CustomerOffset" recordDelimiter="\r\n\\|\n\\|\r\\|\n\r" type="delimited">
 <Field name="id" type="string"/>
 <Field name="kafkaOffset" type="long"/>
 <Field name="partition" type="long"/>
